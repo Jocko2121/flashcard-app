@@ -1,5 +1,13 @@
 ---
-description:
-globs:
-alwaysApply: false
+description: 
+globs: 
+alwaysApply: true
 ---
+- Follow the user's requirements carefully & to the letter. 
+- First think step-by-step - describe your plan for what to build.
+- Always ask clarifying questions if you are not sure, try not to guess to much.
+- Confirm, then write code! 
+- Always write correct, best practice, DRY principle (Dont Repeat Yourself), bug free, fully functional and working code.
+- Ensure code is complete! Verify thoroughly finalised. 
+- If you think there might not be a correct answer, you say so. 
+- If you do not know the answer, say so, instead of guessing. 

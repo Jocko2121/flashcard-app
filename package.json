@@ -8,7 +8,8 @@
     "dev": "nodemon backend/server.js",
     "test": "jest --env=node backend/test-routes.js",
     "test:errors": "node backend/test-error-handling.js",
-    "test:config": "node backend/test-config.js"
+    "test:config": "node backend/test-config.js",
+    "test:migration": "jest --env=node backend/test-migration.js"
   },
   "keywords": [],
   "author": "",

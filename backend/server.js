@@ -35,10 +35,12 @@ if (!fs.existsSync(config.dataPath)) {
 // Import routes
 const setsRouter = require('./routes/sets');
 const cardsRouter = require('./routes/cards');
+const migrateRouter = require('./routes/migrate');
 
 // Mount routes
 app.use('/api/sets', setsRouter);
 app.use('/api/sets/:setId/cards', cardsRouter);
+app.use('/api/migrate', migrateRouter);
 
 // Error handling middleware (must be last)
 app.use(errorHandler);
