@@ -120,35 +120,34 @@ flashcard-app/
   - [ ] Add integration tests
 
 ## Phase 2.5: Github Integration
-- [ ] Learn Git Basics
-  - [ ] Install Git on local machine
-  - [ ] Configure Git with user name and email
-  - [ ] Learn basic Git commands:
-    - [ ] git init
-    - [ ] git add
-    - [ ] git commit
-    - [ ] git status
-    - [ ] git log
-    - [ ] git branch
-    - [ ] git checkout
-- [ ] GitHub Account Setup
-  - [ ] Verify GitHub account is active
-  - [ ] Set up SSH keys for secure connection
-  - [ ] Configure GitHub authentication
-  - [ ] Learn GitHub web interface basics
-- [ ] Project Repository Setup
-  - [ ] Create new repository on GitHub
-  - [ ] Initialize local repository
-  - [ ] Create .gitignore file for Node.js project
-  - [ ] Make first commit
-  - [ ] Push to GitHub
+- [X] Learn Git Basics
+  - [X] Install Git on local machine
+  - [X] Configure Git with user name and email
+  - [X] Learn basic Git commands:
+    - [X] git init
+    - [X] git add
+    - [X] git commit
+    - [X] git status
+    - [X] git log
+    - [X] git branch
+    - [X] git checkout
+- [X] GitHub Account Setup
+  - [X] Verify GitHub account is active
+  - [X] Set up authentication
+  - [X] Learn GitHub web interface basics
+- [X] Project Repository Setup
+  - [X] Create new repository on GitHub
+  - [X] Initialize local repository
+  - [X] Create .gitignore file for Node.js project
+  - [X] Make first commit
+  - [X] Push to GitHub
 - [ ] Basic Workflow Setup
-  - [ ] Create main branch
+  - [X] Create main branch
   - [ ] Set up development branch
   - [ ] Learn pull request workflow
   - [ ] Practice basic collaboration workflow
 - [ ] Documentation
-  - [ ] Create README.md with project description
+  - [X] Create README.md with project description
   - [ ] Add setup instructions
   - [ ] Document basic Git commands for team
   - [ ] Add contribution guidelines
