@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard App</title>
+    <link rel="stylesheet" href="styles/layout.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* Content-specific styles */
+        .card-set {
+            background: #fff;
+            border: 2px solid #908cff;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: block;
+            min-height: 100px;
+            position: relative;
+            z-index: 4;
+            cursor: pointer;
+        }
+        .card-set.active {
+            background: #e0e7ff;
+            border-color: #4f46e5;
+        }
+        .card-set:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-color: #908cff;
+        }
+        .card-set h3 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        .card-set p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .main-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--header-shadow);
+            padding: 32px 40px;
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+        .main-header h2 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .main-header p {
+            margin: 8px 0 0 0;
+            color: #6c757d;
+        }
+        .main-header-content {
+            display: flex;
+            flex-direction: column;
+        }
+        .card-list-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: flex-start;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 0;
+        }
+        .question-div, .answer-div {
+            margin-bottom: 10px;
+        }
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        /* Flashcard */
+        .flashcard {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--header-shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+            flex: 1 1 300px;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        .flashcard h3 {
+            margin: 0 0 16px 0;
+            color: #333;
+            font-size: 1.2rem;
+        }
+        .flashcard p {
+            margin: 0;
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .flashcard .controls {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="controls">
+            <button id="settings-toggle" title="Toggle Sidebar">⚙️</button>
+            <button id="toggle-completed" title="Toggle Completed Cards">✓</button>
+        </div>
+        <!-- Admin Controls Container - For development only
+             Dependencies:
+             - Backend: src/backend/routes/settings.js (kill-servers endpoint)
+             - Frontend: src/frontend/js/settings.js (killServersBtn event listener)
+             - CSS: src/frontend/styles/layout.css (.admin-controls)
+             Remove this container and its dependencies when going to production -->
+        <div class="admin-controls">
+            <button id="killServersBtn" title="Kill All Servers">Kill Servers</button>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="layout-3col">
+        <!-- Left Column: Card Sets Panel -->
+        <div id="col-left" class="panel-base panel-left panel-visible">
+            <div class="panel-header">
+                <h2>Card Sets</h2>
+                <button id="new-set-btn" type="button">New Set</button>
+            </div>
+            <form id="new-set-form" style="display:none; padding: 10px;">
+                <input id="new-set-name" type="text" placeholder="Set Name" required style="width: 90%; margin-bottom: 5px;" />
+                <input id="new-set-desc" type="text" placeholder="Description" style="width: 90%; margin-bottom: 5px;" />
+                <button type="submit">Add Set</button>
+                <button type="button" id="cancel-new-set">Cancel</button>
+            </form>
+            <div id="card-sets-list" class="panel-content">
+                <!-- Card sets will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Main Column -->
+        <div class="panel-base panel-main">
+            <!-- Main Header (Set Title and Add Flashcard) -->
+            <div class="main-header">
+                <div class="main-header-content">
+                    <h2 id="current-set-name">Select a Card Set</h2>
+                    <p id="current-set-description"></p>
+                </div>
+                <button id="add-flashcard" type="button">Add Flashcard</button>
+            </div>
+            <form id="add-flashcard-form" style="display:none; padding: 10px;">
+                <input id="flashcard-question" type="text" placeholder="Question" required style="width: 90%; margin-bottom: 5px;" />
+                <input id="flashcard-answer" type="text" placeholder="Answer" required style="width: 90%; margin-bottom: 5px;" />
+                <button type="submit">Add Card</button>
+                <button type="button" id="cancel-add-flashcard">Cancel</button>
+            </form>
+            <!-- Flashcard Display Section -->
+            <div id="card-con">
+                <div class="card-list-container">
+                    <!-- Cards will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column: Completed Cards Panel -->
+        <div id="col-right" class="panel-base panel-right panel-hidden">
+            <div class="panel-header">
+                <h2>Completed Cards</h2>
+            </div>
+            <div class="panel-content">
+                <!-- Completed cards will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/cards.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html> 

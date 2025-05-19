@@ -1,0 +1,194 @@
+{
+  "cardSets": [
+    {
+      "id": 1,
+      "name": "Card Test Set",
+      "description": "For testing cards",
+      "cards": [],
+      "createdAt": "2025-05-19T18:21:25.278Z",
+      "lastModified": "2025-05-19T18:21:25.279Z"
+    },
+    {
+      "id": 2,
+      "name": "Test Set",
+      "description": "Test Description",
+      "cards": [],
+      "createdAt": "2025-05-19T18:21:25.279Z",
+      "lastModified": "2025-05-19T18:21:25.279Z"
+    },
+    {
+      "id": 3,
+      "name": "Geography",
+      "description": "1747613970853",
+      "cards": [
+        {
+          "id": 7,
+          "question": "France",
+          "answer": "Paris",
+          "completed": false,
+          "createdAt": "2025-05-19T01:38:00.488Z",
+          "lastModified": "2025-05-19T01:38:00.488Z"
+        },
+        {
+          "id": 8,
+          "question": "Germany",
+          "answer": "Berlin",
+          "completed": false,
+          "createdAt": "2025-05-19T01:38:37.500Z",
+          "lastModified": "2025-05-19T01:38:37.500Z"
+        },
+        {
+          "id": 9,
+          "question": "Italy",
+          "answer": "Rome",
+          "completed": false,
+          "createdAt": "2025-05-19T01:38:51.856Z",
+          "lastModified": "2025-05-19T01:38:51.856Z"
+        },
+        {
+          "id": 10,
+          "question": "Spain",
+          "answer": "Madrid",
+          "completed": false,
+          "createdAt": "2025-05-19T01:39:19.600Z",
+          "lastModified": "2025-05-19T01:39:19.600Z"
+        }
+      ],
+      "createdAt": "2025-05-19T00:25:56.892Z",
+      "lastModified": "2025-05-19T00:25:56.892Z"
+    },
+    {
+      "id": 4,
+      "name": "Math",
+      "description": "1747614029321",
+      "cards": [
+        {
+          "id": 11,
+          "question": "1 x 1",
+          "answer": "1",
+          "completed": false,
+          "createdAt": "2025-05-19T01:39:51.781Z",
+          "lastModified": "2025-05-19T01:39:51.781Z"
+        },
+        {
+          "id": 12,
+          "question": "2 X 2",
+          "answer": "4",
+          "completed": false,
+          "createdAt": "2025-05-19T01:40:07.278Z",
+          "lastModified": "2025-05-19T01:40:07.278Z"
+        },
+        {
+          "id": 13,
+          "question": "3 x 3",
+          "answer": "9",
+          "completed": false,
+          "createdAt": "2025-05-19T01:40:20.656Z",
+          "lastModified": "2025-05-19T01:40:20.656Z"
+        },
+        {
+          "id": 14,
+          "question": "4x4",
+          "answer": "16",
+          "completed": false,
+          "createdAt": "2025-05-19T01:40:36.473Z",
+          "lastModified": "2025-05-19T01:40:36.473Z"
+        },
+        {
+          "id": 15,
+          "question": "5x5",
+          "answer": "25",
+          "completed": false,
+          "createdAt": "2025-05-19T01:40:48.916Z",
+          "lastModified": "2025-05-19T01:40:48.916Z"
+        }
+      ],
+      "createdAt": "2025-05-19T00:26:43.759Z",
+      "lastModified": "2025-05-19T00:26:43.759Z"
+    },
+    {
+      "id": 5,
+      "name": "Science",
+      "description": "1747614057407",
+      "cards": [
+        {
+          "id": 16,
+          "question": "Pig",
+          "answer": "Oink",
+          "completed": false,
+          "createdAt": "2025-05-19T01:41:15.287Z",
+          "lastModified": "2025-05-19T01:41:15.287Z"
+        },
+        {
+          "id": 17,
+          "question": "Cow",
+          "answer": "Moo",
+          "completed": false,
+          "createdAt": "2025-05-19T01:41:28.351Z",
+          "lastModified": "2025-05-19T01:41:28.351Z"
+        },
+        {
+          "id": 18,
+          "question": "Horse",
+          "answer": "I'm Mr Ed",
+          "completed": false,
+          "createdAt": "2025-05-19T01:41:45.108Z",
+          "lastModified": "2025-05-19T01:41:45.108Z"
+        },
+        {
+          "id": 19,
+          "question": "Cat",
+          "answer": "Meow",
+          "completed": false,
+          "createdAt": "2025-05-19T01:41:57.618Z",
+          "lastModified": "2025-05-19T01:41:57.618Z"
+        },
+        {
+          "id": 20,
+          "question": "Dog",
+          "answer": "Ruff",
+          "completed": false,
+          "createdAt": "2025-05-19T01:42:08.987Z",
+          "lastModified": "2025-05-19T01:42:08.987Z"
+        },
+        {
+          "id": 21,
+          "question": "Fish",
+          "answer": "gulp",
+          "completed": false,
+          "createdAt": "2025-05-19T01:42:22.952Z",
+          "lastModified": "2025-05-19T01:42:22.952Z"
+        },
+        {
+          "id": 22,
+          "question": "Mouse",
+          "answer": "Squeak",
+          "completed": false,
+          "createdAt": "2025-05-19T01:42:54.258Z",
+          "lastModified": "2025-05-19T01:42:54.258Z"
+        }
+      ],
+      "createdAt": "2025-05-19T00:27:10.557Z",
+      "lastModified": "2025-05-19T00:27:10.557Z"
+    },
+    {
+      "id": 6,
+      "name": "Set 1",
+      "description": "",
+      "cards": [],
+      "createdAt": "2025-05-19T17:33:43.671Z",
+      "lastModified": "2025-05-19T17:33:43.671Z"
+    }
+  ],
+  "settings": {
+    "showCompleted": true,
+    "lastActiveSet": null,
+    "theme": "light",
+    "studyMode": "normal"
+  },
+  "statistics": {
+    "totalCards": 16,
+    "completedCards": 0,
+    "lastStudySession": null
+  }
+}

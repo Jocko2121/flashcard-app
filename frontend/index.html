@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flashcard App</title>
+    <link rel="stylesheet" href="layout.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* Content-specific styles */
+        .card-set {
+            background: #fff;
+            border: 2px solid #908cff;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: block;
+            min-height: 100px;
+            position: relative;
+            z-index: 4;
+            cursor: pointer;
+        }
+        .card-set.active {
+            background: #e0e7ff;
+            border-color: #4f46e5;
+        }
+        .card-set:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-color: #908cff;
+        }
+        .card-set h3 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        .card-set p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .main-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--header-shadow);
+            padding: 32px 40px;
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+        .main-header h2 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .main-header p {
+            margin: 8px 0 0 0;
+            color: #6c757d;
+        }
+        .main-header-content {
+            display: flex;
+            flex-direction: column;
+        }
+        .main-header .add-flashcard-btn {
+            height: 48px;
+            font-size: 1rem;
+            background: #908cff;
+            color: #fff;
+            border-radius: 8px;
+            border: none;
+            padding: 0 32px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .main-header .add-flashcard-btn:hover {
+            background: #6c63ff;
+        }
+        .card-list-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: flex-start;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 0;
+        }
+        .question-div, .answer-div {
+            margin-bottom: 10px;
+        }
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        .settings-toggle,
+        .toggle-completed-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: #4a90e2;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background 0.2s;
+        }
+        .settings-toggle:hover,
+        .toggle-completed-btn:hover {
+            background: #357abd;
+        }
+        /* Inline Undo */
+        .undo-bar {
+            background: #e3f0fb;
+            color: #222;
+            border: 1px solid #b6d4ef;
+            border-radius: 8px;
+            padding: 16px 24px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .undo-bar button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .undo-bar button:hover {
+            background: #357abd;
+        }
+        /* Flashcard */
+        .flashcard {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--header-shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+            flex: 1 1 300px;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        .flashcard h3 {
+            margin: 0 0 16px 0;
+            color: #333;
+            font-size: 1.2rem;
+        }
+        .flashcard p {
+            margin: 0;
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        .flashcard .controls {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+        }
+        .flashcard .controls button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .flashcard .controls button.complete {
+            background: #4caf50;
+            color: white;
+        }
+        .flashcard .controls button.complete:hover {
+            background: #388e3c;
+        }
+        .flashcard .controls button.delete {
+            background: #f44336;
+            color: white;
+        }
+        .flashcard .controls button.delete:hover {
+            background: #d32f2f;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="top-bar">
+      <div class="controls">
+        <button id="settings-toggle" class="settings-toggle" title="Toggle Sidebar">⚙️</button>
+        <button id="toggle-completed" class="toggle-completed-btn" title="Toggle Completed Cards">✓</button>
+      </div>
+    </div>
+    <div class="layout-3col">
+      <!-- Left Column -->
+      <div id="col-left" class="panel-base panel-left panel-hidden">
+        <div class="panel-header">
+          <h2>Card Sets</h2>
+          <button id="new-set-btn" class="new-set-btn" type="button">New Set</button>
+        </div>
+        <form id="new-set-form" style="display:none; padding: 10px;">
+          <input id="new-set-name" type="text" placeholder="Set Name" required style="width: 90%; margin-bottom: 5px;" />
+          <input id="new-set-desc" type="text" placeholder="Description" style="width: 90%; margin-bottom: 5px;" />
+          <button type="submit">Add Set</button>
+          <button type="button" id="cancel-new-set">Cancel</button>
+        </form>
+        <div id="card-sets-list" class="panel-content">
+          <!-- Card sets will be loaded here -->
+        </div>
+      </div>
+      
+      <!-- Main Column -->
+      <div class="panel-base panel-main">
+        <!-- Main Header (Set Title and Add Flashcard) -->
+        <div class="main-header">
+          <div class="main-header-content">
+            <h2 id="current-set-name">Select a Card Set</h2>
+            <p id="current-set-description"></p>
+          </div>
+          <button id="add-flashcard" class="add-flashcard-btn" type="button">Add Flashcard</button>
+        </div>
+        <form id="add-flashcard-form" style="display:none; padding: 10px;">
+          <input id="flashcard-question" type="text" placeholder="Question" required style="width: 90%; margin-bottom: 5px;" />
+          <input id="flashcard-answer" type="text" placeholder="Answer" required style="width: 90%; margin-bottom: 5px;" />
+          <button type="submit">Add Card</button>
+          <button type="button" id="cancel-add-flashcard">Cancel</button>
+        </form>
+        <!-- Flashcard Display Section -->
+        <div id="card-con">
+          <div class="card-list-container">
+            <!-- Cards will be loaded here -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column -->
+      <div id="col-right" class="panel-base panel-right panel-hidden">
+        <div class="panel-header">
+          <h2>Completed Cards</h2>
+        </div>
+        <div class="panel-content">
+          <!-- Completed cards will be loaded here -->
+        </div>
+      </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const layout3col = document.querySelector('.layout-3col');
+            const colLeft = document.getElementById('col-left');
+            const colRight = document.getElementById('col-right');
+            const settingsToggle = document.getElementById('settings-toggle');
+            const toggleCompleted = document.getElementById('toggle-completed');
+            const cardSetsList = document.getElementById('card-sets-list');
+            const colRightCardsContainer = colRight.querySelector('.panel-content');
+            let currentSetId = null;
+            let doneCards = new Set(JSON.parse(localStorage.getItem('doneCards') || localStorage.getItem('completedCards') || '[]'));
+            // Inline Undo logic
+            let undoTimeout = null;
+            let lastDeletedCard = null;
+            let lastDeletedFromDone = false;
+            function showInlineUndo(container, index, message, undoCallback) {
+                // Remove any existing undo bars
+                container.querySelectorAll('.undo-bar').forEach(el => el.remove());
+                // Create undo bar
+                const undoBar = document.createElement('div');
+                undoBar.className = 'undo-bar';
+                undoBar.innerHTML = `${message} <button type="button">Undo</button>`;
+                // Insert at the correct position
+                if (container.children.length === 0 || index >= container.children.length) {
+                    container.appendChild(undoBar);
+                } else {
+                    container.insertBefore(undoBar, container.children[index]);
+                }
+                // Undo logic
+                undoBar.querySelector('button').onclick = () => {
+                    clearTimeout(undoTimeout);
+                    undoBar.remove();
+                    if (undoCallback) undoCallback();
+                };
+                // Remove after 5 seconds
+                undoTimeout = setTimeout(() => {
+                    undoBar.remove();
+                }, 5000);
+            }
+            function updateGrid() {
+                const colLeftVisible = colLeft.classList.contains('panel-visible');
+                const colRightVisible = colRight.classList.contains('panel-visible');
+                if (colLeftVisible && colRightVisible) {
+                    layout3col.style.gridTemplateColumns = '260px 1fr 260px';
+                } else if (colLeftVisible) {
+                    layout3col.style.gridTemplateColumns = '260px 1fr 0';
+                } else if (colRightVisible) {
+                    layout3col.style.gridTemplateColumns = '0 1fr 260px';
+                } else {
+                    layout3col.style.gridTemplateColumns = '0 1fr 0';
+                }
+            }
+            // Load card sets into sidebar
+            function loadCardSets() {
+                cardSetsList.innerHTML = '';
+                const cardSets = JSON.parse(localStorage.getItem('cardSets') || '[]');
+                if (cardSets.length === 0) {
+                    // Add a default card set if none exist
+                    const defaultSet = {
+                        id: 'default',
+                        name: 'My First Set',
+                        description: 'Start adding flashcards to this set'
+                    };
+                    cardSets.push(defaultSet);
+                    localStorage.setItem('cardSets', JSON.stringify(cardSets));
+                }
+                cardSets.forEach(set => {
+                    const setElement = document.createElement('div');
+                    setElement.className = 'card-set' + (set.id === currentSetId ? ' active' : '');
+                    setElement.innerHTML = `
+                        <div class="set-content-view">
+                            <h3>${set.name}</h3>
+                            <p>${set.description || ''}</p>
+                            <button class="edit-set-btn" data-id="${set.id}">Edit</button>
+                        </div>
+                        <form class="edit-set-form" data-id="${set.id}" style="display:none; margin-top:10px;">
+                            <input type="text" name="edit-set-name" value="${set.name}" style="width:90%; margin-bottom:5px;" required />
+                            <input type="text" name="edit-set-desc" value="${set.description || ''}" style="width:90%; margin-bottom:5px;" />
+                            <button type="submit">Save</button>
+                            <button type="button" class="cancel-edit-set-btn">Cancel</button>
+                        </form>
+                    `;
+                    setElement.querySelector('.set-content-view').addEventListener('click', (e) => {
+                        // Only trigger set selection if not clicking the edit button
+                        if (e.target.classList.contains('edit-set-btn')) return;
+                        currentSetId = set.id;
+                        localStorage.setItem('lastOpenSetId', set.id); // Save last open set
+                        loadCards(set.id);
+                        document.getElementById('current-set-name').textContent = set.name;
+                        document.getElementById('current-set-description').textContent = set.description || '';
+                        loadDoneCards();
+                        loadCardSets(); // Refresh highlight
+                    });
+                    setElement.querySelector('.edit-set-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        setElement.querySelector('.set-content-view').style.display = 'none';
+                        setElement.querySelector('.edit-set-form').style.display = 'block';
+                    });
+                    setElement.querySelector('.cancel-edit-set-btn').addEventListener('click', (e) => {
+                        setElement.querySelector('.edit-set-form').style.display = 'none';
+                        setElement.querySelector('.set-content-view').style.display = 'block';
+                    });
+                    setElement.querySelector('.edit-set-form').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const name = setElement.querySelector('input[name="edit-set-name"]').value.trim();
+                        const desc = setElement.querySelector('input[name="edit-set-desc"]').value.trim();
+                        let cardSets = JSON.parse(localStorage.getItem('cardSets') || '[]');
+                        cardSets = cardSets.map(s => s.id === set.id ? { ...s, name, description: desc } : s);
+                        localStorage.setItem('cardSets', JSON.stringify(cardSets));
+                        setElement.querySelector('.edit-set-form').style.display = 'none';
+                        setElement.querySelector('.set-content-view').style.display = 'block';
+                        loadCardSets();
+                        // If this set is active, update the main header too
+                        if (set.id === currentSetId) {
+                            document.getElementById('current-set-name').textContent = name;
+                            document.getElementById('current-set-description').textContent = desc;
+                        }
+                    });
+                    cardSetsList.appendChild(setElement);
+                });
+            }
+            // Load done cards
+            function loadDoneCards() {
+                colRightCardsContainer.innerHTML = '';
+                const allCards = JSON.parse(localStorage.getItem('cards') || '[]');
+                const doneCardsList = allCards.filter(card => doneCards.has(card.id) && card.setId === currentSetId);
+                if (doneCardsList.length === 0) {
+                    colRightCardsContainer.innerHTML = `
+                        <div class="card-set">
+                            No completed cards yet. Complete some cards to see them here!
+                        </div>
+                    `;
+                } else {
+                    doneCardsList.forEach(card => {
+                        const cardElement = document.createElement('div');
+                        cardElement.className = 'card-set completed';
+                        cardElement.innerHTML = `
+                            <h3>${card.question}</h3>
+                            <p>${card.answer}</p>
+                            <button class="incomplete-card-btn" data-id="${card.id}">Activate</button>
+                            <button class="delete-card-btn" data-id="${card.id}">Delete</button>
+                        `;
+                        colRightCardsContainer.appendChild(cardElement);
+                    });
+                    // Add event listeners for Activate and Delete
+                    colRightCardsContainer.querySelectorAll('.incomplete-card-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = btn.getAttribute('data-id');
+                            doneCards.delete(id);
+                            localStorage.setItem('doneCards', JSON.stringify([...doneCards]));
+                            loadCards(currentSetId);
+                            loadDoneCards();
+                        });
+                    });
+                    colRightCardsContainer.querySelectorAll('.delete-card-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = btn.getAttribute('data-id');
+                            let cards = JSON.parse(localStorage.getItem('cards') || '[]');
+                            const cardToDelete = cards.find(card => card.id === id);
+                            cards = cards.filter(card => card.id !== id);
+                            localStorage.setItem('cards', JSON.stringify(cards));
+                            doneCards.delete(id);
+                            localStorage.setItem('doneCards', JSON.stringify([...doneCards]));
+                            lastDeletedCard = cardToDelete;
+                            lastDeletedFromDone = true;
+                            // Find the index of the card in the container
+                            const cardDiv = btn.closest('.card-set');
+                            const index = Array.from(colRightCardsContainer.children).indexOf(cardDiv);
+                            loadCards(currentSetId);
+                            loadDoneCards();
+                            showInlineUndo(colRightCardsContainer, index, 'Card deleted.', () => {
+                                // Undo: restore card
+                                let cards = JSON.parse(localStorage.getItem('cards') || '[]');
+                                cards.push(lastDeletedCard);
+                                localStorage.setItem('cards', JSON.stringify(cards));
+                                if (lastDeletedFromDone) {
+                                    doneCards.add(lastDeletedCard.id);
+                                    localStorage.setItem('doneCards', JSON.stringify([...doneCards]));
+                                }
+                                loadCards(currentSetId);
+                                loadDoneCards();
+                            });
+                        });
+                    });
+                }
+            }
+            // Load cards for a specific set
+            function loadCards(setId) {
+                const cardContainer = document.querySelector('.card-list-container');
+                cardContainer.innerHTML = '';
+                const cards = JSON.parse(localStorage.getItem('cards') || '[]')
+                    .filter(card => card.setId === setId && !doneCards.has(card.id)); // Only show non-done
+                if (cards.length === 0) {
+                    cardContainer.innerHTML = `
+                        <div class="card-set">
+                            No cards in this set yet. Click "Add Flashcard" to create one!
+                        </div>
+                    `;
+                    return;
+                }
+                cards.forEach(card => {
+                    const cardElement = document.createElement('div');
+                    cardElement.className = `card-set`;
+                    cardElement.innerHTML = `
+                        <div class="card-content-view">
+                            <h3>${card.question}</h3>
+                            <p>${card.answer}</p>
+                            <button class="done-card-btn" data-id="${card.id}">Mark Complete</button>
+                            <button class="edit-card-btn" data-id="${card.id}">Edit</button>
+                            <button class="delete-card-btn" data-id="${card.id}">Delete</button>
+                        </div>
+                        <form class="edit-card-form" data-id="${card.id}" style="display:none; margin-top:10px;">
+                            <input type="text" name="edit-question" value="${card.question}" style="width:90%; margin-bottom:5px;" required />
+                            <input type="text" name="edit-answer" value="${card.answer}" style="width:90%; margin-bottom:5px;" required />
+                            <button type="submit">Save</button>
+                            <button type="button" class="cancel-edit-btn">Cancel</button>
+                        </form>
+                    `;
+                    cardContainer.appendChild(cardElement);
+                });
+                // Add event listeners for done/edit/delete
+                cardContainer.querySelectorAll('.done-card-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = btn.getAttribute('data-id');
+                        doneCards.add(id);
+                        localStorage.setItem('doneCards', JSON.stringify([...doneCards]));
+                        loadCards(setId);
+                        loadDoneCards();
+                    });
+                });
+                cardContainer.querySelectorAll('.edit-card-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = btn.getAttribute('data-id');
+                        const cardDiv = btn.closest('.card-set');
+                        cardDiv.querySelector('.card-content-view').style.display = 'none';
+                        cardDiv.querySelector('.edit-card-form').style.display = 'block';
+                    });
+                });
+                cardContainer.querySelectorAll('.cancel-edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const cardDiv = btn.closest('.card-set');
+                        cardDiv.querySelector('.edit-card-form').style.display = 'none';
+                        cardDiv.querySelector('.card-content-view').style.display = 'block';
+                    });
+                });
+                cardContainer.querySelectorAll('.edit-card-form').forEach(form => {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const id = form.getAttribute('data-id');
+                        const question = form.elements['edit-question'].value.trim();
+                        const answer = form.elements['edit-answer'].value.trim();
+                        let cards = JSON.parse(localStorage.getItem('cards') || '[]');
+                        cards = cards.map(card => card.id === id ? { ...card, question, answer } : card);
+                        localStorage.setItem('cards', JSON.stringify(cards));
+                        loadCards(setId);
+                    });
+                });
+                cardContainer.querySelectorAll('.delete-card-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = btn.getAttribute('data-id');
+                        let cards = JSON.parse(localStorage.getItem('cards') || '[]');
+                        const cardToDelete = cards.find(card => card.id === id);
+                        cards = cards.filter(card => card.id !== id);
+                        localStorage.setItem('cards', JSON.stringify(cards));
+                        lastDeletedCard = cardToDelete;
+                        lastDeletedFromDone = false;
+                        // Find the index of the card in the container
+                        const cardDiv = btn.closest('.card-set');
+                        const index = Array.from(cardContainer.children).indexOf(cardDiv);
+                        loadCards(setId);
+                        showInlineUndo(cardContainer, index, 'Card deleted.', () => {
+                            // Undo: restore card
+                            let cards = JSON.parse(localStorage.getItem('cards') || '[]');
+                            cards.push(lastDeletedCard);
+                            localStorage.setItem('cards', JSON.stringify(cards));
+                            loadCards(setId);
+                        });
+                    });
+                });
+            }
+            // Initialize event listeners
+            function initializeEventListeners() {
+                if (settingsToggle && colLeft) {
+                    settingsToggle.addEventListener('click', () => {
+                        colLeft.classList.toggle('panel-visible');
+                        if (colLeft.classList.contains('panel-visible')) {
+                            loadCardSets();
+                        }
+                        updateGrid();
+                    });
+                }
+                if (toggleCompleted && colRight) {
+                    toggleCompleted.addEventListener('click', () => {
+                        colRight.classList.toggle('panel-visible');
+                        if (colRight.classList.contains('panel-visible')) {
+                            loadDoneCards();
+                        }
+                        updateGrid();
+                    });
+                }
+                // Add new set button
+                const newSetBtn = document.getElementById('new-set-btn');
+                const newSetForm = document.getElementById('new-set-form');
+                const cancelNewSet = document.getElementById('cancel-new-set');
+                if (newSetBtn) {
+                    newSetBtn.addEventListener('click', () => {
+                        newSetForm.style.display = 'block';
+                        newSetBtn.style.display = 'none';
+                    });
+                }
+                if (cancelNewSet) {
+                    cancelNewSet.addEventListener('click', () => {
+                        newSetForm.reset();
+                        newSetForm.style.display = 'none';
+                        newSetBtn.style.display = 'inline-block';
+                    });
+                }
+                if (newSetForm) {
+                    newSetForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const name = document.getElementById('new-set-name').value.trim();
+                        const desc = document.getElementById('new-set-desc').value.trim();
+                        if (!name) return;
+                        let cardSets = JSON.parse(localStorage.getItem('cardSets') || '[]');
+                        const id = 'set_' + Date.now();
+                        cardSets.push({ id, name, description: desc });
+                        localStorage.setItem('cardSets', JSON.stringify(cardSets));
+                        newSetForm.reset();
+                        newSetForm.style.display = 'none';
+                        newSetBtn.style.display = 'inline-block';
+                        loadCardSets();
+                    });
+                }
+                // Add flashcard button
+                const addFlashcardBtn = document.getElementById('add-flashcard');
+                const addFlashcardForm = document.getElementById('add-flashcard-form');
+                const cancelAddFlashcard = document.getElementById('cancel-add-flashcard');
+                if (addFlashcardBtn) {
+                    addFlashcardBtn.addEventListener('click', () => {
+                        if (!currentSetId) {
+                            alert('Please select a card set first!');
+                            return;
+                        }
+                        addFlashcardForm.style.display = 'block';
+                        addFlashcardBtn.style.display = 'none';
+                    });
+                }
+                if (cancelAddFlashcard) {
+                    cancelAddFlashcard.addEventListener('click', () => {
+                        addFlashcardForm.reset();
+                        addFlashcardForm.style.display = 'none';
+                        addFlashcardBtn.style.display = 'inline-block';
+                    });
+                }
+                if (addFlashcardForm) {
+                    addFlashcardForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const question = document.getElementById('flashcard-question').value.trim();
+                        const answer = document.getElementById('flashcard-answer').value.trim();
+                        if (!question || !answer) return;
+                        let cards = JSON.parse(localStorage.getItem('cards') || '[]');
+                        const id = 'card_' + Date.now();
+                        cards.push({ id, setId: currentSetId, question, answer });
+                        localStorage.setItem('cards', JSON.stringify(cards));
+                        addFlashcardForm.reset();
+                        addFlashcardForm.style.display = 'none';
+                        addFlashcardBtn.style.display = 'inline-block';
+                        loadCards(currentSetId);
+                    });
+                }
+            }
+            // Initialize the app
+            initializeEventListeners();
+            loadCardSets();
+            loadDoneCards();
+            // Open sidebar by default
+            colLeft.classList.add('panel-visible');
+            updateGrid();
+            // Auto-select last open set if available
+            const lastOpenSetId = localStorage.getItem('lastOpenSetId');
+            if (lastOpenSetId) {
+                const cardSets = JSON.parse(localStorage.getItem('cardSets') || '[]');
+                const lastSet = cardSets.find(set => set.id === lastOpenSetId);
+                if (lastSet) {
+                    currentSetId = lastSet.id;
+                    document.getElementById('current-set-name').textContent = lastSet.name;
+                    document.getElementById('current-set-description').textContent = lastSet.description || '';
+                    loadCards(lastSet.id);
+                    loadCardSets(); // Ensure .active is applied
+                }
+            }
+            // Make toggleCardCompletion available globally
+            window.toggleCardCompletion = function(cardId) {
+                if (doneCards.has(cardId)) {
+                    doneCards.delete(cardId);
+                } else {
+                    doneCards.add(cardId);
+                }
+                localStorage.setItem('doneCards', JSON.stringify([...doneCards]));
+                loadCards(currentSetId);
+                loadDoneCards();
+            };
+        });
+    </script>
+  </body>
+</html>
