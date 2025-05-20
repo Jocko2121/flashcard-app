@@ -2,7 +2,8 @@
 const API = {
     cardSets: '/api/sets',
     cards: '/api/sets/:setId/cards',
-    settings: '/api/settings'
+    settings: '/api/settings',
+    statistics: '/api/settings/statistics'
 };
 
 // Main app class
@@ -10,14 +11,19 @@ class FlashcardApp {
     constructor() {
         this.currentSetId = null;
         this.settings = null;
+        this.statistics = null;
         this.initializeApp();
     }
 
     async initializeApp() {
         try {
-            // Load settings
-            const settingsResponse = await fetch(API.settings);
+            // Load settings and statistics
+            const [settingsResponse, statisticsResponse] = await Promise.all([
+                fetch(API.settings),
+                fetch(API.statistics)
+            ]);
             this.settings = await settingsResponse.json();
+            this.statistics = await statisticsResponse.json();
             // this.updateSettingsUI(this.settings); // Disabled: not implemented
 
             // Load card sets
@@ -306,6 +312,64 @@ class FlashcardApp {
                 addFlashcardForm.style.display = 'none';
                 addFlashcardBtn.style.display = 'inline-block';
             });
+        }
+    }
+
+    async updateSettings(updates) {
+        try {
+            const response = await fetch(API.settings, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updates)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update settings');
+            }
+
+            this.settings = await response.json();
+            // this.updateSettingsUI(this.settings); // Disabled: not implemented
+        } catch (error) {
+            console.error('Failed to update settings:', error);
+            this.showError('Failed to update settings');
+        }
+    }
+
+    async updateStudySession(duration, cardsReviewed) {
+        try {
+            const response = await fetch(`${API.statistics}/session`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ duration, cardsReviewed })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update study session');
+            }
+
+            this.statistics = await response.json();
+        } catch (error) {
+            console.error('Failed to update study session:', error);
+            this.showError('Failed to update study session');
+        }
+    }
+
+    async getStatistics() {
+        try {
+            const response = await fetch(API.statistics);
+            if (!response.ok) {
+                throw new Error('Failed to get statistics');
+            }
+            this.statistics = await response.json();
+            return this.statistics;
+        } catch (error) {
+            console.error('Failed to get statistics:', error);
+            this.showError('Failed to get statistics');
+            return null;
         }
     }
 }

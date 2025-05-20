@@ -145,4 +145,30 @@ flashcard-app/
     "studyMode": "normal"
   }
 }
-``` 
+```
+
+## Development Workflow
+
+### Git Commands
+- `git add .` - Stage all changes
+- `git commit -m "message"` - Commit changes with a descriptive message
+- `git push` - Push changes to GitHub
+- `git pull` - Pull latest changes from GitHub
+
+### Development Process
+1. Make changes to the code
+2. Test changes locally
+3. Update PLAN.md to track progress
+4. Commit changes with descriptive message
+5. Push to GitHub using the sync button in Cursor
+
+### Common Scenarios
+- **Making Changes**: Edit files → Test → Update PLAN.md → Commit → Push
+- **Handling Errors**: Check console → Fix issue → Test → Commit → Push
+- **Verifying Changes**: Test locally → Check GitHub → Update documentation
+
+### Commit Messages
+- Use clear, descriptive messages
+- Reference the phase or feature being worked on
+- Example: "feat: implement statistics endpoints"
+- Example: "docs: update API documentation" 

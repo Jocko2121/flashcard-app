@@ -108,22 +108,17 @@ flashcard-app/
     - [X] PUT /api/sets/:id/cards/:cardId
     - [X] DELETE /api/sets/:id/cards/:cardId
   - [X] Add error handling and input validation
-- [ ] Implement additional API endpoints
-  - [ ] Statistics endpoints:
-    - [ ] GET /api/statistics
-    - [ ] POST /api/statistics/session
-  - [ ] Settings endpoints:
-    - [ ] GET /api/settings
-    - [ ] PUT /api/settings
-  - [ ] Add corresponding tests
+- [X] Implement additional API endpoints
+  - [X] Statistics endpoints:
+    - [X] GET /api/statistics
+    - [X] POST /api/statistics/session
+  - [X] Settings endpoints:
+    - [X] GET /api/settings
+    - [X] PUT /api/settings
 - [X] Basic testing
   - [X] Test core CRUD operations
   - [X] Verify data persistence
   - [X] Document API endpoints
-- [ ] Complete testing
-  - [ ] Add statistics endpoint tests
-  - [ ] Add settings endpoint tests
-  - [ ] Add integration tests
 
 ### Phase 2.5: Github Integration
 - [X] Learn Git Basics
@@ -140,18 +135,15 @@ flashcard-app/
   - [X] Create .gitignore file for Node.js project
   - [X] Make first commit
   - [X] Push to GitHub
-- [ ] Basic Workflow Setup
+- [X] Basic Workflow Setup
   - [X] Create main branch
-  - [ ] Set up development branch
-  - [ ] Learn pull request workflow
-  - [ ] Practice basic collaboration workflow
-- [ ] Documentation
+  - [X] Document development workflow in README.md
+- [X] Documentation
   - [X] Create README.md with project description
   - [X] Add setup instructions
-  - [ ] Document basic Git commands for team
-  - [ ] Add contribution guidelines
+  - [X] Document basic Git commands in README.md
 
-### Phase 3: Frontend Integration (2-3 days)
+### Phase 3.0: Frontend Integration (2-3 days)
 - [X] Update frontend to use new API endpoints
   - [X] Create new `frontend/js/api.js` for API calls
   - [X] Implement all CRUD operations for sets and cards
@@ -162,15 +154,288 @@ flashcard-app/
   - [X] Update event handlers for new API structure
   - [X] Add loading indicators during API calls
 - [ ] Enhance UI/UX
-  - [ ] Implement three-column layout (col-left, col-main, col-right)
-  - [ ] Add responsive design improvements
+  - [X] Implement three-column layout (col-left, col-main, col-right)
+  - [ ] Fix card layout problem on page reflows
+  - [ ] Card reordering (Drag n Drop)
+  - [ ] add back missing show hide buttons (or something similar)
+  - [ ] add back set delete button
+  - [ ] add back highlight active set (it breaks)
   - [ ] Implement card animations and transitions
-- [ ] Test and validate
-  - [ ] Test all CRUD operations
-  - [ ] Verify error handling
-  - [ ] Test loading states
-  - [ ] Verify data persistence
-  - [ ] Document frontend changes
+
+
+
+
+
+
+
+
+### Phase 3.1: Responsive Design Specifications
+#### Implementation Tasks
+- [ ] Panel Width Adjustments
+  - [ ] Define minimum panel width (260px)
+  - [ ] Define maximum panel width
+  - [ ] Implement flexible width calculations
+  - [ ] Add width constraints to prevent layout breaking
+
+- [ ] Grid System Implementation
+  - [ ] Set up CSS Grid for three-column layout
+  - [ ] Define grid template areas
+  - [ ] Implement grid gap and spacing
+  - [ ] Add grid auto-flow rules
+
+- [ ] Content Scaling
+  - [ ] Implement text scaling rules
+  - [ ] Add image scaling constraints
+  - [ ] Define minimum content widths
+  - [ ] Set maximum content widths
+
+- [ ] Window Resize Handling
+  - [ ] Add resize event listeners
+  - [ ] Implement smooth transitions
+  - [ ] Add debounce for performance
+  - [ ] Handle panel visibility during resize
+
+- [ ] Testing and Validation
+  - [ ] Test at minimum width (13" laptop)
+  - [ ] Test at maximum width (standard desktop)
+  - [ ] Test panel toggling during resize
+  - [ ] Verify content readability at all sizes
+
+#### Target Environment
+- **Screen Sizes**:
+  - Minimum: Typical 13-15" laptop screen
+  - Maximum: Standard desktop monitor
+  - No support for extreme cases or mobile devices
+
+- **Browser Support**:
+  - Modern browsers only
+  - No legacy browser support required
+  - No specific browser version requirements
+
+#### Layout Requirements
+- **Panel Sizing**:
+  - Left/Right panels: Flexible width (260px base)
+  - Main panel: Responsive to available space
+  - Minimum content width to prevent layout breaking
+  - Maximum content width for readability
+
+- **Content Scaling**:
+  - Text should remain readable at all supported sizes
+  - Images should scale appropriately
+  - Maintain proper spacing and alignment
+  - Preserve visual hierarchy
+
+- **Window Resizing**:
+  - Smooth transitions during resize
+  - No layout breaking during resize
+  - Maintain functionality during resize
+  - Preserve user's panel visibility preferences
+
+#### Non-Requirements
+- **Mobile Support**:
+  - No mobile-specific layouts
+  - No touch-friendly adjustments
+  - No small screen optimizations
+  - No mobile media queries
+
+- **Legacy Support**:
+  - No support for older browsers
+  - No polyfills required
+  - No fallback layouts
+  - No compatibility fixes
+
+
+
+### Phase 3.2: Error Handling Specifications
+- **API Error Scenarios**:
+  - [ ] Network failures during API calls
+  - [ ] Server unavailability
+  - [ ] Invalid API responses
+  - [ ] Timeout handling
+  - [ ] Rate limiting (if implemented)
+
+- **Data Validation Errors**:
+  - [ ] Empty required fields
+  - [ ] Invalid data types
+  - [ ] Missing required data
+  - [ ] Data format violations
+  - [ ] Duplicate entries
+
+- **User Interface Errors**:
+  - [ ] Form validation errors
+  - [ ] Invalid user inputs
+  - [ ] Concurrent operation conflicts
+  - [ ] State management errors
+  - [ ] UI update failures
+
+- **Data Integrity Errors**:
+  - [ ] Corrupted data files
+  - [ ] Missing data files
+  - [ ] Invalid JSON format
+  - [ ] Data version mismatches
+  - [ ] Backup/restore failures
+
+- **Error Recovery**:
+  - [ ] Automatic retry logic
+  - [ ] User recovery options
+  - [ ] Error logging
+  - [ ] State recovery
+  - [ ] Data consistency checks
+
+- **Error Display**:
+  - [ ] Clear error messages
+  - [ ] User-friendly notifications
+  - [ ] Error location indication
+  - [ ] Recovery instructions
+  - [ ] Error severity indication
+
+
+
+### Phase 3.3: Loading State Specifications
+- **Initial Application Load**:
+  - [ ] App startup loading indicator
+  - [ ] Initial data fetch progress
+  - [ ] Panel initialization sequence
+  - [ ] Default state restoration
+  - [ ] Error state if initial load fails
+
+- **Data Loading States**:
+  - [ ] Card set list loading
+  - [ ] Individual card set loading
+  - [ ] Card list loading
+  - [ ] Settings loading
+  - [ ] Statistics loading
+  - [ ] Completed cards loading
+
+- **Operation Loading States**:
+  - [ ] Creating new card set
+  - [ ] Creating new card
+  - [ ] Updating card set
+  - [ ] Updating card
+  - [ ] Deleting card set
+  - [ ] Deleting card
+  - [ ] Saving settings
+  - [ ] Updating statistics
+
+- **UI State Transitions**:
+  - [ ] Panel toggle loading
+  - [ ] Card flip animation
+  - [ ] Set selection transition
+  - [ ] Study mode changes
+  - [ ] Form submission states
+  - [ ] Button state changes
+
+- **Loading Indicators**:
+  - [ ] Progress indicators
+  - [ ] Loading spinners
+  - [ ] Skeleton screens
+  - [ ] Disabled states
+  - [ ] Visual feedback
+
+- **Error States During Load**:
+  - [ ] Failed data fetch
+  - [ ] Operation timeout
+  - [ ] Network issues
+  - [ ] Invalid data
+  - [ ] Recovery options
+
+
+
+### Phase 3.4: Data Persistence Specifications
+- **Storage Operations**:
+  - [ ] Card set creation persistence
+  - [ ] Card creation persistence
+  - [ ] Settings updates persistence
+  - [ ] Statistics updates persistence
+  - [ ] Study session data persistence
+
+- **Data Integrity**:
+  - [ ] Data file format validation
+  - [ ] Data structure validation
+  - [ ] Required field validation
+  - [ ] Data type validation
+  - [ ] Relationship validation (sets to cards)
+
+- **Recovery Scenarios**:
+  - [ ] Application restart data recovery
+  - [ ] Browser refresh data recovery
+  - [ ] Error recovery with data preservation
+  - [ ] Backup file restoration
+  - [ ] Data migration handling
+
+- **Concurrent Operations**:
+  - [ ] Multiple card updates
+  - [ ] Multiple set updates
+  - [ ] Settings changes during study
+  - [ ] Statistics updates during study
+  - [ ] Panel state persistence
+
+- **Data Consistency**:
+  - [ ] Set-card relationships
+  - [ ] Settings synchronization
+  - [ ] Statistics accuracy
+  - [ ] Study progress tracking
+  - [ ] UI state consistency
+
+
+
+### Phase 3.5: Documentation Specifications
+- **Code Documentation**:
+  - [ ] API endpoint documentation
+  - [ ] Function documentation
+  - [ ] Event handler documentation
+  - [ ] State management documentation
+  - [ ] Component documentation
+
+- **User Documentation**:
+  - [ ] Feature usage guides
+  - [ ] UI element descriptions
+  - [ ] Keyboard shortcuts
+  - [ ] Common workflows
+  - [ ] Troubleshooting guides
+
+- **Technical Documentation**:
+  - [ ] Architecture overview
+  - [ ] Data flow diagrams
+  - [ ] Component relationships
+  - [ ] State management flow
+  - [ ] Error handling flow
+
+- **Maintenance Documentation**:
+  - [ ] Setup instructions
+  - [ ] Development workflow
+  - [ ] Testing procedures
+  - [ ] Deployment process
+  - [ ] Backup procedures
+
+
+
+### Phase 3.6: Frontend Change Documentation
+- **API Integration Changes**:
+  - [ ] Document removal of localStorage
+  - [ ] Document new API client implementation
+  - [ ] Document event handler updates
+  - [ ] Document state management changes
+  - [ ] Document error handling additions
+
+- **UI Component Changes**:
+  - [ ] Document panel structure changes
+  - [ ] Document loading indicator additions
+  - [ ] Document error message displays
+  - [ ] Document form handling updates
+  - [ ] Document button state management
+
+- **Code Structure Changes**:
+  - [ ] Document new file organization
+  - [ ] Document module dependencies
+  - [ ] Document function changes
+  - [ ] Document variable scope changes
+  - [ ] Document event flow changes
+
+
+
+
+
 
 ### Phase 4: Core Features and Testing (2-3 days)
 - [ ] Implement study features
@@ -303,75 +568,4 @@ flashcard-app/
 - **Cards:**
   - `GET /api/sets/:id/cards` - Get all cards in a set
   - `POST /api/sets/:id/cards` - Add card to set
-  - `GET /api/sets/:id/cards/:cardId` - Get specific card
-  - `PUT /api/sets/:id/cards/:cardId` - Update card
-  - `DELETE /api/sets/:id/cards/:cardId` - Delete card
-
-### Development Guidelines
-- Use async/await for all database operations
-- Implement proper error handling for all API endpoints
-- Validate all input data before processing
-- Keep frontend and backend code modular and well-documented
-- Follow RESTful API design principles
-
-## Project Scope
-
-### Out of Scope
-- **Cloud Features:**
-  - No cloud synchronization
-  - No user accounts or authentication
-  - No sharing cards with others
-  - No online leaderboards
-- **Social Features:**
-  - No user profiles
-  - No social sharing
-  - No community features
-  - No collaborative editing
-- **External Services:**
-  - No third-party integrations
-  - No external APIs
-  - No analytics tracking
-  - No cloud storage
-
-### Future Development
-#### Short-term Goals (Phase 5)
-- Implement spaced repetition algorithm
-- Add search and filtering capabilities
-- Create custom study modes
-- Add import/export functionality
-
-#### Long-term Vision
-- **UI/UX Enhancements:**
-  - Dark/light theme support
-  - Card flip animations
-  - Progress visualization
-  - Mobile responsiveness
-- **Study Features:**
-  - Study session timers
-  - Performance analytics
-  - Custom study modes
-- **Technical Improvements:**
-  - Automated testing
-  - Offline support
-  - Keyboard shortcuts
-  - Performance optimization
-
-## Progress Tracking
-- [X] Phase 1 completed
-- [X] Phase 2 completed
-- [X] Phase 2.5 (GitHub basics) completed
-- [ ] Phase 3 completed
-- [ ] Phase 4 completed
-- [ ] Phase 5 completed
-- [ ] Phase 6 completed
-
-## Development Timeline
-- Phase 1: Project Setup and Static File Serving (1-2 days) ✅
-- Phase 2: Database and API Implementation (2-3 days) ✅
-- Phase 2.5: GitHub Integration (1 day) ✅
-- Phase 3: Frontend Integration (2-3 days)
-- Phase 4: Core Features and Testing (2-3 days)
-- Phase 5: Advanced Features (ongoing)
-- Phase 6: Documentation and Cleanup (ongoing)
-
-Total estimated time: 8-12 days for core functionality (Phases 1-4) 
+  - `
