@@ -31,4 +31,8 @@ logs/
 
 # Debug
 debug/
-debug.log 
+debug.log
+
+# Data files
+backend/data.json
+backend/data.json.backup 

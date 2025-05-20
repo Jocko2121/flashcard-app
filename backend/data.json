@@ -1,5 +1,48 @@
 {
-  "cardSets": [],
+  "cardSets": [
+    {
+      "id": 1,
+      "name": "Geometry 2",
+      "description": "Geo 2",
+      "cards": [
+        {
+          "id": 1,
+          "question": "France",
+          "answer": "Paris",
+          "completed": false,
+          "createdAt": "2025-05-20T03:05:26.093Z",
+          "lastModified": "2025-05-20T03:06:01.207Z"
+        },
+        {
+          "id": 2,
+          "question": "deleter",
+          "answer": "s",
+          "completed": false,
+          "createdAt": "2025-05-20T03:06:14.423Z",
+          "lastModified": "2025-05-20T03:06:14.423Z"
+        }
+      ],
+      "createdAt": "2025-05-20T03:03:14.251Z",
+      "lastModified": "2025-05-20T03:04:54.982Z"
+    },
+    {
+      "id": 2,
+      "name": "Test deleter",
+      "description": "",
+      "cards": [
+        {
+          "id": 1,
+          "question": "deleter",
+          "answer": "yes",
+          "completed": false,
+          "createdAt": "2025-05-20T03:06:43.688Z",
+          "lastModified": "2025-05-20T03:06:43.688Z"
+        }
+      ],
+      "createdAt": "2025-05-20T03:06:29.528Z",
+      "lastModified": "2025-05-20T03:06:29.528Z"
+    }
+  ],
   "settings": {
     "showCompleted": true,
     "lastActiveSet": null,
