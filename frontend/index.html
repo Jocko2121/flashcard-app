@@ -161,12 +161,17 @@
                 }
                 return response.json();
             },
-            async updateCard(setId, cardId, question, answer) {
-                console.log(`API: Updating card ${cardId} in set ${setId}`, { question, answer });
+            async updateCard(setId, cardId, question, answer, completed) {
+                console.log(`API: Updating card ${cardId} in set ${setId}`, { question, answer, completed });
+                const body = {};
+                if (question !== null) body.question = question;
+                if (answer !== null) body.answer = answer;
+                if (completed !== undefined) body.completed = completed;
+                
                 const response = await fetch(`/api/sets/${setId}/cards/${cardId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question, answer })
+                    body: JSON.stringify(body)
                 });
                 if (!response.ok) {
                     console.error(`API Error: Failed to update card ${cardId}`, response.status);

@@ -1,0 +1,57 @@
+{
+  "cardSets": [
+    {
+      "id": 1,
+      "name": "My First Set",
+      "description": "Start adding flashcards to this set",
+      "cards": [
+        {
+          "id": 1,
+          "question": "Finland",
+          "answer": "Helsinki",
+          "completed": false,
+          "createdAt": "2025-05-21T20:19:21.574Z",
+          "lastModified": "2025-05-21T20:32:37.244Z"
+        },
+        {
+          "id": 2,
+          "question": "France",
+          "answer": "Paris",
+          "completed": false,
+          "createdAt": "2025-05-21T20:19:37.084Z",
+          "lastModified": "2025-05-21T20:32:31.232Z"
+        }
+      ],
+      "createdAt": "2025-05-21T20:18:57.990Z",
+      "lastModified": "2025-05-21T20:18:57.990Z"
+    },
+    {
+      "id": 2,
+      "name": "test set",
+      "description": "",
+      "cards": [
+        {
+          "id": 1,
+          "question": "France",
+          "answer": "Paris",
+          "completed": true,
+          "createdAt": "2025-05-21T20:21:07.580Z",
+          "lastModified": "2025-05-21T20:39:51.454Z"
+        }
+      ],
+      "createdAt": "2025-05-21T20:20:57.659Z",
+      "lastModified": "2025-05-21T20:20:57.659Z"
+    }
+  ],
+  "settings": {
+    "showCompleted": true,
+    "lastActiveSet": 2,
+    "theme": "light",
+    "studyMode": "normal"
+  },
+  "statistics": {
+    "totalCards": 0,
+    "completedCards": 0,
+    "lastStudySession": null
+  }
+}

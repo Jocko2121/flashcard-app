@@ -15,6 +15,9 @@ function isValidDataStructure(data) {
 async function readData() {
     try {
         const data = await fs.readFile(config.dataPath, 'utf8');
+        if (!data || data.trim() === '') {
+            throw new Error('Empty data file');
+        }
         const parsedData = JSON.parse(data);
         
         if (!isValidDataStructure(parsedData)) {
@@ -24,7 +27,8 @@ async function readData() {
         return parsedData;
     } catch (error) {
         console.error('Error reading data:', error);
-        return {
+        // Create default data structure
+        const defaultData = {
             cardSets: [],
             settings: {
                 showCompleted: true,
@@ -38,6 +42,13 @@ async function readData() {
                 lastStudySession: null
             }
         };
+        // Try to write the default data
+        try {
+            await writeData(defaultData);
+        } catch (writeError) {
+            console.error('Error writing default data:', writeError);
+        }
+        return defaultData;
     }
 }
 

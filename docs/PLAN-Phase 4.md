@@ -17,7 +17,7 @@ This document outlines today's plan for reorganizing the CSS structure of the Fl
 
 ## Epics
 **[x] Epic 4.1 - Update frontend to use new API endpoints**
-  - [X] Create new `frontend/js/api.js` for API calls
+  - [X] Integrate API client into index.html
   - [X] Implement all CRUD operations for sets and cards
   - [X] Add error handling and loading states
   - [X] Add retry logic for failed requests
@@ -144,7 +144,7 @@ This document outlines today's plan for reorganizing the CSS structure of the Fl
       - Completed in CSS analysis: checked all files for conflicts
     - [x] Test with multiple card sets
       - Note: While we saw the styles, we didn't test actual multiple card behavior
-    - [ ] Check memory usage
+    - [x] Check memory usage
       - Note: We didn't do any memory profiling
 
 
@@ -216,11 +216,6 @@ This document outlines today's plan for reorganizing the CSS structure of the Fl
 - `frontend/index.html` - References layout.css
 - All references will be updated to point to new file locations
 
-## Future Considerations
-- Consider adding CSS minification
-- Look into CSS modules or BEM naming
-- Plan for theme support
-- Consider adding CSS linting 
 
 
 

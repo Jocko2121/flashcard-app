@@ -355,7 +355,6 @@ flashcard-app/
 
 - [ ] Epic 11.3 - Add local settings
   - [ ] Implement user preferences
-  - [ ] Add theme options
   - [ ] Save last active set
   - [ ] Test settings functionality
   - [ ] Document settings features

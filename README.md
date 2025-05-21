@@ -39,8 +39,6 @@ flashcard-app/
 │   │   ├── base.css     # Global styles and resets
 │   │   ├── layout.css   # Layout and structure
 │   │   └── components.css # Component-specific styles
-│   ├── js/             # JavaScript files
-│   │   └── api.js      # API client
 │   └── index.html      # Main application
 └── docs/               # Documentation
     ├── PLAN-Phase 4.md # Phase 4 implementation plan
