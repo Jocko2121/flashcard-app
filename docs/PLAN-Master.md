@@ -30,172 +30,71 @@ flashcard-app/
 - No external stylesheets are currently in use
 - Data is stored in JSON files in the root directory
 
-## Development Phases
+## Phases - Done / Active
 
-### Phase 1: Project Setup and Static File Serving (1-2 days)
-- [X] Initialize Node.js project
-  - [X] Created package.json with express, cors, and body-parser dependencies
-  - [X] Set up basic npm configuration
-- [X] Set up basic directory structure
-  - [X] Organized frontend and backend files
-  - [X] Removed redundant files (data.js, index2.html)
-- [X] Install required dependencies:
-  - [X] express
-  - [X] cors
-  - [X] body-parser
-- [X] Set up Express server and static file serving
-  - [X] Created and configured Express server (server.js)
-  - [X] Moved static files to frontend directory:
-    - [X] index.html
-    - [X] layout.css
-    - [X] images/
-  - [X] Configured Express static file middleware to serve from frontend directory
-  - [X] Tested and verified:
-    - [X] HTML loads correctly
-    - [X] CSS is applied
-    - [X] Images display
-    - [X] All current functionality works
-- [X] Refactor & clean up code for this phase
-  - [X] Created proper directory structure:
-    - [X] frontend/ for static files (index.html, layout.css, images)
-    - [X] backend/ for server code (server.js)
-    - [X] root/ for data files (data.json, data.json.backup)
-  - [X] Updated file paths in server.js for new structure
-  - [X] Updated package.json to point to backend/server.js
-  - [X] Created README.md with setup instructions
-  - [X] Verified server runs correctly from new structure
+### **Phase 1: Project Setup and Static File Serving (1-2 days)**
+- [X] Epic 1.1 - Initialize Node.js project
+- [X] Epic 1.2 - Install required dependencies
+- [X] Epic 1.3 - Set up Express server and static file serving
+- [X] Epic 1.4 - Refactor & clean up code for this phase
+- [X] Epic 1.5 - Code Cleanup Tasks
 
-- [X] Code Cleanup Tasks
-  - [X] Route Organization
-    - [X] Move API routes to separate files in routes directory
-    - [X] Create route handlers for sets and cards
-    - [X] Update server.js to use route modules
-  - [X] Error Handling
-    - [X] Create centralized error handling middleware
-    - [X] Implement consistent error response format
-    - [X] Add error logging
-  - [X] Configuration Management
-    - [X] Create config.js for environment variables
-    - [X] Move port and other settings to config
-    - [X] Add environment-specific configurations
-  - [X] Data Initialization
-    - [X] Move default data to separate file
-    - [X] Create data initialization utility
-    - [X] Add data validation on startup
+### **Phase 2: Database and API Implementation (2-3 days)**
+- [X] Epic 2.1 - Set up local JSON file storage
+- [X] Epic 2.2 - Complete data migration
+- [X] Epic 2.3 - Implement core API endpoints
+- [X] Epic 2.4 - Implement additional API endpoints
+- [X] Epic 2.5 - Basic testing
 
-### Phase 2: Database and API Implementation (2-3 days)
-- [X] Set up local JSON file storage
-  - [X] Create initial database structure
-  - [X] Implement data validation
-  - [X] Add automatic data file initialization
-- [X] Complete data migration
-  - [X] Create migration function
-  - [X] Implement localStorage to API migration
-  - [X] Add automatic migration on first app load
-  - [X] Implement localStorage clearing after migration
-  - [X] Add migration error handling
-- [X] Implement core API endpoints
-  - [X] Create card sets endpoints:
-    - [X] GET /api/sets
-    - [X] POST /api/sets
-    - [X] GET /api/sets/:id
-    - [X] PUT /api/sets/:id
-    - [X] DELETE /api/sets/:id
-  - [X] Create cards endpoints:
-    - [X] GET /api/sets/:id/cards
-    - [X] POST /api/sets/:id/cards
-    - [X] GET /api/sets/:id/cards/:cardId
-    - [X] PUT /api/sets/:id/cards/:cardId
-    - [X] DELETE /api/sets/:id/cards/:cardId
-  - [X] Add error handling and input validation
-- [X] Implement additional API endpoints
-  - [X] Statistics endpoints:
-    - [X] GET /api/statistics
-    - [X] POST /api/statistics/session
-  - [X] Settings endpoints:
-    - [X] GET /api/settings
-    - [X] PUT /api/settings
-- [X] Basic testing
-  - [X] Test core CRUD operations
-  - [X] Verify data persistence
-  - [X] Document API endpoints
+### **Phase 3: Github Integration**
+- [X] Epic 3.1 - Learn Git Basics
+- [X] Epic 3.2 - GitHub Account Setup
+- [X] Epic 3.3 - Project Repository Setup
+- [X] Epic 3.4 - Basic Workflow Setup
+- [X] Epic 3.5 - Documentation
 
-### Phase 2.5: Github Integration
-- [X] Learn Git Basics
-  - [X] Install Git on local machine
-  - [X] Configure Git with user name and email
-  - [X] Learn basic Git commands
-- [X] GitHub Account Setup
-  - [X] Verify GitHub account is active
-  - [X] Set up authentication
-  - [X] Learn GitHub web interface basics
-- [X] Project Repository Setup
-  - [X] Create new repository on GitHub
-  - [X] Initialize local repository
-  - [X] Create .gitignore file for Node.js project
-  - [X] Make first commit
-  - [X] Push to GitHub
-- [X] Basic Workflow Setup
-  - [X] Create main branch
-  - [X] Document development workflow in README.md
-- [X] Documentation
-  - [X] Create README.md with project description
-  - [X] Add setup instructions
-  - [X] Document basic Git commands in README.md
-
-### Phase 3.0: Frontend Integration (2-3 days)
-- [X] Update frontend to use new API endpoints
-  - [X] Create new `frontend/js/api.js` for API calls
-  - [X] Implement all CRUD operations for sets and cards
-  - [X] Add error handling and loading states
-  - [X] Add retry logic for failed requests
-  - [X] Remove all localStorage usage
-  - [X] Replace with API client calls
-  - [X] Update event handlers for new API structure
-  - [X] Add loading indicators during API calls
-- [ ] Enhance UI/UX
-  - [X] Implement three-column layout (col-left, col-main, col-right)
-  - [ ] Fix card layout problem on page reflows
-  - [ ] Card reordering (Drag n Drop)
-  - [ ] add back missing show hide buttons (or something similar)
-  - [ ] add back set delete button
-  - [ ] add back highlight active set (it breaks)
-  - [ ] Implement card animations and transitions
+### **Phase 4: CSS Reorganization Plan (2-3 days)**
+- [X] Epic 4.1 - Update frontend to use new API endpoints
+- [X] Epic 4.2 - Layout.css (First File)
+- [X] Epic 4.3 - Components.css (New File)
+- [X] Epic 4.4 - Base.css (New File)
+- [ ] Epic 4.5 - Documentation
+- [ ] Epic 4.6 - Cleanup
 
 
 
 
 
 
+## Phases - Next
 
-
-### Phase 3.1: Responsive Design Specifications
+### **Phase 5: Responsive Design Specifications**
 #### Implementation Tasks
-- [ ] Panel Width Adjustments
+- [ ] Epic 5.1 - Panel Width Adjustments
   - [ ] Define minimum panel width (260px)
   - [ ] Define maximum panel width
   - [ ] Implement flexible width calculations
   - [ ] Add width constraints to prevent layout breaking
 
-- [ ] Grid System Implementation
+- [ ] Epic 5.2 - Grid System Implementation
   - [ ] Set up CSS Grid for three-column layout
   - [ ] Define grid template areas
   - [ ] Implement grid gap and spacing
   - [ ] Add grid auto-flow rules
 
-- [ ] Content Scaling
+- [ ] Epic 5.3 - Content Scaling
   - [ ] Implement text scaling rules
   - [ ] Add image scaling constraints
   - [ ] Define minimum content widths
   - [ ] Set maximum content widths
 
-- [ ] Window Resize Handling
+- [ ] Epic 5.4 - Window Resize Handling
   - [ ] Add resize event listeners
   - [ ] Implement smooth transitions
   - [ ] Add debounce for performance
   - [ ] Handle panel visibility during resize
 
-- [ ] Testing and Validation
+- [ ] Epic 5.5 - Testing and Validation
   - [ ] Test at minimum width (13" laptop)
   - [ ] Test at maximum width (standard desktop)
   - [ ] Test panel toggling during resize
@@ -246,43 +145,44 @@ flashcard-app/
 
 
 
-### Phase 3.2: Error Handling Specifications
-- **API Error Scenarios**:
+### **Phase 6: Error Handling Specifications**
+
+- [ ] Epic 6.1 - API Error Scenarios:
   - [ ] Network failures during API calls
   - [ ] Server unavailability
   - [ ] Invalid API responses
   - [ ] Timeout handling
   - [ ] Rate limiting (if implemented)
 
-- **Data Validation Errors**:
+- [ ] Epic 6.2 - Data Validation Errors:
   - [ ] Empty required fields
   - [ ] Invalid data types
   - [ ] Missing required data
   - [ ] Data format violations
   - [ ] Duplicate entries
 
-- **User Interface Errors**:
+- [ ] Epic 6.3 - User Interface Errors:
   - [ ] Form validation errors
   - [ ] Invalid user inputs
   - [ ] Concurrent operation conflicts
   - [ ] State management errors
   - [ ] UI update failures
 
-- **Data Integrity Errors**:
+- [ ] Epic 6.4 - Data Integrity Errors:
   - [ ] Corrupted data files
   - [ ] Missing data files
   - [ ] Invalid JSON format
   - [ ] Data version mismatches
   - [ ] Backup/restore failures
 
-- **Error Recovery**:
+- [ ] Epic 6.5 - Error Recovery:
   - [ ] Automatic retry logic
   - [ ] User recovery options
   - [ ] Error logging
   - [ ] State recovery
   - [ ] Data consistency checks
 
-- **Error Display**:
+- [ ] Epic 6.6 - Error Display:
   - [ ] Clear error messages
   - [ ] User-friendly notifications
   - [ ] Error location indication
@@ -291,15 +191,15 @@ flashcard-app/
 
 
 
-### Phase 3.3: Loading State Specifications
-- **Initial Application Load**:
+### **Phase 7: Loading State Specifications**
+- [ ] Epic 7.1 - Initial Application Load:
   - [ ] App startup loading indicator
   - [ ] Initial data fetch progress
   - [ ] Panel initialization sequence
   - [ ] Default state restoration
   - [ ] Error state if initial load fails
 
-- **Data Loading States**:
+- [ ] Epic 7.2 - Data Loading States:
   - [ ] Card set list loading
   - [ ] Individual card set loading
   - [ ] Card list loading
@@ -307,7 +207,7 @@ flashcard-app/
   - [ ] Statistics loading
   - [ ] Completed cards loading
 
-- **Operation Loading States**:
+- [ ] Epic 7.3 - Operation Loading States:
   - [ ] Creating new card set
   - [ ] Creating new card
   - [ ] Updating card set
@@ -317,7 +217,7 @@ flashcard-app/
   - [ ] Saving settings
   - [ ] Updating statistics
 
-- **UI State Transitions**:
+- [ ] Epic 7.4 - UI State Transitions:
   - [ ] Panel toggle loading
   - [ ] Card flip animation
   - [ ] Set selection transition
@@ -325,14 +225,14 @@ flashcard-app/
   - [ ] Form submission states
   - [ ] Button state changes
 
-- **Loading Indicators**:
+- [ ] Epic 7.5 - Loading Indicators:
   - [ ] Progress indicators
   - [ ] Loading spinners
   - [ ] Skeleton screens
   - [ ] Disabled states
   - [ ] Visual feedback
 
-- **Error States During Load**:
+- [ ] Epic 7.6 - Error States During Load:
   - [ ] Failed data fetch
   - [ ] Operation timeout
   - [ ] Network issues
@@ -341,36 +241,37 @@ flashcard-app/
 
 
 
-### Phase 3.4: Data Persistence Specifications
-- **Storage Operations**:
+### **Phase 8: Data Persistence Specifications**
+
+- [ ] Epic 8.1 - Storage Operations:
   - [ ] Card set creation persistence
   - [ ] Card creation persistence
   - [ ] Settings updates persistence
   - [ ] Statistics updates persistence
   - [ ] Study session data persistence
 
-- **Data Integrity**:
+- [ ] Epic 8.2 - Data Integrity:
   - [ ] Data file format validation
   - [ ] Data structure validation
   - [ ] Required field validation
   - [ ] Data type validation
   - [ ] Relationship validation (sets to cards)
 
-- **Recovery Scenarios**:
+- [ ] Epic 8.3 - Recovery Scenarios:
   - [ ] Application restart data recovery
   - [ ] Browser refresh data recovery
   - [ ] Error recovery with data preservation
   - [ ] Backup file restoration
   - [ ] Data migration handling
 
-- **Concurrent Operations**:
+- [ ] Epic 8.4 - Concurrent Operations:
   - [ ] Multiple card updates
   - [ ] Multiple set updates
   - [ ] Settings changes during study
   - [ ] Statistics updates during study
   - [ ] Panel state persistence
 
-- **Data Consistency**:
+- [ ] Epic 8.5 - Data Consistency:
   - [ ] Set-card relationships
   - [ ] Settings synchronization
   - [ ] Statistics accuracy
@@ -379,29 +280,29 @@ flashcard-app/
 
 
 
-### Phase 3.5: Documentation Specifications
-- **Code Documentation**:
+### **Phase 9: Documentation Specifications**
+- [ ] Epic 9.1 - Code Documentation:
   - [ ] API endpoint documentation
   - [ ] Function documentation
   - [ ] Event handler documentation
   - [ ] State management documentation
   - [ ] Component documentation
 
-- **User Documentation**:
+- [ ] Epic 9.2 - User Documentation:
   - [ ] Feature usage guides
   - [ ] UI element descriptions
   - [ ] Keyboard shortcuts
   - [ ] Common workflows
   - [ ] Troubleshooting guides
 
-- **Technical Documentation**:
+- [ ] Epic 9.3 - Technical Documentation:
   - [ ] Architecture overview
   - [ ] Data flow diagrams
   - [ ] Component relationships
   - [ ] State management flow
   - [ ] Error handling flow
 
-- **Maintenance Documentation**:
+- [ ] Epic 9.4 - Maintenance Documentation:
   - [ ] Setup instructions
   - [ ] Development workflow
   - [ ] Testing procedures
@@ -410,22 +311,23 @@ flashcard-app/
 
 
 
-### Phase 3.6: Frontend Change Documentation
-- **API Integration Changes**:
+### **Phase 10: Frontend Change Documentation**
+
+- [ ] Epic 10.1 - API Integration Changes:
   - [ ] Document removal of localStorage
   - [ ] Document new API client implementation
   - [ ] Document event handler updates
   - [ ] Document state management changes
   - [ ] Document error handling additions
 
-- **UI Component Changes**:
+- [ ] Epic 10.2 - UI Component Changes:
   - [ ] Document panel structure changes
   - [ ] Document loading indicator additions
   - [ ] Document error message displays
   - [ ] Document form handling updates
   - [ ] Document button state management
 
-- **Code Structure Changes**:
+- [ ] Epic 10.3 - Code Structure Changes:
   - [ ] Document new file organization
   - [ ] Document module dependencies
   - [ ] Document function changes
@@ -434,77 +336,94 @@ flashcard-app/
 
 
 
+### **Phase 11: Core Features and Testing (2-3 days)**
 
-
-
-### Phase 4: Core Features and Testing (2-3 days)
-- [ ] Implement study features
+- [ ] Epic 11.1 - Implement study features
   - [ ] Add card completion tracking
   - [ ] Implement study statistics
   - [ ] Add progress indicators
   - [ ] Test study functionality
   - [ ] Document study features
-- [ ] Add import/export functionality
+
+- [ ] Epic 11.2 - Add import/export functionality
   - [ ] Create import UI with file upload and text paste
   - [ ] Implement structured text parsing (CSV/TSV)
   - [ ] Add preview functionality
   - [ ] Implement export features
   - [ ] Test import/export functionality
   - [ ] Document import/export features
-- [ ] Add local settings
+
+- [ ] Epic 11.3 - Add local settings
   - [ ] Implement user preferences
   - [ ] Add theme options
   - [ ] Save last active set
   - [ ] Test settings functionality
   - [ ] Document settings features
-- [ ] Implement backup strategy
+
+- [ ] Epic 11.4 - Implement backup strategy
   - [ ] Add automatic backups
   - [ ] Create restore functionality
   - [ ] Test backup/restore
   - [ ] Document backup process
-- [ ] Performance optimization
+
+- [ ] Epic 11.5 - Performance optimization
   - [ ] Add request caching
   - [ ] Optimize file operations
   - [ ] Add request batching
   - [ ] Test performance improvements
   - [ ] Document optimizations
 
-### Phase 5: Advanced Features (ongoing)
-- [ ] Implement spaced repetition
+
+
+### **Phase 12: Advanced Features (ongoing)**
+
+- [ ] Epic 12.1 - Implement spaced repetition
   - [ ] Add difficulty tracking
   - [ ] Implement review scheduling
   - [ ] Add performance analytics
   - [ ] Test spaced repetition
   - [ ] Document algorithm
-- [ ] Add search and filtering
+
+- [ ] Epic 12.2 - Add search and filtering
   - [ ] Implement card search
   - [ ] Add tag support
   - [ ] Create advanced filters
   - [ ] Test search functionality
   - [ ] Document search features
-- [ ] Create custom study modes
+
+- [ ] Epic 12.3 - Create custom study modes
   - [ ] Add timed study sessions
   - [ ] Implement random order
   - [ ] Add custom card ordering
   - [ ] Test study modes
   - [ ] Document modes
 
-### Phase 6: Documentation and Cleanup (ongoing)
-- [ ] Maintain documentation
+
+
+### **Phase 13: Documentation and Cleanup (ongoing)**
+- [ ] Epic 13.1 - Maintain documentation
   - [ ] Keep API documentation up to date
   - [ ] Update setup instructions
   - [ ] Document new features
   - [ ] Add troubleshooting guides
-- [ ] Code cleanup
+
+- [ ] Epic 13.2 - Code cleanup
   - [ ] Remove unused files
   - [ ] Remove commented-out code
   - [ ] Update outdated comments
   - [ ] Standardize code style
-- [ ] Version control
+
+- [ ] Epic 13.3 - Version control
   - [ ] Set up development branch
   - [ ] Learn pull request workflow
   - [ ] Practice basic collaboration workflow
   - [ ] Document Git workflow
+
+
+
+
+
+
 
 ## Technical Implementation
 
