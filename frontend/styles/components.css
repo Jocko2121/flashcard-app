@@ -4,8 +4,8 @@
 
 /* Card Set Component */
 .card-set {
-    background: #fff;
-    border: 2px solid #908cff;
+    background: var(--panel-bg);
+    border: 2px solid var(--card-border);
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 16px;
@@ -17,25 +17,25 @@
 }
 
 .card-set.active {
-    background: #e0e7ff;
-    border-color: #4f46e5;
+    background: var(--card-active-bg);
+    border-color: var(--card-active-border);
 }
 
 .card-set:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border-color: #908cff;
+    border-color: var(--card-border);
 }
 
 .card-set h3 {
     margin: 0 0 8px 0;
-    color: #333;
+    color: var(--text-primary);
     font-size: 1.1rem;
 }
 
 .card-set p {
     margin: 0;
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
@@ -45,7 +45,7 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 32px;
-    background: #fff;
+    background: var(--panel-bg);
     border-radius: 12px;
     box-shadow: var(--header-shadow);
     padding: 15px 40px;
@@ -61,7 +61,7 @@
 
 .main-header p {
     margin: 8px 0 0 0;
-    color: #6c757d;
+    color: var(--text-muted);
 }
 
 .main-header-content {
@@ -72,8 +72,8 @@
 .main-header .add-flashcard-btn {
     height: 48px;
     font-size: 1rem;
-    background: #908cff;
-    color: #fff;
+    background: var(--btn-special-bg);
+    color: var(--text-light);
     border-radius: 8px;
     border: none;
     padding: 0 32px;
@@ -82,7 +82,7 @@
 }
 
 .main-header .add-flashcard-btn:hover {
-    background: #6c63ff;
+    background: var(--btn-special-hover);
 }
 
 /* Card List Container */
@@ -115,8 +115,8 @@
     height: 40px;
     border: none;
     border-radius: 50%;
-    background: #4a90e2;
-    color: white;
+    background: var(--btn-primary-bg);
+    color: var(--text-light);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -129,14 +129,14 @@
 .toggle-sets-panel:hover,
 .toggle-completed-btn:hover,
 .toggle-completed-panel:hover {
-    background: #357abd;
+    background: var(--btn-primary-hover);
 }
 
 /* Undo Bar Component */
 .undo-bar {
-    background: #e3f0fb;
-    color: #222;
-    border: 1px solid #b6d4ef;
+    background: var(--topbar-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--topbar-border);
     border-radius: 8px;
     padding: 16px 24px;
     margin-bottom: 16px;
@@ -147,8 +147,8 @@
 }
 
 .undo-bar button {
-    background: #4a90e2;
-    color: white;
+    background: var(--btn-primary-bg);
+    color: var(--text-light);
     border: none;
     border-radius: 4px;
     padding: 8px 16px;
@@ -157,12 +157,12 @@
 }
 
 .undo-bar button:hover {
-    background: #357abd;
+    background: var(--btn-primary-hover);
 }
 
 /* Flashcard Component */
 .flashcard {
-    background: white;
+    background: var(--panel-bg);
     border-radius: 12px;
     box-shadow: var(--header-shadow);
     padding: 32px;
@@ -176,13 +176,13 @@
 
 .flashcard h3 {
     margin: 0 0 16px 0;
-    color: #333;
+    color: var(--text-primary);
     font-size: 1.2rem;
 }
 
 .flashcard p {
     margin: 0;
-    color: #666;
+    color: var(--text-secondary);
     font-size: 1rem;
     line-height: 1.5;
 }
@@ -199,25 +199,23 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.9rem;
-    transition: background 0.2s;
+    color: var(--text-light);
 }
 
 .flashcard .controls button.complete {
-    background: #4caf50;
-    color: white;
+    background: var(--btn-success-bg);
 }
 
 .flashcard .controls button.complete:hover {
-    background: #388e3c;
+    background: var(--btn-success-hover);
 }
 
 .flashcard .controls button.delete {
-    background: #f44336;
-    color: white;
+    background: var(--btn-danger-bg);
 }
 
 .flashcard .controls button.delete:hover {
-    background: #d32f2f;
+    background: var(--btn-danger-hover);
 }
 
 /* Form Components */

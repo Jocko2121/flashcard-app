@@ -18,10 +18,35 @@
     --panel-shadow: 2px 0 8px rgba(0,0,0,0.04);
     --header-shadow: 0 4px 16px rgba(0,0,0,0.06);
     
-    /* Colors */
-    --bg-color: #f7f8fa;
-    --panel-bg: #ffffff;
-    --border-color: #eee;
+    /* Base Colors */
+    --bg-color: #f7f8fa;      /* Main background color */
+    --panel-bg: #ffffff;      /* Panel background color */
+    --border-color: #eee;     /* Border color for panels and dividers */
+    
+    /* Text Colors */
+    --text-primary: #333;     /* Primary text color */
+    --text-secondary: #666;   /* Secondary text color */
+    --text-muted: #6c757d;    /* Muted text color */
+    --text-light: #ffffff;    /* Light text (for dark backgrounds) */
+    
+    /* Button Colors */
+    --btn-primary-bg: #4a90e2;    /* Primary button background */
+    --btn-primary-hover: #357abd; /* Primary button hover state */
+    --btn-special-bg: #908cff;    /* Special action button */
+    --btn-special-hover: #6c63ff; /* Special action hover state */
+    --btn-success-bg: #4caf50;    /* Success button background */
+    --btn-success-hover: #388e3c; /* Success button hover state */
+    --btn-danger-bg: #f44336;     /* Danger button background */
+    --btn-danger-hover: #d32f2f;  /* Danger button hover state */
+    
+    /* Card Colors */
+    --card-border: #908cff;       /* Card set border */
+    --card-active-bg: #e0e7ff;    /* Active card set background */
+    --card-active-border: #4f46e5; /* Active card set border */
+    
+    /* Top Bar Colors */
+    --topbar-bg: #e3f0fb;         /* Top bar background */
+    --topbar-border: #b6d4ef;     /* Top bar border */
 }
 
 /* Core Layout Classes */
@@ -124,7 +149,7 @@
 .top-bar {
     width: 100%;
     /* TODO: Move these colors to theme variables when implementing theming system */
-    background: #e3f0fb;
+    background: var(--topbar-bg);
     padding: 0 24px;
     height: var(--top-bar-height);
     display: flex;
@@ -132,7 +157,7 @@
     justify-content: flex-end;
     box-sizing: border-box;
     gap: 10px;
-    border-bottom: 1px solid #b6d4ef;
+    border-bottom: 1px solid var(--topbar-border);
     position: relative;
     z-index: 10;
 } 
