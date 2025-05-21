@@ -14,8 +14,8 @@
   <body>
     <div class="top-bar">
       <div class="controls">
-        <button id="settings-toggle" class="settings-toggle" title="Toggle Sidebar">⚙️</button>
-        <button id="toggle-completed" class="toggle-completed-btn" title="Toggle Completed Cards">✓</button>
+        <button id="toggle-sets-panel" class="toggle-sets-panel" title="Toggle Card Sets">⚙️</button>
+        <button id="toggle-completed-panel" class="toggle-completed-panel" title="Toggle Completed Cards">✓</button>
       </div>
     </div>
     <div class="layout-3col">
@@ -73,8 +73,8 @@
     <div class="settings-panel">
         <h3>Settings</h3>
         <div class="setting-item">
-            <label for="toggle-completed">Show Completed Cards</label>
-            <input type="checkbox" id="toggle-completed" checked>
+            <label for="show-completed">Show Completed Cards</label>
+            <input type="checkbox" id="show-completed" checked>
         </div>
     </div>
     <script>
@@ -154,8 +154,9 @@
             const layout3col = document.querySelector('.layout-3col');
             const colLeft = document.getElementById('col-left');
             const colRight = document.getElementById('col-right');
-            const settingsToggle = document.getElementById('settings-toggle');
-            const toggleCompleted = document.getElementById('toggle-completed');
+            const toggleSetsPanel = document.getElementById('toggle-sets-panel');
+            const toggleCompletedPanel = document.getElementById('toggle-completed-panel');
+            const showCompleted = document.getElementById('show-completed');
             const cardSetsList = document.getElementById('card-sets-list');
             const colRightCardsContainer = colRight.querySelector('.panel-content');
             let currentSetId = null;
@@ -469,8 +470,8 @@
             }
             // Initialize event listeners
             function initializeEventListeners() {
-                if (settingsToggle && colLeft) {
-                    settingsToggle.addEventListener('click', () => {
+                if (toggleSetsPanel && colLeft) {
+                    toggleSetsPanel.addEventListener('click', () => {
                         colLeft.classList.toggle('panel-visible');
                         if (colLeft.classList.contains('panel-visible')) {
                             loadCardSets();
@@ -478,8 +479,8 @@
                         updateGrid();
                     });
                 }
-                if (toggleCompleted && colRight) {
-                    toggleCompleted.addEventListener('click', () => {
+                if (toggleCompletedPanel && colRight) {
+                    toggleCompletedPanel.addEventListener('click', () => {
                         colRight.classList.toggle('panel-visible');
                         if (colRight.classList.contains('panel-visible')) {
                             loadDoneCards();

@@ -108,7 +108,9 @@
 }
 
 .settings-toggle,
-.toggle-completed-btn {
+.toggle-sets-panel,
+.toggle-completed-btn,
+.toggle-completed-panel {
     width: 40px;
     height: 40px;
     border: none;
@@ -124,7 +126,9 @@
 }
 
 .settings-toggle:hover,
-.toggle-completed-btn:hover {
+.toggle-sets-panel:hover,
+.toggle-completed-btn:hover,
+.toggle-completed-panel:hover {
     background: #357abd;
 }
 
