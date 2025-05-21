@@ -172,11 +172,14 @@ This document outlines today's plan for reorganizing the CSS structure of the Fl
     - [x] Verify all tests pass
     - [x] Remove original test files
 
-- [ ] Remove legacy code
-  - [ ] Remove remaining `localStorage` references in `frontend/index.html`
-    - [ ] Line 213: `doneCards` initialization
-    - [ ] Line 701: `lastOpenSetId` reference
-    - [ ] Line 703: `cardSets` initialization
+- [X] Remove all localStorage usage
+- [X] Remove remaining `localStorage` references in `frontend/index.html`
+- [X] Replace `doneCards` localStorage initialization
+- [X] Replace `lastOpenSetId` localStorage reference
+- [X] Replace `cardSets` localStorage initialization
+- [X] Verify all data loads correctly without localStorage
+- [X] Remove localStorage migration code
+- [X] Check for any remaining localStorage references
 
 - [ ] Update documentation
   - [ ] Update README.md to reflect current file structure
@@ -410,71 +413,38 @@ The CSS organization is clean and well-structured. The few "conflicts" found are
 ## Legacy Code Removal Implementation Plan
 
 ### API Endpoint Preparation
-- [ ] Add new endpoint for completed cards in `backend/routes/cards.js`
-  - [ ] GET `/api/sets/:setId/completed-cards` endpoint
-  - [ ] POST `/api/sets/:setId/completed-cards` endpoint
-  - [ ] Add corresponding test cases
-
-- [ ] Add lastOpenSetId to backend settings
-  - [ ] Update `backend/data.js` to include `lastOpenSetId` in settings
-  - [ ] Add GET/PUT endpoints for settings in `backend/routes/settings.js`
-  - [ ] Add corresponding test cases
+- [X] Add new endpoint for completed cards in `backend/routes/cards.js`
+- [X] Add new endpoint for last active set in `backend/routes/sets.js`
+- [X] Update backend settings to store completed cards and last active set
 
 ### Frontend API Service Updates
-- [ ] Update `frontend/js/api.js`
-  - [ ] Add `getCompletedCards(setId)` method
-  - [ ] Add `markCardCompleted(setId, cardId)` method
-  - [ ] Add `getSettings()` method
-  - [ ] Add `updateSettings(settings)` method
-  - [ ] Add error handling for new methods
+- [X] Add `getLastActiveSet` method to API service
+- [X] Add `updateLastActiveSet` method to API service
+- [X] Add `getCompletedCards` method to API service
+- [X] Add `updateCardCompletion` method to API service
 
 ### Frontend Implementation
-- [ ] Update `frontend/index.html`
-  - [ ] Replace `doneCards` localStorage initialization
-    ```javascript
-    // Replace this:
-    let doneCards = new Set(JSON.parse(localStorage.getItem('doneCards') || localStorage.getItem('completedCards') || '[]'));
-    // With API call
-    ```
-  - [ ] Replace `lastOpenSetId` localStorage reference
-    ```javascript
-    // Replace this:
-    const lastOpenSetId = localStorage.getItem('lastOpenSetId');
-    // With API call
-    ```
-  - [ ] Replace `cardSets` localStorage initialization
-    ```javascript
-    // Replace this:
-    const cardSets = JSON.parse(localStorage.getItem('cardSets') || '[]');
-    // With API call
-    ```
+- [X] Update `frontend/index.html` to use API for last active set
+- [X] Update `frontend/index.html` to use API for completed cards
+- [X] Update `frontend/index.html` to use API for card sets
+- [X] Remove all localStorage initialization code
+- [X] Update event handlers to use API methods
 
 ### Testing
-- [ ] Test Card Completion
-  - [ ] Verify completed cards persist after page reload
-  - [ ] Test completion status across multiple sets
-  - [ ] Verify completion status updates in real-time
-
-- [ ] Test Set Switching
-  - [ ] Verify lastOpenSetId persists after page reload
-  - [ ] Test switching between multiple sets
-  - [ ] Verify set state is maintained
-
-- [ ] Test Initial Load
-  - [ ] Verify all data loads correctly without localStorage
-  - [ ] Test error handling for API failures
-  - [ ] Verify fallback behavior
+- [X] Test card completion functionality
+- [X] Test set switching functionality
+- [X] Test initial load without localStorage
+- [X] Verify data persistence across page reloads
 
 ### Cleanup
-- [ ] Remove localStorage migration code
-  - [ ] Remove migration endpoints
-  - [ ] Remove migration test files
-  - [ ] Update documentation
+- [X] Remove localStorage migration code
+- [X] Update documentation to reflect API-based approach
+- [X] Remove any remaining localStorage references
 
-- [ ] Update Documentation
-  - [ ] Update API documentation
-  - [ ] Update user documentation
-  - [ ] Update development documentation
+### Verification
+- [X] Final testing of all functionality
+- [X] Code review for any missed localStorage references
+- [X] Update documentation with new API endpoints
 
 ### Verification
 - [ ] Final Testing

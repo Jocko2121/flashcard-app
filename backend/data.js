@@ -191,6 +191,19 @@ function resetData() {
     return writeData(blankData);
 }
 
+// Get last active set
+function getLastActiveSet() {
+    const data = readData();
+    return data.settings.lastActiveSet;
+}
+
+// Update last active set
+function updateLastActiveSet(setId) {
+    const data = readData();
+    data.settings.lastActiveSet = setId;
+    return writeData(data);
+}
+
 module.exports = {
     getAllSets,
     getSetById,
@@ -202,5 +215,7 @@ module.exports = {
     updateCard,
     deleteCard,
     updateSet,
-    resetData
+    resetData,
+    getLastActiveSet,
+    updateLastActiveSet
 }; 

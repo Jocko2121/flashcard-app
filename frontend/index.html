@@ -195,6 +195,21 @@
                     }
                     throw error; // Other error
                 }
+            },
+            async getLastActiveSet() {
+                const response = await fetch('/api/sets/settings/last-active-set');
+                if (!response.ok) throw new Error('Failed to get last active set');
+                const data = await response.json();
+                return data.lastActiveSet;
+            },
+            async updateLastActiveSet(setId) {
+                const response = await fetch('/api/sets/settings/last-active-set', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ setId })
+                });
+                if (!response.ok) throw new Error('Failed to update last active set');
+                return await response.json();
             }
         };
 
@@ -211,7 +226,6 @@
             const cardSetsList = document.getElementById('card-sets-list');
             const colRightCardsContainer = colRight.querySelector('.panel-content');
             let currentSetId = null;
-            let doneCards = new Set(JSON.parse(localStorage.getItem('doneCards') || localStorage.getItem('completedCards') || '[]'));
             // Inline Undo logic
             let undoTimeout = null;
             let lastDeletedCard = null;
@@ -263,6 +277,19 @@
                         const defaultSet = await API.createSet('My First Set', 'Start adding flashcards to this set');
                         cardSets.push(defaultSet);
                     }
+                    
+                    // Get last active set
+                    const lastActiveSet = await API.getLastActiveSet();
+                    if (lastActiveSet) {
+                        currentSetId = lastActiveSet;
+                        const lastSet = cardSets.find(set => String(set.id) === String(lastActiveSet));
+                        if (lastSet) {
+                            document.getElementById('current-set-name').textContent = lastSet.name;
+                            document.getElementById('current-set-description').textContent = lastSet.description || '';
+                            loadCards(lastSet.id);
+                        }
+                    }
+                    
                     cardSets.forEach(set => {
                         const setElement = document.createElement('div');
                         setElement.className = 'card-set' + (set.id === currentSetId ? ' active' : '');
@@ -284,6 +311,7 @@
                             // Only trigger set selection if not clicking the edit button
                             if (e.target.classList.contains('edit-set-btn')) return;
                             currentSetId = set.id;
+                            await API.updateLastActiveSet(set.id);
                             await loadCards(set.id);
                             document.getElementById('current-set-name').textContent = set.name;
                             document.getElementById('current-set-description').textContent = set.description || '';
@@ -698,18 +726,10 @@
             // Open sidebar by default
             colLeft.classList.add('panel-visible');
             updateGrid();
-            // Auto-select last open set if available
-            const lastOpenSetId = localStorage.getItem('lastOpenSetId');
-            if (lastOpenSetId) {
-                const cardSets = JSON.parse(localStorage.getItem('cardSets') || '[]');
-                const lastSet = cardSets.find(set => set.id === lastOpenSetId);
-                if (lastSet) {
-                    currentSetId = lastSet.id;
-                    document.getElementById('current-set-name').textContent = lastSet.name;
-                    document.getElementById('current-set-description').textContent = lastSet.description || '';
-                    loadCards(lastSet.id);
-                    loadCardSets(); // Ensure .active is applied
-                }
+            // Load the current set
+            if (currentSetId) {
+                loadCards(currentSetId);
+                loadCardSets(); // Ensure .active is applied
             }
             // Make toggleCardCompletion available globally
             window.toggleCardCompletion = async function(cardId) {

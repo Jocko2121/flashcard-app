@@ -5,8 +5,7 @@ const { ValidationError, NotFoundError } = require('../middleware/error-handler'
 
 // Get all sets
 router.get('/', (req, res) => {
-    const sets = data.getAllSets();
-    res.json(sets);
+    res.json(data.getAllSets());
 });
 
 // Get set by ID
@@ -21,16 +20,24 @@ router.get('/:id', (req, res, next) => {
 // Create new set
 router.post('/', (req, res, next) => {
     const { name, description } = req.body;
-    
     if (!name) {
         return next(new ValidationError('Set name is required'));
     }
-
     const newSet = data.addSet({ name, description });
     if (!newSet) {
         return next(new Error('Failed to create set'));
     }
     res.status(201).json(newSet);
+});
+
+// Update set
+router.put('/:id', (req, res, next) => {
+    const { name, description } = req.body;
+    const updatedSet = data.updateSet(req.params.id, { name, description });
+    if (!updatedSet) {
+        return next(new NotFoundError(`Set with ID ${req.params.id} not found`));
+    }
+    res.json(updatedSet);
 });
 
 // Delete set
@@ -39,19 +46,26 @@ router.delete('/:id', (req, res, next) => {
     if (!success) {
         return next(new NotFoundError(`Set with ID ${req.params.id} not found`));
     }
-    res.status(204).end();
+    res.status(204).send();
 });
 
-// Add PUT endpoint for updating sets
-router.put('/:id', (req, res, next) => {
-    const { name, description } = req.body;
-    const setId = req.params.id;
+// Get last active set
+router.get('/settings/last-active-set', (req, res) => {
+    const lastActiveSet = data.getLastActiveSet();
+    res.json({ lastActiveSet });
+});
 
-    const updatedSet = data.updateSet(setId, { name, description });
-    if (!updatedSet) {
-        return next(new NotFoundError(`Set with ID ${setId} not found`));
+// Update last active set
+router.post('/settings/last-active-set', (req, res, next) => {
+    const { setId } = req.body;
+    if (!setId) {
+        return next(new ValidationError('Set ID is required'));
     }
-    res.json(updatedSet);
+    const success = data.updateLastActiveSet(setId);
+    if (!success) {
+        return next(new Error('Failed to update last active set'));
+    }
+    res.json({ lastActiveSet: setId });
 });
 
 module.exports = router; 

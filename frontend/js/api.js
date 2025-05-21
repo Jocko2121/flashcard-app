@@ -72,5 +72,23 @@ const API = {
             method: 'DELETE'
         });
         if (!response.ok) throw new Error('Failed to delete card');
+    },
+
+    // Settings
+    async getLastActiveSet() {
+        const response = await fetch('/api/sets/settings/last-active-set');
+        if (!response.ok) throw new Error('Failed to get last active set');
+        const data = await response.json();
+        return data.lastActiveSet;
+    },
+
+    async updateLastActiveSet(setId) {
+        const response = await fetch('/api/sets/settings/last-active-set', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ setId })
+        });
+        if (!response.ok) throw new Error('Failed to update last active set');
+        return response.json();
     }
 }; 
