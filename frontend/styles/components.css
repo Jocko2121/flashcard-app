@@ -48,7 +48,7 @@
     background: #fff;
     border-radius: 12px;
     box-shadow: var(--header-shadow);
-    padding: 32px 40px;
+    padding: 15px 40px;
     position: relative;
     z-index: 1;
     flex-shrink: 0;
@@ -214,4 +214,22 @@
 
 .flashcard .controls button.delete:hover {
     background: #d32f2f;
+}
+
+/* Form Components */
+.form-container {
+    padding: 10px;
+}
+
+.form-container.hidden {
+    display: none;
+}
+
+.form-container input[type="text"] {
+    width: 90%;
+    margin-bottom: 5px;
+}
+
+.form-container button {
+    margin-right: 5px;
 } 

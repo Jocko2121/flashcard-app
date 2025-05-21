@@ -25,9 +25,9 @@
           <h2>Card Sets</h2>
           <button id="new-set-btn" class="new-set-btn" type="button">New Set</button>
         </div>
-        <form id="new-set-form" style="display:none; padding: 10px;">
-          <input id="new-set-name" type="text" placeholder="Set Name" required style="width: 90%; margin-bottom: 5px;" />
-          <input id="new-set-desc" type="text" placeholder="Description" style="width: 90%; margin-bottom: 5px;" />
+        <form id="new-set-form" class="form-container hidden">
+          <input id="new-set-name" type="text" placeholder="Set Name" required />
+          <input id="new-set-desc" type="text" placeholder="Description" />
           <button type="submit">Add Set</button>
           <button type="button" id="cancel-new-set">Cancel</button>
         </form>
@@ -46,9 +46,9 @@
           </div>
           <button id="add-flashcard" class="add-flashcard-btn" type="button">Add Flashcard</button>
         </div>
-        <form id="add-flashcard-form" style="display:none; padding: 10px;">
-          <input id="flashcard-question" type="text" placeholder="Question" required style="width: 90%; margin-bottom: 5px;" />
-          <input id="flashcard-answer" type="text" placeholder="Answer" required style="width: 90%; margin-bottom: 5px;" />
+        <form id="add-flashcard-form" class="form-container hidden">
+          <input id="flashcard-question" type="text" placeholder="Question" required />
+          <input id="flashcard-answer" type="text" placeholder="Answer" required />
           <button type="submit">Add Card</button>
           <button type="button" id="cancel-add-flashcard">Cancel</button>
         </form>
@@ -493,14 +493,14 @@
                 const cancelNewSet = document.getElementById('cancel-new-set');
                 if (newSetBtn) {
                     newSetBtn.addEventListener('click', () => {
-                        newSetForm.style.display = 'block';
+                        newSetForm.classList.remove('hidden');
                         newSetBtn.style.display = 'none';
                     });
                 }
                 if (cancelNewSet) {
                     cancelNewSet.addEventListener('click', () => {
                         newSetForm.reset();
-                        newSetForm.style.display = 'none';
+                        newSetForm.classList.add('hidden');
                         newSetBtn.style.display = 'inline-block';
                     });
                 }
@@ -513,7 +513,7 @@
                         try {
                             await API.createSet(name, desc);
                             newSetForm.reset();
-                            newSetForm.style.display = 'none';
+                            newSetForm.classList.add('hidden');
                             newSetBtn.style.display = 'inline-block';
                             loadCardSets();
                         } catch (error) {
@@ -532,14 +532,14 @@
                             alert('Please select a card set first!');
                             return;
                         }
-                        addFlashcardForm.style.display = 'block';
+                        addFlashcardForm.classList.remove('hidden');
                         addFlashcardBtn.style.display = 'none';
                     });
                 }
                 if (cancelAddFlashcard) {
                     cancelAddFlashcard.addEventListener('click', () => {
                         addFlashcardForm.reset();
-                        addFlashcardForm.style.display = 'none';
+                        addFlashcardForm.classList.add('hidden');
                         addFlashcardBtn.style.display = 'inline-block';
                     });
                 }
@@ -552,7 +552,7 @@
                         try {
                             await API.createCard(currentSetId, question, answer);
                             addFlashcardForm.reset();
-                            addFlashcardForm.style.display = 'none';
+                            addFlashcardForm.classList.add('hidden');
                             addFlashcardBtn.style.display = 'inline-block';
                             loadCards(currentSetId);
                         } catch (error) {

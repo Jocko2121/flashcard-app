@@ -123,6 +123,7 @@
 /* Top Bar */
 .top-bar {
     width: 100%;
+    /* TODO: Move these colors to theme variables when implementing theming system */
     background: #e3f0fb;
     padding: 0 24px;
     height: var(--top-bar-height);
