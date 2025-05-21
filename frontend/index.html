@@ -80,43 +80,67 @@
     <script>
         // API Client
         const API = {
-            async getSets() {
+            async getAllSets() {
+                console.log('API: Fetching all sets');
                 const response = await fetch('/api/sets');
-                if (!response.ok) throw new Error('Failed to fetch sets');
+                if (!response.ok) {
+                    console.error('API Error: Failed to fetch sets', response.status);
+                    throw new Error('Failed to fetch sets');
+                }
                 return response.json();
             },
             async getSet(id) {
+                console.log(`API: Fetching set ${id}`);
                 const response = await fetch(`/api/sets/${id}`);
-                if (!response.ok) throw new Error('Failed to fetch set');
+                if (!response.ok) {
+                    console.error(`API Error: Failed to fetch set ${id}`, response.status);
+                    throw new Error('Failed to fetch set');
+                }
                 return response.json();
             },
             async createSet(name, description) {
+                console.log('API: Creating new set', { name, description });
                 const response = await fetch('/api/sets', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, description })
                 });
-                if (!response.ok) throw new Error('Failed to create set');
+                if (!response.ok) {
+                    console.error('API Error: Failed to create set', response.status);
+                    throw new Error('Failed to create set');
+                }
                 return response.json();
             },
             async updateSet(id, name, description) {
+                console.log(`API: Updating set ${id}`, { name, description });
                 const response = await fetch(`/api/sets/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, description })
                 });
-                if (!response.ok) throw new Error('Failed to update set');
+                if (!response.ok) {
+                    console.error(`API Error: Failed to update set ${id}`, response.status);
+                    throw new Error('Failed to update set');
+                }
                 return response.json();
             },
             async deleteSet(id) {
+                console.log(`API: Deleting set ${id}`);
                 const response = await fetch(`/api/sets/${id}`, {
                     method: 'DELETE'
                 });
-                if (!response.ok) throw new Error('Failed to delete set');
+                if (!response.ok) {
+                    console.error(`API Error: Failed to delete set ${id}`, response.status);
+                    throw new Error('Failed to delete set');
+                }
             },
             async getCards(setId) {
+                console.log(`API: Fetching cards for set ${setId}`);
                 const response = await fetch(`/api/sets/${setId}/cards`);
-                if (!response.ok) throw new Error('Failed to fetch cards');
+                if (!response.ok) {
+                    console.error(`API Error: Failed to fetch cards for set ${setId}`, response.status);
+                    throw new Error('Failed to fetch cards');
+                }
                 return response.json();
             },
             async getCard(setId, cardId) {
@@ -125,32 +149,59 @@
                 return response.json();
             },
             async createCard(setId, question, answer) {
+                console.log(`API: Creating card in set ${setId}`, { question, answer });
                 const response = await fetch(`/api/sets/${setId}/cards`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ question, answer })
                 });
-                if (!response.ok) throw new Error('Failed to create card');
+                if (!response.ok) {
+                    console.error(`API Error: Failed to create card in set ${setId}`, response.status);
+                    throw new Error('Failed to create card');
+                }
                 return response.json();
             },
-            async updateCard(setId, cardId, question, answer, completed) {
+            async updateCard(setId, cardId, question, answer) {
+                console.log(`API: Updating card ${cardId} in set ${setId}`, { question, answer });
                 const response = await fetch(`/api/sets/${setId}/cards/${cardId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question, answer, completed })
+                    body: JSON.stringify({ question, answer })
                 });
-                if (!response.ok) throw new Error('Failed to update card');
+                if (!response.ok) {
+                    console.error(`API Error: Failed to update card ${cardId}`, response.status);
+                    throw new Error('Failed to update card');
+                }
                 return response.json();
             },
             async deleteCard(setId, cardId) {
+                console.log(`API: Deleting card ${cardId} from set ${setId}`);
                 const response = await fetch(`/api/sets/${setId}/cards/${cardId}`, {
                     method: 'DELETE'
                 });
-                if (!response.ok) throw new Error('Failed to delete card');
+                if (!response.ok) {
+                    console.error(`API Error: Failed to delete card ${cardId}`, response.status);
+                    throw new Error('Failed to delete card');
+                }
+            },
+            async verifySetDeleted(setId) {
+                console.log(`API: Verifying set ${setId} is deleted`);
+                try {
+                    await this.getSet(setId);
+                    return false; // Set still exists
+                } catch (error) {
+                    if (error.message === 'Failed to fetch set') {
+                        return true; // Set is gone
+                    }
+                    throw error; // Other error
+                }
             }
         };
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Add logging to verify event handlers
+            console.log('DOM Content Loaded - Initializing event handlers');
+            
             const layout3col = document.querySelector('.layout-3col');
             const colLeft = document.getElementById('col-left');
             const colRight = document.getElementById('col-right');
@@ -206,7 +257,7 @@
             async function loadCardSets() {
                 cardSetsList.innerHTML = '';
                 try {
-                    const cardSets = await API.getSets();
+                    const cardSets = await API.getAllSets();
                     if (cardSets.length === 0) {
                         // Add a default card set if none exist
                         const defaultSet = await API.createSet('My First Set', 'Start adding flashcards to this set');
@@ -220,6 +271,7 @@
                                 <h3>${set.name}</h3>
                                 <p>${set.description || ''}</p>
                                 <button class="edit-set-btn" data-id="${set.id}">Edit</button>
+                                <button class="delete-set-btn" data-id="${set.id}">Delete</button>
                             </div>
                             <form class="edit-set-form" data-id="${set.id}" style="display:none; margin-top:10px;">
                                 <input type="text" name="edit-set-name" value="${set.name}" style="width:90%; margin-bottom:5px;" required />
@@ -264,6 +316,42 @@
                             } catch (error) {
                                 console.error('Failed to update set:', error);
                                 alert('Failed to update set. Please try again.');
+                            }
+                        });
+                        setElement.querySelector('.delete-set-btn').addEventListener('click', async (e) => {
+                            e.stopPropagation();
+                            try {
+                                // Check if set has cards
+                                const cards = await API.getCards(set.id);
+                                const message = cards.length > 0 
+                                    ? `This set contains ${cards.length} card(s). Deleting will remove all cards. Are you sure?`
+                                    : 'Are you sure you want to delete this set?';
+                                
+                                if (confirm(message)) {
+                                    // Delete all cards first
+                                    for (const card of cards) {
+                                        await API.deleteCard(set.id, card.id);
+                                    }
+                                    // Then delete the set
+                                    await API.deleteSet(set.id);
+                                    
+                                    // Verify deletion
+                                    const isDeleted = await API.verifySetDeleted(set.id);
+                                    if (!isDeleted) {
+                                        throw new Error('Set deletion verification failed');
+                                    }
+                                    
+                                    loadCardSets();
+                                    if (set.id === currentSetId) {
+                                        currentSetId = null;
+                                        document.getElementById('current-set-name').textContent = '';
+                                        document.getElementById('current-set-description').textContent = '';
+                                        document.querySelector('.card-list-container').innerHTML = '';
+                                    }
+                                }
+                            } catch (error) {
+                                console.error('Failed to delete set:', error);
+                                alert('Failed to delete set. Please try again.');
                             }
                         });
                         cardSetsList.appendChild(setElement);
