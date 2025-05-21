@@ -526,29 +526,69 @@
                     cardContainer.querySelectorAll('.delete-card-btn').forEach(btn => {
                         btn.addEventListener('click', async (e) => {
                             const id = btn.getAttribute('data-id');
-                            try {
-                                const cardToDelete = cards.find(card => card.id === id);
-                                await API.deleteCard(setId, id);
-                                lastDeletedCard = cardToDelete;
-                                lastDeletedFromDone = false;
-                                // Find the index of the card in the container
-                                const cardDiv = btn.closest('.card-set');
-                                const index = Array.from(cardContainer.children).indexOf(cardDiv);
-                                loadCards(setId);
-                                showInlineUndo(cardContainer, index, 'Card deleted.', async () => {
-                                    // Undo: restore card
-                                    try {
-                                        await API.createCard(setId, lastDeletedCard.question, lastDeletedCard.answer);
-                                        loadCards(setId);
-                                    } catch (error) {
-                                        console.error('Failed to restore card:', error);
-                                        alert('Failed to restore card. Please try again.');
-                                    }
-                                });
-                            } catch (error) {
-                                console.error('Failed to delete card:', error);
-                                alert('Failed to delete card. Please try again.');
+                            const cardDiv = btn.closest('.card-set');
+                            
+                            // Get current card data from DOM
+                            const question = cardDiv.querySelector('h3').textContent;
+                            const answer = cardDiv.querySelector('p').textContent;
+                            
+                            // Create placeholder
+                            const placeholder = document.createElement('div');
+                            placeholder.className = 'card-set deleting';
+                            placeholder.innerHTML = `
+                                <div class="card-content-view">
+                                    <h3>${question}</h3>
+                                    <p>${answer}</p>
+                                    <div class="deleting-status">Deleting...</div>
+                                </div>
+                            `;
+                            
+                            // Store the original card's position
+                            const originalIndex = Array.from(cardContainer.children).indexOf(cardDiv);
+                            
+                            // Remove the original card
+                            cardDiv.remove();
+                            
+                            // Insert placeholder at the exact same position
+                            if (cardContainer.children.length === 0 || originalIndex >= cardContainer.children.length) {
+                                cardContainer.appendChild(placeholder);
+                            } else {
+                                cardContainer.insertBefore(placeholder, cardContainer.children[originalIndex]);
                             }
+                            
+                            // Create a variable to store the timeout ID
+                            let deleteTimeout;
+                            
+                            // Show undo bar
+                            showInlineUndo(cardContainer, originalIndex, 'Card deleted.', () => {
+                                // Undo: restore original card and clear the timeout
+                                clearTimeout(deleteTimeout);
+                                placeholder.remove();
+                                if (cardContainer.children.length === 0 || originalIndex >= cardContainer.children.length) {
+                                    cardContainer.appendChild(cardDiv);
+                                } else {
+                                    cardContainer.insertBefore(cardDiv, cardContainer.children[originalIndex]);
+                                }
+                            });
+                            
+                            // Set timeout for actual deletion
+                            deleteTimeout = setTimeout(async () => {
+                                try {
+                                    await API.deleteCard(setId, id);
+                                    placeholder.remove();
+                                    loadCards(setId);
+                                } catch (error) {
+                                    console.error('Failed to delete card:', error);
+                                    alert('Failed to delete card. Please try again.');
+                                    // Restore original card on error
+                                    placeholder.remove();
+                                    if (cardContainer.children.length === 0 || originalIndex >= cardContainer.children.length) {
+                                        cardContainer.appendChild(cardDiv);
+                                    } else {
+                                        cardContainer.insertBefore(cardDiv, cardContainer.children[originalIndex]);
+                                    }
+                                }
+                            }, 5000);
                         });
                     });
                 } catch (error) {

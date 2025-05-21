@@ -1,4 +1,4 @@
-const data = require('./data');
+const data = require('../data');
 const fs = require('fs');
 const path = require('path');
 
@@ -18,8 +18,8 @@ function runTest(name, testFn) {
 }
 
 // Backup original data file if it exists
-const dataFilePath = path.join(__dirname, 'data.json');
-const backupFilePath = path.join(__dirname, 'data.json.backup');
+const dataFilePath = path.join(__dirname, '../data.json');
+const backupFilePath = path.join(__dirname, '../data.json.backup');
 if (fs.existsSync(dataFilePath)) {
     fs.copyFileSync(dataFilePath, backupFilePath);
     console.log('📦 Backed up existing data.json');

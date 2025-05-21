@@ -5,7 +5,7 @@ const fs = require('fs');
 // Helper to reload config after changing env vars
 function loadFreshConfig() {
     delete require.cache[require.resolve('./config')];
-    return require('./config');
+    return require('../config');
 }
 
 // Test helper functions

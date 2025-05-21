@@ -396,11 +396,20 @@
     },
     {
       "id": 3,
-      "name": "test",
+      "name": "placeholder test",
       "description": "ccc",
-      "cards": [],
+      "cards": [
+        {
+          "id": 1,
+          "question": "PH5",
+          "answer": "5",
+          "completed": false,
+          "createdAt": "2025-05-21T06:44:51.626Z",
+          "lastModified": "2025-05-21T06:44:51.722Z"
+        }
+      ],
       "createdAt": "2025-05-21T02:59:17.909Z",
-      "lastModified": "2025-05-21T02:59:27.989Z"
+      "lastModified": "2025-05-21T06:33:49.098Z"
     },
     {
       "id": 5,

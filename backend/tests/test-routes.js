@@ -1,13 +1,13 @@
 const request = require('supertest');
 const express = require('express');
-const data = require('./data');
+const data = require('../data');
 const fs = require('fs').promises;
 const path = require('path');
-const config = require('./config');
+const config = require('../config');
 
 // Patch config.dataPath to use a temporary file for tests
 const originalDataPath = config.dataPath;
-const tempDataPath = path.join(__dirname, 'test-data.json');
+const tempDataPath = path.join(__dirname, '../test-data.json');
 config.dataPath = tempDataPath;
 
 // Helper function to create a fresh app instance
@@ -16,8 +16,8 @@ function createApp() {
     app.use(express.json());
     
     // Import routes
-    const setsRouter = require('./routes/sets');
-    const cardsRouter = require('./routes/cards');
+    const setsRouter = require('../routes/sets');
+    const cardsRouter = require('../routes/cards');
     
     // Mount routes
     app.use('/api/sets', setsRouter);

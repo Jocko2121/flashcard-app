@@ -1,4 +1,4 @@
-const db = require('./database');
+const db = require('../database');
 
 // Test 1: Check if database file exists and has correct structure
 console.log('Test 1: Checking database structure...');

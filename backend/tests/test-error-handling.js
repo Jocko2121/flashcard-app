@@ -1,12 +1,12 @@
 const request = require('supertest');
 const express = require('express');
 const app = express();
-const data = require('./data');
-const { errorHandler } = require('./middleware/error-handler');
+const data = require('../data');
+const { errorHandler } = require('../middleware/error-handler');
 
 // Import routes
-const setsRouter = require('./routes/sets');
-const cardsRouter = require('./routes/cards');
+const setsRouter = require('../routes/sets');
+const cardsRouter = require('../routes/cards');
 
 // Middleware
 app.use(express.json());

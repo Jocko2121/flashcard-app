@@ -1,9 +1,9 @@
 const request = require('supertest');
 const express = require('express');
 const app = express();
-const { migrateFromLocalStorage } = require('./migrate');
-const migrateRouter = require('./routes/migrate');
-const { errorHandler } = require('./middleware/error-handler');
+const { migrateFromLocalStorage } = require('../migrate');
+const migrateRouter = require('../routes/migrate');
+const { errorHandler } = require('../middleware/error-handler');
 
 // Middleware
 app.use(express.json());
