@@ -2,70 +2,95 @@ const express = require('express');
 const router = express.Router();
 const data = require('../data');
 const { ValidationError, NotFoundError } = require('../middleware/error-handler');
+const { setValidationRules, idValidationRules } = require('../middleware/security');
 
 // Get all sets
-router.get('/', (req, res) => {
-    res.json(data.getAllSets());
+router.get('/', async (req, res, next) => {
+    try {
+        const sets = await data.getAllSets();
+        res.json(sets);
+    } catch (error) {
+        next(error);
+    }
 });
 
 // Get set by ID
-router.get('/:id', (req, res, next) => {
-    const set = data.getSetById(req.params.id);
-    if (!set) {
-        return next(new NotFoundError(`Set with ID ${req.params.id} not found`));
+router.get('/:id', idValidationRules, async (req, res, next) => {
+    try {
+        const set = await data.getSetById(req.params.id);
+        if (!set) {
+            return next(new NotFoundError(`Set with ID ${req.params.id} not found`));
+        }
+        res.json(set);
+    } catch (error) {
+        next(error);
     }
-    res.json(set);
 });
 
 // Create new set
-router.post('/', (req, res, next) => {
-    const { name, description } = req.body;
-    if (!name) {
-        return next(new ValidationError('Set name is required'));
+router.post('/', setValidationRules, async (req, res, next) => {
+    try {
+        const { name, description } = req.body;
+        const newSet = await data.addSet({ name, description });
+        if (!newSet) {
+            return next(new Error('Failed to create set'));
+        }
+        res.status(201).json(newSet);
+    } catch (error) {
+        next(error);
     }
-    const newSet = data.addSet({ name, description });
-    if (!newSet) {
-        return next(new Error('Failed to create set'));
-    }
-    res.status(201).json(newSet);
 });
 
 // Update set
-router.put('/:id', (req, res, next) => {
-    const { name, description } = req.body;
-    const updatedSet = data.updateSet(req.params.id, { name, description });
-    if (!updatedSet) {
-        return next(new NotFoundError(`Set with ID ${req.params.id} not found`));
+router.put('/:id', [...idValidationRules, ...setValidationRules], async (req, res, next) => {
+    try {
+        const { name, description } = req.body;
+        const updatedSet = await data.updateSet(req.params.id, { name, description });
+        if (!updatedSet) {
+            return next(new NotFoundError(`Set with ID ${req.params.id} not found`));
+        }
+        res.json(updatedSet);
+    } catch (error) {
+        next(error);
     }
-    res.json(updatedSet);
 });
 
 // Delete set
-router.delete('/:id', (req, res, next) => {
-    const success = data.deleteSet(req.params.id);
-    if (!success) {
-        return next(new NotFoundError(`Set with ID ${req.params.id} not found`));
+router.delete('/:id', idValidationRules, async (req, res, next) => {
+    try {
+        const success = await data.deleteSet(req.params.id);
+        if (!success) {
+            return next(new NotFoundError(`Set with ID ${req.params.id} not found`));
+        }
+        res.status(204).send();
+    } catch (error) {
+        next(error);
     }
-    res.status(204).send();
 });
 
 // Get last active set
-router.get('/settings/last-active-set', (req, res) => {
-    const lastActiveSet = data.getLastActiveSet();
-    res.json({ lastActiveSet });
+router.get('/settings/last-active-set', async (req, res, next) => {
+    try {
+        const lastActiveSet = await data.getLastActiveSet();
+        res.json({ lastActiveSet });
+    } catch (error) {
+        next(error);
+    }
 });
 
 // Update last active set
-router.post('/settings/last-active-set', (req, res, next) => {
-    const { setId } = req.body;
-    if (!setId) {
-        return next(new ValidationError('Set ID is required'));
+router.post('/settings/last-active-set', async (req, res, next) => {
+    try {
+        const { setId } = req.body;
+        const set = await data.getSetById(setId);
+        if (!set) {
+            return next(new NotFoundError(`Set with ID ${setId} not found`));
+        }
+        await data.updateLastActiveSet(setId);
+        res.json({ lastActiveSet: setId });
+    } catch (error) {
+        next(error);
     }
-    const success = data.updateLastActiveSet(setId);
-    if (!success) {
-        return next(new Error('Failed to update last active set'));
-    }
-    res.json({ lastActiveSet: setId });
 });
 
 module.exports = router; 

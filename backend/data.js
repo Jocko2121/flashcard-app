@@ -1,11 +1,27 @@
-const fs = require('fs');
+const fs = require('fs').promises;
+const path = require('path');
 const config = require('./config');
 
+// Data structure validation
+function isValidDataStructure(data) {
+    return data 
+        && typeof data === 'object'
+        && Array.isArray(data.cardSets)
+        && typeof data.settings === 'object'
+        && typeof data.statistics === 'object';
+}
+
 // Helper function to read data
-function readData() {
+async function readData() {
     try {
-        const data = fs.readFileSync(config.dataPath, 'utf8');
-        return JSON.parse(data);
+        const data = await fs.readFile(config.dataPath, 'utf8');
+        const parsedData = JSON.parse(data);
+        
+        if (!isValidDataStructure(parsedData)) {
+            throw new Error('Invalid data structure');
+        }
+        
+        return parsedData;
     } catch (error) {
         console.error('Error reading data:', error);
         return {
@@ -26,9 +42,18 @@ function readData() {
 }
 
 // Helper function to write data
-function writeData(data) {
+async function writeData(data) {
     try {
-        fs.writeFileSync(config.dataPath, JSON.stringify(data, null, 2));
+        if (!isValidDataStructure(data)) {
+            throw new Error('Invalid data structure');
+        }
+
+        const dataString = JSON.stringify(data, null, 2);
+        if (dataString.length > 10 * 1024 * 1024) { // 10MB limit
+            throw new Error('Data too large');
+        }
+
+        await fs.writeFile(config.dataPath, dataString);
         return true;
     } catch (error) {
         console.error('Error writing data:', error);
@@ -37,22 +62,21 @@ function writeData(data) {
 }
 
 // Get all card sets
-function getAllSets() {
-    const data = readData();
+async function getAllSets() {
+    const data = await readData();
     return data.cardSets;
 }
 
 // Get set by ID
-function getSetById(id) {
-    const data = readData();
+async function getSetById(id) {
+    const data = await readData();
     const set = data.cardSets.find(set => String(set.id) === String(id));
     return set || null;
 }
 
 // Add new set
-function addSet({ name, description }) {
-    const data = readData();
-    // Find the max existing set ID and increment
+async function addSet({ name, description }) {
+    const data = await readData();
     const maxId = data.cardSets.reduce((max, set) => Math.max(max, Number(set.id)), 0);
     const newSet = {
         id: maxId + 1,
@@ -63,49 +87,43 @@ function addSet({ name, description }) {
         lastModified: new Date().toISOString()
     };
     data.cardSets.push(newSet);
-    if (writeData(data)) {
+    if (await writeData(data)) {
         return newSet;
     }
     return null;
 }
 
 // Delete set
-function deleteSet(id) {
-    console.log(`Attempting to delete set with ID: ${id}`);
-    const data = readData();
-    console.log(`Current sets before deletion: ${JSON.stringify(data.cardSets)}`);
+async function deleteSet(id) {
+    const data = await readData();
     const initialLength = data.cardSets.length;
     data.cardSets = data.cardSets.filter(set => String(set.id) !== String(id));
-    console.log(`Sets after filter: ${JSON.stringify(data.cardSets)}`);
     if (data.cardSets.length !== initialLength) {
-        const writeResult = writeData(data);
-        console.log(`Write result: ${writeResult}`);
-        return writeResult;
+        return await writeData(data);
     }
-    console.log('No sets were removed');
     return false;
 }
 
 // Get all cards in a set
-function getAllCards(setId) {
-    const set = getSetById(setId);
+async function getAllCards(setId) {
+    const set = await getSetById(setId);
     return set ? set.cards : [];
 }
 
 // Get card by ID
-function getCardById(setId, cardId) {
-    const set = getSetById(setId);
+async function getCardById(setId, cardId) {
+    const set = await getSetById(setId);
     if (!set) return null;
     const card = set.cards.find(card => String(card.id) === String(cardId));
     return card || null;
 }
 
 // Add card to set
-function createCard(setId, { question, answer }) {
-    const data = readData();
+async function createCard(setId, { question, answer }) {
+    const data = await readData();
     const set = data.cardSets.find(s => String(s.id) === String(setId));
     if (!set) return null;
-    // Find the max existing card ID and increment
+    
     const maxCardId = set.cards.reduce((max, card) => Math.max(max, Number(card.id)), 0);
     const newCard = {
         id: maxCardId + 1,
@@ -116,15 +134,15 @@ function createCard(setId, { question, answer }) {
         lastModified: new Date().toISOString()
     };
     set.cards.push(newCard);
-    if (writeData(data)) {
+    if (await writeData(data)) {
         return newCard;
     }
     return null;
 }
 
 // Update card
-function updateCard(setId, cardId, { question, answer, completed }) {
-    const data = readData();
+async function updateCard(setId, cardId, { question, answer, completed }) {
+    const data = await readData();
     const set = data.cardSets.find(s => String(s.id) === String(setId));
     if (!set) return null;
 
@@ -136,29 +154,29 @@ function updateCard(setId, cardId, { question, answer, completed }) {
     if (completed !== undefined) card.completed = completed;
     card.lastModified = new Date().toISOString();
 
-    if (writeData(data)) {
+    if (await writeData(data)) {
         return card;
     }
     return null;
 }
 
 // Delete card
-function deleteCard(setId, cardId) {
-    const data = readData();
+async function deleteCard(setId, cardId) {
+    const data = await readData();
     const set = data.cardSets.find(s => String(s.id) === String(setId));
     if (!set) return false;
 
     const initialLength = set.cards.length;
     set.cards = set.cards.filter(card => String(card.id) !== String(cardId));
     if (set.cards.length !== initialLength) {
-        return writeData(data);
+        return await writeData(data);
     }
     return false;
 }
 
-// Add updateSet function
-function updateSet(id, { name, description }) {
-    const data = readData();
+// Update set
+async function updateSet(id, { name, description }) {
+    const data = await readData();
     const set = data.cardSets.find(s => String(s.id) === String(id));
     if (!set) return null;
 
@@ -166,14 +184,14 @@ function updateSet(id, { name, description }) {
     if (description) set.description = description;
     set.lastModified = new Date().toISOString();
 
-    if (writeData(data)) {
+    if (await writeData(data)) {
         return set;
     }
     return null;
 }
 
 // Reset data file (for testing)
-function resetData() {
+async function resetData() {
     const blankData = {
         cardSets: [],
         settings: {
@@ -188,20 +206,20 @@ function resetData() {
             lastStudySession: null
         }
     };
-    return writeData(blankData);
+    return await writeData(blankData);
 }
 
 // Get last active set
-function getLastActiveSet() {
-    const data = readData();
+async function getLastActiveSet() {
+    const data = await readData();
     return data.settings.lastActiveSet;
 }
 
 // Update last active set
-function updateLastActiveSet(setId) {
-    const data = readData();
+async function updateLastActiveSet(setId) {
+    const data = await readData();
     data.settings.lastActiveSet = setId;
-    return writeData(data);
+    return await writeData(data);
 }
 
 module.exports = {

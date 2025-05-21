@@ -1,6 +1,6 @@
 {
-  "watch": ["src"],
+  "watch": ["backend"],
   "ext": "js,json",
-  "ignore": ["src/frontend/*", "src/backend/data.json"],
-  "delay": "1000"
+  "ignore": ["frontend/*", "backend/data.json"],
+  "exec": "node backend/server.js"
 } 

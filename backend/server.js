@@ -1,35 +1,41 @@
 const express = require('express');
-const cors = require('cors');
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 const config = require('./config');
 const data = require('./data');
 const { errorHandler } = require('./middleware/error-handler');
+const { applySecurityMiddleware } = require('./middleware/security');
 
 const app = express();
 
+// Apply security middleware
+applySecurityMiddleware(app);
+
 // Middleware
-app.use(cors(config.cors));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Initialize data file if it doesn't exist
-if (!fs.existsSync(config.dataPath)) {
-    const defaultData = {
-        cardSets: [],
-        settings: {
-            showCompleted: true,
-            lastActiveSet: null,
-            theme: "light",
-            studyMode: "normal"
-        },
-        statistics: {
-            totalCards: 0,
-            completedCards: 0,
-            lastStudySession: null
-        }
-    };
-    fs.writeFileSync(config.dataPath, JSON.stringify(defaultData, null, 2));
+async function initializeDataFile() {
+    try {
+        await fs.access(config.dataPath);
+    } catch (error) {
+        const defaultData = {
+            cardSets: [],
+            settings: {
+                showCompleted: true,
+                lastActiveSet: null,
+                theme: "light",
+                studyMode: "normal"
+            },
+            statistics: {
+                totalCards: 0,
+                completedCards: 0,
+                lastStudySession: null
+            }
+        };
+        await fs.writeFile(config.dataPath, JSON.stringify(defaultData, null, 2));
+    }
 }
 
 // Import routes
@@ -44,9 +50,17 @@ app.use('/api/sets/:setId/cards', cardsRouter);
 app.use(errorHandler);
 
 // Start server
-app.listen(config.port, () => {
-    console.log('=================================');
-    console.log(`🚀 Server running on port ${config.port}`);
-    console.log(`🌍 Environment: ${config.env}`);
-    console.log('=================================');
+async function startServer() {
+    await initializeDataFile();
+    app.listen(config.port, () => {
+        console.log('=================================');
+        console.log(`🚀 Server running on port ${config.port}`);
+        console.log(`🌍 Environment: ${config.env}`);
+        console.log('=================================');
+    });
+}
+
+startServer().catch(error => {
+    console.error('Failed to start server:', error);
+    process.exit(1);
 }); 

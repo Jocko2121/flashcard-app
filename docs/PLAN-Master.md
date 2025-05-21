@@ -58,8 +58,8 @@ flashcard-app/
 - [X] Epic 4.2 - Layout.css (First File)
 - [X] Epic 4.3 - Components.css (New File)
 - [X] Epic 4.4 - Base.css (New File)
-- [ ] Epic 4.5 - Documentation
-- [ ] Epic 4.6 - Cleanup
+- [x] Epic 4.5 - Documentation
+- [x] Epic 4.6 - Cleanup
 
 
 
