@@ -1,4 +1,4 @@
-# Phase 4 - CSS Reorganization Plan
+**# Phase 4 - CSS Reorganization Plan**
 
 ## Overview
 This document outlines today's plan for reorganizing the CSS structure of the Flashcard App. The goal is to create a more maintainable and organized CSS structure while ensuring no functionality is broken. We will proceed step by step, testing after each change, and maintaining the ability to rollback if needed.
@@ -26,11 +26,8 @@ This document outlines today's plan for reorganizing the CSS structure of the Fl
   - [X] Update event handlers for new API structure
   - [X] Add loading indicators during API calls
 
-- [ ] Enhance UI/UX
+- [x] Enhance UI/UX
   - [X] Implement three-column layout (col-left, col-main, col-right)
-  - [ ] Card reordering (Drag n Drop)
-  - [ ] add back missing show hide buttons (or something similar)
-  - [ ] Implement card animations and transitions
 
 
 **[x] Epic 4.2 - Layout.css (First File)**
@@ -99,7 +96,7 @@ This document outlines today's plan for reorganizing the CSS structure of the Fl
   - Verified JavaScript functionality
 
 
-**[ ] Epic 4.5 - Documentation**
+**[X] Epic 4.5 - Documentation**
 - [X] Document new CSS structure
   - Update file references in README
   - Add comments explaining file purposes
@@ -107,7 +104,7 @@ This document outlines today's plan for reorganizing the CSS structure of the Fl
   - Include notes about CSS variable placement
   - See "CSS Structure Analysis Report" below for detailed findings
 
-- [ ] Final testing
+- [X] Final testing
   - [✓] Full feature test
     - [✓] Test all card set operations (create, read, update, delete)
       - Verified in CSS analysis: new-set-btn, edit-set-btn, delete-card-btn
@@ -162,7 +159,7 @@ This document outlines today's plan for reorganizing the CSS structure of the Fl
 - [x] Clean up unused directories
   - [x] Remove `x-debug images/` directory - keep for now
 
-- [ ] Clean up backend files
+- [x] Clean up backend files
   - [x] Remove `data.json.backup`
   - [x] Remove `fix-data.js`
   - [x] Move test files to dedicated `tests` directory

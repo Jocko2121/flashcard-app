@@ -3,11 +3,58 @@ description:
 globs: 
 alwaysApply: true
 ---
-- Follow the user's requirements carefully & to the letter. 
-- First think step-by-step - describe your plan for what to build.
-- Always ask clarifying questions if you are not sure, try not to guess to much.
-- Confirm, then write code! 
-- Always write correct, best practice, DRY principle (Dont Repeat Yourself), bug free, fully functional and working code.
-- Ensure code is complete! Verify thoroughly finalised. 
-- If you think there might not be a correct answer, you say so. 
-- If you do not know the answer, say so, instead of guessing. 
+# Flashcard App Development Rules
+
+## [Before Starting Task] [bst] [1]
+- Review and understand the user's requirements completely
+- Think step-by-step and describe your plan
+- Identify any areas of uncertainty
+- Ask clarifying questions if needed
+- Confirm understanding before proceeding
+
+## [During Planning] [dp] [2]
+- Break down the task into clear steps
+- Consider edge cases and potential issues
+- Plan for error handling
+- Consider performance implications
+- Document the approach
+
+## [During Implementation] [di] [3]
+- Follow best practices and DRY principles
+- Write bug-free, functional code
+- Keep documentation updated
+- Consider code maintainability
+- Test as you go
+
+## [Before Completing] [bc] [4]
+- Verify all requirements are met
+- Check code is complete and functional
+- Ensure documentation is updated
+- Review for potential issues
+- Confirm with user before finalizing
+
+## [When Uncertain] [wu] [5]
+- If you think there might not be a correct answer, say so
+- If you don't know the answer, say so
+- Don't guess or make assumptions
+- Ask for clarification
+- Be honest about limitations
+
+## [During Code Review] [cr] [6]
+- Check for unused code
+- Verify comments are current
+- Ensure consistent code style
+- Look for potential improvements
+- Validate error handling 
+
+## [Documentation and Cleanup] [dc] [7]
+### Maintain documentation
+  - Keep API documentation up to date
+  - Update setup instructions
+  - Document new features
+  - Add troubleshooting guides
+### Code cleanup
+  - Remove unused files
+  - Remove commented-out code
+  - Update outdated comments
+  - Standardize code style
