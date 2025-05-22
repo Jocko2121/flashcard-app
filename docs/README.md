@@ -97,8 +97,8 @@ flashcard-app/
 
 ### API Endpoints
 
-#### Card Sets
-- `GET /api/sets` - Get all card sets
+#### Library
+- `GET /api/sets` - Get all libraries
 - `GET /api/sets/:id` - Get a specific card set
 - `POST /api/sets` - Create a new card set
   ```json

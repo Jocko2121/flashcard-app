@@ -72,7 +72,7 @@ async function writeData(data) {
     }
 }
 
-// Get all card sets
+// Get all libraries
 async function getAllSets() {
     const data = await readData();
     return data.cardSets;

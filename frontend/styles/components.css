@@ -2,18 +2,19 @@
    COMPONENT STYLES
    ========================================================================== */
 
-/* Card Set Component */
+/* Library Component */
 .card-set {
     background: var(--panel-bg);
     border: 2px solid var(--card-border);
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 16px;
-    display: block;
     min-height: 100px;
     position: relative;
     z-index: 4;
     cursor: pointer;
+    width: 300px;
+    box-sizing: border-box;
 }
 
 .card-set.active {
@@ -83,6 +84,11 @@
 
 .main-header .add-flashcard-btn:hover {
     background: var(--btn-special-hover);
+}
+
+.main-header .header-buttons {
+    display: flex;
+    gap: 10px;
 }
 
 /* Card List Container */
@@ -234,4 +240,28 @@
 
 .form-container button {
     margin-right: 5px;
+}
+
+#card-sets-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 0;
+}
+
+.set-stats {
+    margin: 8px 0;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+.card-count {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
 } 

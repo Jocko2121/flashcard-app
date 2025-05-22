@@ -44,16 +44,16 @@ color: #6c757d;              /* Muted text color */
 */
 ```
 
-#### Card Set Colors
+#### Library Colors
 ```css
-border: 2px solid #908cff;    /* Card set border */
-background: #e0e7ff;          /* Active card set background */
-border-color: #4f46e5;        /* Active card set border */
+border: 2px solid #908cff;    /* Library border */
+background: #e0e7ff;          /* Active library background */
+border-color: #4f46e5;        /* Active library border */
 
 /* TODO: Consider creating semantic variables:
-   --card-border
-   --card-active-bg
-   --card-active-border
+   --library-border
+   --library-active-bg
+   --library-active-border
 */
 ```
 

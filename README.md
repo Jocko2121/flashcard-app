@@ -65,12 +65,8 @@ For detailed documentation, including API endpoints, usage instructions, and dev
 
 ## API Endpoints
 
-### Card Sets
-- `GET /api/sets` - Get all card sets
-- `POST /api/sets` - Create a new card set
-- `GET /api/sets/:id` - Get a specific card set
-- `PUT /api/sets/:id` - Update a card set
-- `DELETE /api/sets/:id` - Delete a card set
+### Library
+- `GET /api/sets` - Get all libraries
 
 ### Cards
 - `GET /api/sets/:setId/cards` - Get all cards in a set

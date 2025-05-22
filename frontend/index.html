@@ -14,7 +14,7 @@
   <body>
     <div class="top-bar">
       <div class="controls">
-        <button id="toggle-sets-panel" class="toggle-sets-panel" title="Toggle Card Sets">⚙️</button>
+        <button id="toggle-sets-panel" class="toggle-sets-panel" title="Toggle Library">⚙️</button>
         <button id="toggle-completed-panel" class="toggle-completed-panel" title="Toggle Completed Cards">✓</button>
       </div>
     </div>
@@ -22,17 +22,10 @@
       <!-- Left Column -->
       <div id="col-left" class="panel-base panel-left panel-hidden">
         <div class="panel-header">
-          <h2>Card Sets</h2>
-          <button id="new-set-btn" class="new-set-btn" type="button">New Set</button>
+          <h2>Navigation</h2>
         </div>
-        <form id="new-set-form" class="form-container hidden">
-          <input id="new-set-name" type="text" placeholder="Set Name" required />
-          <input id="new-set-desc" type="text" placeholder="Description" />
-          <button type="submit">Add Set</button>
-          <button type="button" id="cancel-new-set">Cancel</button>
-        </form>
-        <div id="card-sets-list" class="panel-content">
-          <!-- Card sets will be loaded here -->
+        <div class="panel-content">
+          <button id="show-card-sets" class="add-flashcard-btn" type="button">Show Library</button>
         </div>
       </div>
       
@@ -44,8 +37,17 @@
             <h2 id="current-set-name">Select a Card Set</h2>
             <p id="current-set-description"></p>
           </div>
-          <button id="add-flashcard" class="add-flashcard-btn" type="button">Add Flashcard</button>
+          <div class="header-buttons">
+            <button id="new-set-btn" class="new-set-btn" type="button">New Set</button>
+            <button id="add-flashcard" class="add-flashcard-btn" type="button">Add Flashcard</button>
+          </div>
         </div>
+        <form id="new-set-form" class="form-container hidden">
+          <input id="new-set-name" type="text" placeholder="Set Name" required />
+          <input id="new-set-desc" type="text" placeholder="Description" />
+          <button type="submit">Add Set</button>
+          <button type="button" id="cancel-new-set">Cancel</button>
+        </form>
         <form id="add-flashcard-form" class="form-container hidden">
           <input id="flashcard-question" type="text" placeholder="Question" required />
           <input id="flashcard-answer" type="text" placeholder="Answer" required />
@@ -54,6 +56,9 @@
         </form>
         <!-- Flashcard Display Section -->
         <div id="card-con">
+          <div id="card-sets-list" class="panel-content">
+            <!-- Library will be loaded here -->
+          </div>
           <div class="card-list-container">
             <!-- Cards will be loaded here -->
           </div>
@@ -69,13 +74,6 @@
           <!-- Completed cards will be loaded here -->
         </div>
       </div>
-    </div>
-    <div class="settings-panel">
-        <h3>Settings</h3>
-        <div class="setting-item">
-            <label for="show-completed">Show Completed Cards</label>
-            <input type="checkbox" id="show-completed" checked>
-        </div>
     </div>
     <script>
         // API Client
@@ -227,7 +225,6 @@
             const colRight = document.getElementById('col-right');
             const toggleSetsPanel = document.getElementById('toggle-sets-panel');
             const toggleCompletedPanel = document.getElementById('toggle-completed-panel');
-            const showCompleted = document.getElementById('show-completed');
             const cardSetsList = document.getElementById('card-sets-list');
             const colRightCardsContainer = colRight.querySelector('.panel-content');
             let currentSetId = null;
@@ -272,36 +269,39 @@
                     layout3col.style.gridTemplateColumns = '0 1fr 0';
                 }
             }
-            // Load card sets into sidebar
-            async function loadCardSets() {
+            // Load library into sidebar
+            async function loadLibrary() {
                 cardSetsList.innerHTML = '';
                 try {
-                    const cardSets = await API.getAllSets();
-                    if (cardSets.length === 0) {
-                        // Add a default card set if none exist
-                        const defaultSet = await API.createSet('My First Set', 'Start adding flashcards to this set');
-                        cardSets.push(defaultSet);
+                    const library = await API.getAllSets();
+                    if (library.length === 0) {
+                        // Add a default library if none exist
+                        const defaultLibrary = await API.createSet('My First Library', 'Start adding flashcards to this library');
+                        library.push(defaultLibrary);
                     }
                     
-                    // Get last active set
-                    const lastActiveSet = await API.getLastActiveSet();
-                    if (lastActiveSet) {
-                        currentSetId = lastActiveSet;
-                        const lastSet = cardSets.find(set => String(set.id) === String(lastActiveSet));
-                        if (lastSet) {
-                            document.getElementById('current-set-name').textContent = lastSet.name;
-                            document.getElementById('current-set-description').textContent = lastSet.description || '';
-                            loadCards(lastSet.id);
+                    // Get last active library
+                    const lastActiveLibrary = await API.getLastActiveSet();
+                    if (lastActiveLibrary) {
+                        currentSetId = lastActiveLibrary;
+                        const lastLibrary = library.find(set => String(set.id) === String(lastActiveLibrary));
+                        if (lastLibrary) {
+                            document.getElementById('current-set-name').textContent = lastLibrary.name;
+                            document.getElementById('current-set-description').textContent = lastLibrary.description || '';
+                            loadCards(lastLibrary.id);
                         }
                     }
                     
-                    cardSets.forEach(set => {
+                    library.forEach(set => {
                         const setElement = document.createElement('div');
                         setElement.className = 'card-set' + (set.id === currentSetId ? ' active' : '');
                         setElement.innerHTML = `
                             <div class="set-content-view">
                                 <h3>${set.name}</h3>
                                 <p>${set.description || ''}</p>
+                                <div class="set-stats">
+                                    <span class="card-count">0 cards</span>
+                                </div>
                                 <button class="edit-set-btn" data-id="${set.id}">Edit</button>
                                 <button class="delete-set-btn" data-id="${set.id}">Delete</button>
                             </div>
@@ -312,16 +312,23 @@
                                 <button type="button" class="cancel-edit-set-btn">Cancel</button>
                             </form>
                         `;
+                        // Load card count for this set
+                        API.getCards(set.id).then(cards => {
+                            const cardCount = cards.length;
+                            const countElement = setElement.querySelector('.card-count');
+                            countElement.textContent = `${cardCount} card${cardCount !== 1 ? 's' : ''}`;
+                        }).catch(error => {
+                            console.error('Failed to load card count:', error);
+                        });
                         setElement.querySelector('.set-content-view').addEventListener('click', async (e) => {
                             // Only trigger set selection if not clicking the edit button
                             if (e.target.classList.contains('edit-set-btn')) return;
                             currentSetId = set.id;
                             await API.updateLastActiveSet(set.id);
-                            await loadCards(set.id);
+                            switchToCardView(set.id);
                             document.getElementById('current-set-name').textContent = set.name;
                             document.getElementById('current-set-description').textContent = set.description || '';
                             loadDoneCards();
-                            loadCardSets(); // Refresh highlight
                         });
                         setElement.querySelector('.edit-set-btn').addEventListener('click', (e) => {
                             e.stopPropagation();
@@ -340,7 +347,7 @@
                                 await API.updateSet(set.id, name, desc);
                                 setElement.querySelector('.edit-set-form').style.display = 'none';
                                 setElement.querySelector('.set-content-view').style.display = 'block';
-                                loadCardSets();
+                                loadLibrary();
                                 // If this set is active, update the main header too
                                 if (set.id === currentSetId) {
                                     document.getElementById('current-set-name').textContent = name;
@@ -374,7 +381,7 @@
                                         throw new Error('Set deletion verification failed');
                                     }
                                     
-                                    loadCardSets();
+                                    loadLibrary();
                                     if (set.id === currentSetId) {
                                         currentSetId = null;
                                         document.getElementById('current-set-name').textContent = '';
@@ -390,8 +397,8 @@
                         cardSetsList.appendChild(setElement);
                     });
                 } catch (error) {
-                    console.error('Failed to load card sets:', error);
-                    alert('Failed to load card sets. Please refresh the page.');
+                    console.error('Failed to load library:', error);
+                    alert('Failed to load library. Please refresh the page.');
                 }
             }
             // Load done cards
@@ -400,7 +407,7 @@
                 if (!currentSetId) {
                     colRightCardsContainer.innerHTML = `
                         <div class="card-set">
-                            Select a card set to view completed cards
+                            Select a library to view completed cards
                         </div>
                     `;
                     return;
@@ -634,9 +641,6 @@
                 if (toggleSetsPanel && colLeft) {
                     toggleSetsPanel.addEventListener('click', () => {
                         colLeft.classList.toggle('panel-visible');
-                        if (colLeft.classList.contains('panel-visible')) {
-                            loadCardSets();
-                        }
                         updateGrid();
                     });
                 }
@@ -647,6 +651,20 @@
                             loadDoneCards();
                         }
                         updateGrid();
+                    });
+                }
+                // Show library button
+                const showLibraryBtn = document.getElementById('show-card-sets');
+                if (showLibraryBtn) {
+                    showLibraryBtn.addEventListener('click', () => {
+                        currentSetId = null;
+                        document.getElementById('current-set-name').textContent = 'Select a Library';
+                        document.getElementById('current-set-description').textContent = '';
+                        document.querySelector('.card-list-container').style.display = 'none';
+                        document.getElementById('card-sets-list').style.display = 'flex';
+                        document.getElementById('add-flashcard').style.display = 'none';
+                        document.getElementById('new-set-btn').style.display = 'inline-block';
+                        loadLibrary();
                     });
                 }
                 // Add new set button
@@ -677,7 +695,7 @@
                             newSetForm.reset();
                             newSetForm.classList.add('hidden');
                             newSetBtn.style.display = 'inline-block';
-                            loadCardSets();
+                            loadLibrary();
                         } catch (error) {
                             console.error('Failed to create set:', error);
                             alert('Failed to create set. Please try again.');
@@ -691,7 +709,7 @@
                 if (addFlashcardBtn) {
                     addFlashcardBtn.addEventListener('click', () => {
                         if (!currentSetId) {
-                            alert('Please select a card set first!');
+                            alert('Please select a library first!');
                             return;
                         }
                         addFlashcardForm.classList.remove('hidden');
@@ -726,15 +744,18 @@
             }
             // Initialize the app
             initializeEventListeners();
-            loadCardSets();
+            loadLibrary();
             loadDoneCards();
+            // Set initial view state
+            document.querySelector('.card-list-container').style.display = 'none';
+            document.getElementById('card-sets-list').style.display = 'flex';
             // Open sidebar by default
             colLeft.classList.add('panel-visible');
             updateGrid();
             // Load the current set
             if (currentSetId) {
                 loadCards(currentSetId);
-                loadCardSets(); // Ensure .active is applied
+                loadLibrary(); // Ensure .active is applied
             }
             // Make toggleCardCompletion available globally
             window.toggleCardCompletion = async function(cardId) {
@@ -748,6 +769,14 @@
                     alert('Failed to toggle card completion. Please try again.');
                 }
             };
+            // Add view switching function
+            function switchToCardView(setId) {
+                document.getElementById('card-sets-list').style.display = 'none';
+                document.querySelector('.card-list-container').style.display = 'flex';
+                document.getElementById('add-flashcard').style.display = 'inline-block';
+                document.getElementById('new-set-btn').style.display = 'none';
+                loadCards(setId);
+            }
         });
     </script>
   </body>

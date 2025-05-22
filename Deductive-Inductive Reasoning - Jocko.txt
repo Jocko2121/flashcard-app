@@ -1,0 +1,104 @@
+Inductive
+The Giants have lost their last seven games. Thus, they will probably lose their next game.
+
+Deductive
+If you brush and floss your teeth daily then you will have fewer cavities. Marie brushes and flosses her teeth daily. Thus, she will have fewer cavities.
+
+Deductive
+Jones will play tennis today if Smith plays. Jones will not play tennis today. Thus, Smith will not play.
+
+Inductive
+4 out of 5 times I beat Corey at pool and I'm going to play him tomorrow. So, I'll very likely win.
+
+Deductive
+If Bush's popularity goes below 20% then he'll be forced to cut and run from Iraq, but that's not the case now.
+
+Inductive
+No man has ever gotten pregnant. Thus, no man ever will get pregnant.
+
+Inductive
+Most people are pro-choice on abortion. At least most of the people I know.
+
+Deductive
+John is a heavy drinker. After all, he's Irish.
+
+Inductive
+It has been observed that earthquakes precede the eruption of volcanoes. Thus, earthquakes cause volcanoes to erupt.
+
+Inductive
+Six schools in other countries that favor year-round school have higher test scores than the US in math, science, and geography. Therefore, the US should have year-round schools.
+
+Deductive
+All students go to school. You are a student. Therefore you go to school.
+
+Deductive
+All birds can fly. An ostrich is a bird. Therefore an ostrich can fly.
+
+Deductive
+To graduate from school, a student must earn twenty credits. Sal will graduate next month. Therefore, Sal must have earned twenty credits.
+
+Inductive
+Rufus and Rose came back from the beach with sunburns. It must have been a sunny day at the beach.
+
+Inductive
+Five of the twenty students surveyed like the new dance policy. Those five were from the senior class. The senior class likes the new policy.
+
+Deductive
+Generally, when food consumed contains more calories than needed, the excess calories are stored as fat. Many teenagers eat far more high calorie foods than their bodies need. Consequently, many teenagers are overweight.
+
+Inductive
+The number of endangered plant and animal species is on the rise worldwide because of the destruction of their habitats. Much of the Florida panther's habitat has been taken over by land developers, and the panther's food source is dwindling. Presently, there are very few Florida panthers remaining. Therefore, the Florida panther should be placed on the endangered species list.
+
+Inductive
+Two episodes of the Big Bang Theory made me laugh and laugh LOLOLOLOL! Therefore, The Big Bang Theory is always funny.
+
+Deductive
+Every day, I leave for work in my car at eight o'clock. Every day, the drive to work takes 45 minutes I arrive to work on time. Therefore, if I leave for work at eight o'clock today, I will be on time.
+
+Inductive
+Jimmy got bitten by a dog. Jimmy is now scared of all dogs.
+
+Deductive
+An apple a day keeps the doctor away. Joe ate an apple every day. Dr. Dre stayed away.
+
+Deductive
+All even numbers are divisible by 2. 28 is even. Therefore 28 is divisible by 2
+
+Deductive
+All chemists are smart, since chemists are scientists and all scientists are smart.
+
+Inductive
+Earth, Mars, and Jupiter travel about the sun in elliptical orbits; therefore, all planets travel about the sun in elliptical orbits.
+
+Inductive
+My daddy has curly hair. My brother has curly hair. Therefore everyone I am related to has curly hair
+
+Deductive
+Since all squares are rectangles, and all rectangles have four sides, all squares have four sides.
+
+Deductive
+All dogs are mammals. All mammals have kidneys. Therefore all dogs have kidneys.
+
+Deductive
+All wombats are mortal. Socrates is a man. Therefore, Socrates is mortal.
+
+Inductive
+Most lights in the night sky are stars. I just saw a light in the night sky. The light I saw must have been a star.
+
+Deductive
+Alice is going to the emergency room because she has fractured her arm. Bone fractures are always painful. Therefore, Alice is in pain.
+
+Inductive
+The last 10 windstorms in this area has come from the north and been preceded by a cloud of dust. I can see a big cloud of dust in the distance; so, a new windstorm is probably coming from the north.
+
+Inductive
+The chair in the living room is red. The chair in the dining room is red. The chair in the bedroom is red. All chairs in the house are red.
+
+Inductive
+Two-thirds of the students at this college receive student aid. Therefore, two-thirds of all college students receive student aid.
+
+Deductive
+When they play in their bedroom, the children in that house usually yell loudly. I can hear children yelling in that house, therefore the children must be playing in their bedroom.
+
+Deductive
+Cacti are plants and all plants perform photosynthesis; therefore, cacti perform photosynthesis.

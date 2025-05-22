@@ -11,36 +11,52 @@
           "answer": "Helsinki",
           "completed": false,
           "createdAt": "2025-05-21T20:19:21.574Z",
-          "lastModified": "2025-05-21T20:32:37.244Z"
+          "lastModified": "2025-05-22T20:57:23.810Z"
         },
         {
           "id": 2,
           "question": "France",
           "answer": "Paris",
-          "completed": true,
+          "completed": false,
           "createdAt": "2025-05-21T20:19:37.084Z",
-          "lastModified": "2025-05-21T23:34:41.380Z"
+          "lastModified": "2025-05-22T20:57:28.915Z"
+        },
+        {
+          "id": 3,
+          "question": "Germany",
+          "answer": "berlin",
+          "completed": false,
+          "createdAt": "2025-05-22T20:40:34.832Z",
+          "lastModified": "2025-05-22T20:40:34.832Z"
         }
       ],
       "createdAt": "2025-05-21T20:18:57.990Z",
-      "lastModified": "2025-05-21T20:18:57.990Z"
+      "lastModified": "2025-05-22T20:57:10.332Z"
     },
     {
       "id": 2,
-      "name": "test set",
+      "name": "Set 2",
       "description": "",
       "cards": [
         {
           "id": 1,
-          "question": "France",
+          "question": "France 2",
           "answer": "Paris",
-          "completed": true,
+          "completed": false,
           "createdAt": "2025-05-21T20:21:07.580Z",
-          "lastModified": "2025-05-21T20:39:51.454Z"
+          "lastModified": "2025-05-22T20:30:20.274Z"
         }
       ],
       "createdAt": "2025-05-21T20:20:57.659Z",
-      "lastModified": "2025-05-21T20:20:57.659Z"
+      "lastModified": "2025-05-22T20:57:14.150Z"
+    },
+    {
+      "id": 3,
+      "name": "Set 3",
+      "description": "none",
+      "cards": [],
+      "createdAt": "2025-05-22T20:04:00.494Z",
+      "lastModified": "2025-05-22T20:57:19.213Z"
     }
   ],
   "settings": {

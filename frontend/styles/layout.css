@@ -40,9 +40,9 @@
     --btn-danger-hover: #d32f2f;  /* Danger button hover state */
     
     /* Card Colors */
-    --card-border: #908cff;       /* Card set border */
-    --card-active-bg: #e0e7ff;    /* Active card set background */
-    --card-active-border: #4f46e5; /* Active card set border */
+    --card-border: #908cff;       /* Library border */
+    --card-active-bg: #e0e7ff;    /* Active library background */
+    --card-active-border: #4f46e5; /* Active library border */
     
     /* Top Bar Colors */
     --topbar-bg: #e3f0fb;         /* Top bar background */
