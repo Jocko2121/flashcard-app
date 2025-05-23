@@ -27,20 +27,29 @@
           </button>
         </div>
         <div class="panel-content nav-content">
-          <div class="nav-header-label">
-            <span class="nav-label">Library</span>
-          </div>
+            <button id="show-home" class="sidebar-nav-btn" type="button">
+                <!-- Home SVG -->
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 9l2 1.5V20h16V10.5L22 9l-10-7zM12 4.5L19 10v8H5v-8l7-5.5z" fill="#555"/>
+                </svg>
+                <span class="nav-label">Home</span>
+              </button>
           
           <button id="show-card-sets" class="add-flashcard-btn sidebar-nav-btn" type="button">
-            <!-- Gear SVG -->
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7zm7.43-2.9l1.77-1.02a1 1 0 0 0 .37-1.36l-1.68-2.92a1 1 0 0 0-1.28-.46l-1.77 1.02a7.03 7.03 0 0 0-1.52-.88l-.27-1.97A1 1 0 0 0 14.1 4h-3.2a1 1 0 0 0-.99.85l-.27 1.97a7.03 7.03 0 0 0-1.52.88l-1.77-1.02a1 1 0 0 0-1.28.46l-1.68 2.92a1 1 0 0 0 .37 1.36l1.77 1.02c-.07.32-.13.65-.17.99l-1.97.27A1 1 0 0 0 2 9.9v3.2a1 1 0 0 0 .85.99l1.97.27c.04.34.1.67.17.99l-1.77 1.02a1 1 0 0 0-.37 1.36l1.68 2.92a1 1 0 0 0 1.28.46l1.77-1.02c.47.34.98.63 1.52.88l.27 1.97a1 1 0 0 0 .99.85h3.2a1 1 0 0 0 .99-.85l.27-1.97c.54-.25 1.05-.54 1.52-.88l1.77 1.02a1 1 0 0 0 1.28-.46l1.68-2.92a1 1 0 0 0-.37-1.36l-1.77-1.02c.07-.32.13-.65.17-.99l1.97-.27A1 1 0 0 0 22 14.1v-3.2a1 1 0 0 0-.85-.99l-1.97-.27a7.03 7.03 0 0 0-.17-.99zM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" fill="#555"/></svg>
-            <span class="nav-label">Show Library</span>
+            <!-- Folder SVG -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" fill="#555"/>
+            </svg>
+            <span class="nav-label">Library</span>
           </button>
           <button id="nav-completed-btn" class="nav-icon-btn sidebar-nav-btn" title="Completed Cards" aria-label="Completed Cards">
             <!-- Checkmark SVG -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
-            <span class="nav-label">Completed</span>
+            <span class="nav-label">Completed Panel</span>
           </button>
+          <div class="nav-header-label">
+            <span class="nav-label">Stuff</span>
+          </div>
         </div>
       </div>
       
@@ -49,7 +58,7 @@
         <!-- Main Header (Set Title and Add Flashcard) -->
         <div class="main-header">
           <div class="main-header-content">
-            <h2 id="current-set-name">Select a Card Set</h2>
+            <h2 id="current-set-name">Home</h2>
             <p id="current-set-description"></p>
           </div>
           <div class="header-buttons">
@@ -299,12 +308,21 @@
                     // Get last active library
                     const lastActiveLibrary = await API.getLastActiveSet();
                     if (lastActiveLibrary) {
-                        currentSetId = lastActiveLibrary;
                         const lastLibrary = library.find(set => String(set.id) === String(lastActiveLibrary));
                         if (lastLibrary) {
-                            document.getElementById('current-set-name').textContent = lastLibrary.name;
-                            document.getElementById('current-set-description').textContent = lastLibrary.description || '';
-                            loadCards(lastLibrary.id);
+                            const lastActiveMessage = document.createElement('div');
+                            lastActiveMessage.className = 'last-active-message';
+                            lastActiveMessage.innerHTML = `
+                                <p>Continue with: <span class="last-active-set">${lastLibrary.name}</span></p>
+                            `;
+                            lastActiveMessage.addEventListener('click', () => {
+                                currentSetId = lastLibrary.id;
+                                switchToCardView(lastLibrary.id);
+                                document.getElementById('current-set-name').textContent = lastLibrary.name;
+                                document.getElementById('current-set-description').textContent = lastLibrary.description || '';
+                                loadDoneCards();
+                            });
+                            cardSetsList.appendChild(lastActiveMessage);
                         }
                     }
                     
@@ -669,13 +687,26 @@
                 if (showLibraryBtn) {
                     showLibraryBtn.addEventListener('click', () => {
                         currentSetId = null;
-                        document.getElementById('current-set-name').textContent = 'Select a Library';
+                        document.getElementById('current-set-name').textContent = 'Library';
                         document.getElementById('current-set-description').textContent = '';
                         document.querySelector('.card-list-container').style.display = 'none';
                         document.getElementById('card-sets-list').style.display = 'flex';
                         document.getElementById('add-flashcard').style.display = 'none';
                         document.getElementById('new-set-btn').style.display = 'inline-block';
                         loadLibrary();
+                    });
+                }
+                // Show home button
+                const showHomeBtn = document.getElementById('show-home');
+                if (showHomeBtn) {
+                    showHomeBtn.addEventListener('click', () => {
+                        currentSetId = null;
+                        document.getElementById('current-set-name').textContent = 'Home';
+                        document.getElementById('current-set-description').textContent = '';
+                        document.querySelector('.card-list-container').style.display = 'none';
+                        document.getElementById('card-sets-list').style.display = 'flex';
+                        document.getElementById('add-flashcard').style.display = 'none';
+                        document.getElementById('new-set-btn').style.display = 'inline-block';
                     });
                 }
                 // Add new set button
@@ -774,11 +805,12 @@
             }
             // Initialize the app
             initializeEventListeners();
-            loadLibrary();
-            loadDoneCards();
             // Set initial view state
             document.querySelector('.card-list-container').style.display = 'none';
             document.getElementById('card-sets-list').style.display = 'flex';
+            document.getElementById('add-flashcard').style.display = 'none';
+            document.getElementById('new-set-btn').style.display = 'inline-block';
+            document.getElementById('current-set-name').textContent = 'Home';
             // Open sidebar by default
             colLeft.classList.add('panel-visible');
             updateGrid();
