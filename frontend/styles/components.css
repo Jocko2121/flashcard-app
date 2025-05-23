@@ -236,6 +236,16 @@
     min-height: 0;
 }
 
+#card-sets-list.stacked-layout {
+    flex-direction: column;
+    gap: 16px;
+}
+
+#card-sets-list.stacked-layout .card-set {
+    width: 100%;
+    max-width: 100%;
+}
+
 .set-stats {
     margin: 8px 0;
     font-size: 0.9em;

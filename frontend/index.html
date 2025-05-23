@@ -62,13 +62,6 @@
           <div class="nav-header-label">
             <span class="nav-label">Stuff</span>
           </div>
-          <button id="nav-completed-btn" class="nav-icon-btn sidebar-nav-btn" title="Completed Cards" aria-label="Completed Cards">
-            <!-- Checkmark SVG -->
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
-            <span class="nav-label">Completed Panel</span>
-          </button>
-
-
           
         </div>
       </div>
@@ -80,11 +73,16 @@
           <div class="main-header-content">
             <h2 id="current-set-name">Home</h2>
             <p id="current-set-description"></p>
+            <span id="header-card-count" class="card-count" style="display: none;">0 cards</span>
           </div>
           <div class="header-buttons">
             <button id="new-set-btn" class="new-set-btn" type="button">New Set</button>
             <button id="continue-with-btn" type="button" style="display: none;">Continue with: </button>
             <button id="add-flashcard" class="add-flashcard-btn" type="button">Add Flashcard</button>
+            <button id="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
+                Completed Cards
+            </button>
           </div>
         </div>
         <form id="new-set-form" class="form-container hidden">
@@ -545,6 +543,12 @@
                 try {
                     const cards = await API.getCards(setId);
                     const activeCards = cards.filter(card => !card.completed);
+                    
+                    // Update the header card count
+                    const headerCardCount = document.getElementById('header-card-count');
+                    headerCardCount.textContent = `${cards.length} card${cards.length !== 1 ? 's' : ''}`;
+                    headerCardCount.style.display = 'inline-block';
+                    
                     if (activeCards.length === 0) {
                         cardContainer.innerHTML = `
                             <div class="card-set">
@@ -711,8 +715,11 @@
                         document.getElementById('current-set-description').textContent = '';
                         document.querySelector('.card-list-container').style.display = 'none';
                         document.getElementById('card-sets-list').style.display = 'flex';
+                        document.getElementById('card-sets-list').classList.remove('stacked-layout');
                         document.getElementById('add-flashcard').style.display = 'none';
                         document.getElementById('new-set-btn').style.display = 'inline-block';
+                        document.getElementById('header-completed-btn').style.display = 'none';
+                        document.getElementById('header-card-count').style.display = 'none';
                         showLibraryBtn.classList.add('active');
                         document.getElementById('show-home').classList.remove('active');
                         loadLibrary();
@@ -727,8 +734,11 @@
                         document.getElementById('current-set-description').textContent = '';
                         document.querySelector('.card-list-container').style.display = 'none';
                         document.getElementById('card-sets-list').style.display = 'flex';
+                        document.getElementById('card-sets-list').classList.add('stacked-layout');
                         document.getElementById('add-flashcard').style.display = 'none';
                         document.getElementById('new-set-btn').style.display = 'inline-block';
+                        document.getElementById('header-completed-btn').style.display = 'none';
+                        document.getElementById('header-card-count').style.display = 'none';
                         showHomeBtn.classList.add('active');
                         document.getElementById('show-card-sets').classList.remove('active');
                         loadLibrary();
@@ -745,6 +755,8 @@
                         document.getElementById('add-flashcard').style.display = 'none';
                         document.getElementById('new-set-btn').style.display = 'none';
                         document.getElementById('continue-with-btn').style.display = 'none';
+                        document.getElementById('header-completed-btn').style.display = 'none';
+                        document.getElementById('header-card-count').style.display = 'none';
                         showThemesBtn.classList.add('active');
                         document.getElementById('show-home').classList.remove('active');
                         document.getElementById('show-card-sets').classList.remove('active');
@@ -762,6 +774,8 @@
                         document.getElementById('add-flashcard').style.display = 'none';
                         document.getElementById('new-set-btn').style.display = 'none';
                         document.getElementById('continue-with-btn').style.display = 'none';
+                        document.getElementById('header-completed-btn').style.display = 'none';
+                        document.getElementById('header-card-count').style.display = 'none';
                         showImportBtn.classList.add('active');
                         document.getElementById('show-home').classList.remove('active');
                         document.getElementById('show-card-sets').classList.remove('active');
@@ -842,17 +856,6 @@
                         }
                     });
                 }
-                // Add event listener for completed cards
-                const navCompletedBtn = document.getElementById('nav-completed-btn');
-                if (navCompletedBtn && colRight) {
-                    navCompletedBtn.addEventListener('click', () => {
-                        colRight.classList.toggle('panel-visible');
-                        if (colRight.classList.contains('panel-visible')) {
-                            loadDoneCards();
-                        }
-                        updateGrid();
-                    });
-                }
                 // Ensure hamburger toggles and calls updateGrid
                 const navCollapseBtn = document.getElementById('nav-collapse-btn');
                 if (navCollapseBtn) {
@@ -869,6 +872,7 @@
             document.getElementById('card-sets-list').style.display = 'flex';
             document.getElementById('add-flashcard').style.display = 'none';
             document.getElementById('new-set-btn').style.display = 'inline-block';
+            document.getElementById('header-completed-btn').style.display = 'none';
             document.getElementById('current-set-name').textContent = 'Home';
             // Set Home button as active
             document.getElementById('show-home').classList.add('active');
@@ -901,7 +905,33 @@
                 document.getElementById('add-flashcard').style.display = 'inline-block';
                 document.getElementById('new-set-btn').style.display = 'none';
                 document.getElementById('continue-with-btn').style.display = 'none';
+                document.getElementById('header-completed-btn').style.display = 'inline-block';
+                document.getElementById('header-card-count').style.display = 'inline-block';
+                
+                // Set up the completed panel button
+                const headerCompletedBtn = document.getElementById('header-completed-btn');
+                if (headerCompletedBtn && colRight) {
+                    headerCompletedBtn.onclick = () => {
+                        colRight.classList.toggle('panel-visible');
+                        if (colRight.classList.contains('panel-visible')) {
+                            loadDoneCards();
+                        }
+                        updateGrid();
+                    };
+                }
+                
                 loadCards(setId);
+            }
+
+            function switchToLibraryView() {
+                document.getElementById('card-sets-list').style.display = 'flex';
+                document.querySelector('.card-list-container').style.display = 'none';
+                document.getElementById('add-flashcard').style.display = 'none';
+                document.getElementById('new-set-btn').style.display = 'inline-block';
+                document.getElementById('header-completed-btn').style.display = 'none';
+                document.getElementById('header-card-count').style.display = 'none';
+                document.getElementById('current-set-name').textContent = 'Library';
+                document.getElementById('current-set-description').textContent = '';
             }
         });
     </script>
