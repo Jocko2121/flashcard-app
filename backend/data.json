@@ -17,9 +17,9 @@
           "id": 2,
           "question": "France",
           "answer": "Paris",
-          "completed": false,
+          "completed": true,
           "createdAt": "2025-05-21T20:19:37.084Z",
-          "lastModified": "2025-05-22T20:57:28.915Z"
+          "lastModified": "2025-05-23T01:41:54.581Z"
         },
         {
           "id": 3,
@@ -61,7 +61,7 @@
   ],
   "settings": {
     "showCompleted": true,
-    "lastActiveSet": 2,
+    "lastActiveSet": 1,
     "theme": "light",
     "studyMode": "normal"
   },
