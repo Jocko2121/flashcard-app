@@ -70,32 +70,6 @@
     flex-direction: column;
 }
 
-.main-header .add-flashcard-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: none;
-    border: none;
-    color: #444;
-    font-size: 1rem;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-}
-
-.main-header .add-flashcard-btn:hover, .main-header .add-flashcard-btn:focus {
-    background: #e6f0ff;
-    color: #2563eb;
-    outline: none;
-}
-
-.main-header .add-flashcard-btn svg {
-    width: 22px;
-    height: 22px;
-    flex-shrink: 0;
-}
-
 .main-header .header-buttons {
     display: flex;
     gap: 10px;
@@ -323,6 +297,18 @@
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
+}
+
+/* Active state only applies to navigation buttons (Home and Library), not panel toggles */
+#show-home.active, #show-card-sets.active {
+    background: #e6f0ff;
+    color: #2563eb;
+}
+
+/* Prevent hover state from persisting on panel toggle buttons */
+#nav-completed-btn:hover, #nav-completed-btn:focus {
+    background: none !important;
+    color: #444 !important;
 }
 
 .sidebar-nav-btn:hover, .sidebar-nav-btn:focus {

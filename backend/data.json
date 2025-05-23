@@ -2,7 +2,7 @@
   "cardSets": [
     {
       "id": 1,
-      "name": "My First Set",
+      "name": "Math",
       "description": "Start adding flashcards to this set",
       "cards": [
         {
@@ -31,11 +31,11 @@
         }
       ],
       "createdAt": "2025-05-21T20:18:57.990Z",
-      "lastModified": "2025-05-22T20:57:10.332Z"
+      "lastModified": "2025-05-23T19:48:26.724Z"
     },
     {
       "id": 2,
-      "name": "Set 2",
+      "name": "Geometry",
       "description": "",
       "cards": [
         {
@@ -48,15 +48,15 @@
         }
       ],
       "createdAt": "2025-05-21T20:20:57.659Z",
-      "lastModified": "2025-05-22T20:57:14.150Z"
+      "lastModified": "2025-05-23T19:48:43.530Z"
     },
     {
       "id": 3,
-      "name": "Set 3",
+      "name": "Physics",
       "description": "none",
       "cards": [],
       "createdAt": "2025-05-22T20:04:00.494Z",
-      "lastModified": "2025-05-22T20:57:19.213Z"
+      "lastModified": "2025-05-23T19:48:55.320Z"
     }
   ],
   "settings": {

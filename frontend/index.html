@@ -27,7 +27,7 @@
           </button>
         </div>
         <div class="panel-content nav-content">
-            <button id="show-home" class="sidebar-nav-btn" type="button">
+            <button id="show-home" class="sidebar-nav-btn active" type="button">
                 <!-- Home SVG -->
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L2 9l2 1.5V20h16V10.5L22 9l-10-7zM12 4.5L19 10v8H5v-8l7-5.5z" fill="#555"/>
@@ -63,6 +63,7 @@
           </div>
           <div class="header-buttons">
             <button id="new-set-btn" class="new-set-btn" type="button">New Set</button>
+            <button id="continue-with-btn" type="button" style="display: none;">Continue with: </button>
             <button id="add-flashcard" class="add-flashcard-btn" type="button">Add Flashcard</button>
           </div>
         </div>
@@ -307,22 +308,21 @@
                     
                     // Get last active library
                     const lastActiveLibrary = await API.getLastActiveSet();
-                    if (lastActiveLibrary) {
+                    const continueBtn = document.getElementById('continue-with-btn');
+                    continueBtn.style.display = 'none'; // Hide by default
+                    
+                    if (lastActiveLibrary && !currentSetId) {
                         const lastLibrary = library.find(set => String(set.id) === String(lastActiveLibrary));
                         if (lastLibrary) {
-                            const lastActiveMessage = document.createElement('div');
-                            lastActiveMessage.className = 'last-active-message';
-                            lastActiveMessage.innerHTML = `
-                                <p>Continue with: <span class="last-active-set">${lastLibrary.name}</span></p>
-                            `;
-                            lastActiveMessage.addEventListener('click', () => {
+                            continueBtn.textContent = `Continue with: ${lastLibrary.name}`;
+                            continueBtn.style.display = 'inline-block';
+                            continueBtn.onclick = () => {
                                 currentSetId = lastLibrary.id;
                                 switchToCardView(lastLibrary.id);
                                 document.getElementById('current-set-name').textContent = lastLibrary.name;
                                 document.getElementById('current-set-description').textContent = lastLibrary.description || '';
                                 loadDoneCards();
-                            });
-                            cardSetsList.appendChild(lastActiveMessage);
+                            };
                         }
                     }
                     
@@ -693,6 +693,8 @@
                         document.getElementById('card-sets-list').style.display = 'flex';
                         document.getElementById('add-flashcard').style.display = 'none';
                         document.getElementById('new-set-btn').style.display = 'inline-block';
+                        showLibraryBtn.classList.add('active');
+                        document.getElementById('show-home').classList.remove('active');
                         loadLibrary();
                     });
                 }
@@ -707,6 +709,9 @@
                         document.getElementById('card-sets-list').style.display = 'flex';
                         document.getElementById('add-flashcard').style.display = 'none';
                         document.getElementById('new-set-btn').style.display = 'inline-block';
+                        showHomeBtn.classList.add('active');
+                        document.getElementById('show-card-sets').classList.remove('active');
+                        loadLibrary();
                     });
                 }
                 // Add new set button
@@ -811,9 +816,13 @@
             document.getElementById('add-flashcard').style.display = 'none';
             document.getElementById('new-set-btn').style.display = 'inline-block';
             document.getElementById('current-set-name').textContent = 'Home';
+            // Set Home button as active
+            document.getElementById('show-home').classList.add('active');
             // Open sidebar by default
             colLeft.classList.add('panel-visible');
             updateGrid();
+            // Load initial content
+            loadLibrary();
             // Load the current set
             if (currentSetId) {
                 loadCards(currentSetId);
@@ -837,6 +846,7 @@
                 document.querySelector('.card-list-container').style.display = 'flex';
                 document.getElementById('add-flashcard').style.display = 'inline-block';
                 document.getElementById('new-set-btn').style.display = 'none';
+                document.getElementById('continue-with-btn').style.display = 'none';
                 loadCards(setId);
             }
         });
