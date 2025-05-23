@@ -272,16 +272,17 @@
                 }, 5000);
             }
             function updateGrid() {
-                const colLeftVisible = colLeft.classList.contains('panel-visible');
                 const colRightVisible = colRight.classList.contains('panel-visible');
-                if (colLeftVisible && colRightVisible) {
-                    layout3col.style.gridTemplateColumns = '260px 1fr 260px';
-                } else if (colLeftVisible) {
-                    layout3col.style.gridTemplateColumns = '260px 1fr 0';
-                } else if (colRightVisible) {
-                    layout3col.style.gridTemplateColumns = '0 1fr 260px';
+                const isCollapsed = layout3col.classList.contains('left-collapsed');
+                
+                if (colRightVisible && !isCollapsed) {
+                    layout3col.style.gridTemplateColumns = '220px 1fr 260px';
+                } else if (colRightVisible && isCollapsed) {
+                    layout3col.style.gridTemplateColumns = '56px 1fr 260px';
+                } else if (!isCollapsed) {
+                    layout3col.style.gridTemplateColumns = '220px 1fr 0';
                 } else {
-                    layout3col.style.gridTemplateColumns = '0 1fr 0';
+                    layout3col.style.gridTemplateColumns = '56px 1fr 0';
                 }
             }
             // Load library into sidebar
@@ -759,6 +760,14 @@
                         if (colRight.classList.contains('panel-visible')) {
                             loadDoneCards();
                         }
+                        updateGrid();
+                    });
+                }
+                // Ensure hamburger toggles and calls updateGrid
+                const navCollapseBtn = document.getElementById('nav-collapse-btn');
+                if (navCollapseBtn) {
+                    navCollapseBtn.addEventListener('click', () => {
+                        layout3col.classList.toggle('left-collapsed');
                         updateGrid();
                     });
                 }
