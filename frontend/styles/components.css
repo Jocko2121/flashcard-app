@@ -71,19 +71,29 @@
 }
 
 .main-header .add-flashcard-btn {
-    height: 48px;
-    font-size: 1rem;
-    background: var(--btn-special-bg);
-    color: var(--text-light);
-    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
     border: none;
-    padding: 0 32px;
+    color: #444;
+    font-size: 1rem;
+    padding: 8px 16px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.15s, color 0.15s;
 }
 
-.main-header .add-flashcard-btn:hover {
-    background: var(--btn-special-hover);
+.main-header .add-flashcard-btn:hover, .main-header .add-flashcard-btn:focus {
+    background: #e6f0ff;
+    color: #2563eb;
+    outline: none;
+}
+
+.main-header .add-flashcard-btn svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
 }
 
 .main-header .header-buttons {
@@ -264,4 +274,71 @@
     background-color: var(--card-bg);
     border-radius: 12px;
     border: 1px solid var(--card-border);
+}
+
+.nav-icon-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    color: #444;
+    font-size: 1rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.nav-icon-btn:hover, .nav-icon-btn:focus {
+    background: #e6f0ff;
+    color: #2563eb;
+    outline: none;
+}
+
+.nav-icon-btn svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.nav-label {
+    font-size: 1rem;
+    color: inherit;
+    font-weight: 500;
+}
+
+.sidebar-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    color: #444;
+    font-size: 1rem;
+    padding: 8px 16px 8px 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.sidebar-nav-btn:hover, .sidebar-nav-btn:focus {
+    background: #e6f0ff;
+    color: #2563eb;
+    outline: none;
+}
+
+.sidebar-nav-btn svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.sidebar-nav-btn .nav-label {
+    font-size: 1rem;
+    color: inherit;
+    font-weight: 500;
 } 
