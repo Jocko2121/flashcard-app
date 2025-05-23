@@ -116,10 +116,17 @@
 .panel-right {
     padding: 15px 0 0 0;
     transform: translateX(100%);
+    width: 335px;
+    min-width: 335px;
+    max-width: 335px;
 }
 
 .panel-right.panel-visible {
     transform: translateX(0);
+}
+
+.layout-3col.right-visible {
+    --right-panel-width: 335px;
 }
 
 /* ==========================================================================
