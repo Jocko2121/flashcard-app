@@ -99,15 +99,34 @@
         </form>
         <!-- Flashcard Display Section -->
         <div id="card-con">
-          <div class="page-panel" id="home-panel">
-            <div id="home-card-sets-list" class="card-sets-list stacked-layout"></div>
+          <div class="panel-content">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+              <div id="home-card-sets-list" class="card-sets-list stacked-layout">
+                <!-- Home card sets will be loaded here -->
+              </div>
+            </div>
+            
+            <!-- Library Page -->
+            <div id="library-page" class="page">
+              <div id="library-card-sets-list" class="card-sets-list">
+                <!-- Library card sets will be loaded here -->
+              </div>
+            </div>
+            
+            <!-- Themes Page -->
+            <div id="themes-page" class="page">
+              <!-- Themes content will go here -->
+            </div>
+            
+            <!-- Import Page -->
+            <div id="import-page" class="page">
+              <!-- Import content will go here -->
+            </div>
           </div>
-          <div class="page-panel" id="library-panel" style="display:none">
-            <div id="library-card-sets-list" class="card-sets-list"></div>
+          <div class="card-list-container">
+            <!-- Cards will be loaded here -->
           </div>
-          <div class="page-panel" id="themes-panel" style="display:none"></div>
-          <div class="page-panel" id="import-panel" style="display:none"></div>
-          <div class="page-panel" id="card-view-panel" style="display:none"></div>
         </div>
       </div>
       
@@ -271,7 +290,8 @@
             const colRight = document.getElementById('col-right');
             const toggleSetsPanel = document.getElementById('toggle-sets-panel');
             const toggleCompletedPanel = document.getElementById('toggle-completed-panel');
-            const cardSetsList = document.getElementById('card-sets-list');
+            const homeCardSetsList = document.getElementById('home-card-sets-list');
+            const libraryCardSetsList = document.getElementById('library-card-sets-list');
             const colRightCardsContainer = colRight.querySelector('.panel-content');
             let currentSetId = null;
             // Inline Undo logic
@@ -318,17 +338,12 @@
             }
             // Load library into sidebar
             async function loadLibrary() {
-                const homePanel = document.getElementById('home-panel');
-                const homeCardSetsList = homePanel ? homePanel.querySelector('#home-card-sets-list') : null;
-                const libraryPanel = document.getElementById('library-panel');
-                const libraryCardSetsList = libraryPanel ? libraryPanel.querySelector('#library-card-sets-list') : null;
-                
                 if (homeCardSetsList) homeCardSetsList.innerHTML = '';
                 if (libraryCardSetsList) libraryCardSetsList.innerHTML = '';
-                
                 try {
                     const library = await API.getAllSets();
                     if (library.length === 0) {
+                        // Add a default library if none exist
                         const defaultLibrary = await API.createSet('My First Library', 'Start adding flashcards to this library');
                         library.push(defaultLibrary);
                     }
@@ -336,179 +351,27 @@
                     // Get last active library
                     const lastActiveLibrary = await API.getLastActiveSet();
                     const continueBtn = document.getElementById('continue-with-btn');
-                    if (continueBtn) continueBtn.style.display = 'none'; // Hide by default
+                    continueBtn.style.display = 'none'; // Hide by default
                     
                     if (lastActiveLibrary && !currentSetId) {
                         const lastLibrary = library.find(set => String(set.id) === String(lastActiveLibrary));
-                        if (lastLibrary && continueBtn) {
+                        if (lastLibrary) {
                             continueBtn.textContent = `Continue with: ${lastLibrary.name}`;
                             continueBtn.style.display = 'inline-block';
                             continueBtn.onclick = () => {
                                 currentSetId = lastLibrary.id;
-                                switchToCardView(lastLibrary.id);
-                                const currentSetName = document.getElementById('current-set-name');
-                                const currentSetDesc = document.getElementById('current-set-description');
-                                if (currentSetName) currentSetName.textContent = lastLibrary.name;
-                                if (currentSetDesc) currentSetDesc.textContent = lastLibrary.description || '';
+                                switchToCardView(lastLibrary);
+                                document.getElementById('current-set-name').textContent = lastLibrary.name;
+                                document.getElementById('current-set-description').textContent = lastLibrary.description || '';
                                 loadDoneCards();
                             };
                         }
                     }
                     
                     library.forEach(set => {
-                        const createSetElement = () => {
-                            const setElement = document.createElement('div');
-                            setElement.className = 'card-set' + (set.id === currentSetId ? ' active' : '');
-                            setElement.innerHTML = `
-                                <div class="set-content-view">
-                                    <h3>${set.name}</h3>
-                                    <p>${set.description || ''}</p>
-                                    <div class="set-stats">
-                                        <span class="card-count">0 cards</span>
-                                    </div>
-                                    <button class="edit-set-btn" data-id="${set.id}">Edit</button>
-                                    <button class="delete-set-btn" data-id="${set.id}">Delete</button>
-                                </div>
-                                <form class="edit-set-form" data-id="${set.id}" style="display:none; margin-top:10px;">
-                                    <input type="text" name="edit-set-name" value="${set.name}" style="width:90%; margin-bottom:5px;" required />
-                                    <input type="text" name="edit-set-desc" value="${set.description || ''}" style="width:90%; margin-bottom:5px;" />
-                                    <button type="submit">Save</button>
-                                    <button type="button" class="cancel-edit-set-btn">Cancel</button>
-                                </form>
-                            `;
-                            
-                            // Load card count for this set
-                            API.getCards(set.id).then(cards => {
-                                const cardCount = cards.length;
-                                const countElement = setElement.querySelector('.card-count');
-                                if (countElement) {
-                                    countElement.textContent = `${cardCount} card${cardCount !== 1 ? 's' : ''}`;
-                                }
-                            }).catch(error => {
-                                console.error('Failed to load card count:', error);
-                            });
-                            
-                            // Add event listeners
-                            const setContentView = setElement.querySelector('.set-content-view');
-                            if (setContentView) {
-                                setContentView.addEventListener('click', async (e) => {
-                                    // Only trigger set selection if not clicking the edit button
-                                    if (e.target.classList.contains('edit-set-btn')) return;
-                                    currentSetId = set.id;
-                                    await API.updateLastActiveSet(set.id);
-                                    switchToCardView(set.id);
-                                    const currentSetName = document.getElementById('current-set-name');
-                                    const currentSetDesc = document.getElementById('current-set-description');
-                                    if (currentSetName) currentSetName.textContent = set.name;
-                                    if (currentSetDesc) currentSetDesc.textContent = set.description || '';
-                                    loadDoneCards();
-                                });
-                            }
-                            
-                            const editBtn = setElement.querySelector('.edit-set-btn');
-                            if (editBtn) {
-                                editBtn.addEventListener('click', (e) => {
-                                    e.stopPropagation();
-                                    const contentView = setElement.querySelector('.set-content-view');
-                                    const editForm = setElement.querySelector('.edit-set-form');
-                                    if (contentView) contentView.style.display = 'none';
-                                    if (editForm) editForm.style.display = 'block';
-                                });
-                            }
-                            
-                            const cancelBtn = setElement.querySelector('.cancel-edit-set-btn');
-                            if (cancelBtn) {
-                                cancelBtn.addEventListener('click', (e) => {
-                                    const contentView = setElement.querySelector('.set-content-view');
-                                    const editForm = setElement.querySelector('.edit-set-form');
-                                    if (contentView) contentView.style.display = 'block';
-                                    if (editForm) editForm.style.display = 'none';
-                                });
-                            }
-                            
-                            const editForm = setElement.querySelector('.edit-set-form');
-                            if (editForm) {
-                                editForm.addEventListener('submit', async (e) => {
-                                    e.preventDefault();
-                                    const nameInput = editForm.querySelector('input[name="edit-set-name"]');
-                                    const descInput = editForm.querySelector('input[name="edit-set-desc"]');
-                                    if (!nameInput) return;
-                                    
-                                    const name = nameInput.value.trim();
-                                    const desc = descInput ? descInput.value.trim() : '';
-                                    
-                                    try {
-                                        await API.updateSet(set.id, name, desc);
-                                        const contentView = setElement.querySelector('.set-content-view');
-                                        if (contentView) contentView.style.display = 'block';
-                                        if (editForm) editForm.style.display = 'none';
-                                        loadLibrary();
-                                        // If this set is active, update the main header too
-                                        if (set.id === currentSetId) {
-                                            const currentSetName = document.getElementById('current-set-name');
-                                            const currentSetDesc = document.getElementById('current-set-description');
-                                            if (currentSetName) currentSetName.textContent = name;
-                                            if (currentSetDesc) currentSetDesc.textContent = desc;
-                                        }
-                                    } catch (error) {
-                                        console.error('Failed to update set:', error);
-                                        alert('Failed to update set. Please try again.');
-                                    }
-                                });
-                            }
-                            
-                            const deleteBtn = setElement.querySelector('.delete-set-btn');
-                            if (deleteBtn) {
-                                deleteBtn.addEventListener('click', async (e) => {
-                                    e.stopPropagation();
-                                    try {
-                                        // Check if set has cards
-                                        const cards = await API.getCards(set.id);
-                                        const message = cards.length > 0 
-                                            ? `This set contains ${cards.length} card(s). Deleting will remove all cards. Are you sure?`
-                                            : 'Are you sure you want to delete this set?';
-                                        
-                                        if (confirm(message)) {
-                                            // Delete all cards first
-                                            for (const card of cards) {
-                                                await API.deleteCard(set.id, card.id);
-                                            }
-                                            // Then delete the set
-                                            await API.deleteSet(set.id);
-                                            
-                                            // Verify deletion
-                                            const isDeleted = await API.verifySetDeleted(set.id);
-                                            if (!isDeleted) {
-                                                throw new Error('Set deletion verification failed');
-                                            }
-                                            
-                                            loadLibrary();
-                                            if (set.id === currentSetId) {
-                                                currentSetId = null;
-                                                const currentSetName = document.getElementById('current-set-name');
-                                                const currentSetDesc = document.getElementById('current-set-description');
-                                                if (currentSetName) currentSetName.textContent = '';
-                                                if (currentSetDesc) currentSetDesc.textContent = '';
-                                                showPanel('home-panel');
-                                            }
-                                        }
-                                    } catch (error) {
-                                        console.error('Failed to delete set:', error);
-                                        alert('Failed to delete set. Please try again.');
-                                    }
-                                });
-                            }
-                            
-                            return setElement;
-                        };
-                        
-                        // Create separate elements for home and library views
-                        const homeElement = createSetElement();
-                        const libraryElement = createSetElement();
-                        
-                        // Add to both lists
-                        if (homeCardSetsList) homeCardSetsList.appendChild(homeElement);
-                        if (libraryCardSetsList) libraryCardSetsList.appendChild(libraryElement);
+                        const setElement = createCardSetElement(set);
+                        if (homeCardSetsList) homeCardSetsList.appendChild(setElement.cloneNode(true));
+                        if (libraryCardSetsList) libraryCardSetsList.appendChild(setElement);
                     });
                 } catch (error) {
                     console.error('Failed to load library:', error);
@@ -517,14 +380,7 @@
             }
             // Load done cards
             async function loadDoneCards() {
-                const colRightCardsContainer = colRight.querySelector('.panel-content');
-                if (!colRightCardsContainer) {
-                    console.error('Completed cards container not found');
-                    return;
-                }
-
                 colRightCardsContainer.innerHTML = '';
-                
                 if (!currentSetId) {
                     colRightCardsContainer.innerHTML = `
                         <div class="card-set">
@@ -533,81 +389,73 @@
                     `;
                     return;
                 }
-
                 try {
                     const cards = await API.getCards(currentSetId);
                     const doneCardsList = cards.filter(card => card.completed);
-                    
                     if (doneCardsList.length === 0) {
                         colRightCardsContainer.innerHTML = `
                             <div class="card-set">
                                 No completed cards yet. Complete some cards to see them here!
                             </div>
                         `;
-                        return;
+                    } else {
+                        doneCardsList.forEach(card => {
+                            const cardElement = document.createElement('div');
+                            cardElement.className = 'card-set completed';
+                            cardElement.innerHTML = `
+                                <h3>${card.question}</h3>
+                                <p>${card.answer}</p>
+                                <button class="incomplete-card-btn" data-id="${card.id}">Activate</button>
+                                <button class="delete-card-btn" data-id="${card.id}">Delete</button>
+                            `;
+                            colRightCardsContainer.appendChild(cardElement);
+                        });
+                        // Add event listeners for Activate and Delete
+                        colRightCardsContainer.querySelectorAll('.incomplete-card-btn').forEach(btn => {
+                            btn.addEventListener('click', async (e) => {
+                                const id = btn.getAttribute('data-id');
+                                try {
+                                    await API.updateCard(currentSetId, id, null, null, false);
+                                    loadCards(currentSetId);
+                                    loadDoneCards();
+                                } catch (error) {
+                                    console.error('Failed to activate card:', error);
+                                    alert('Failed to activate card. Please try again.');
+                                }
+                            });
+                        });
+                        colRightCardsContainer.querySelectorAll('.delete-card-btn').forEach(btn => {
+                            btn.addEventListener('click', async (e) => {
+                                const id = btn.getAttribute('data-id');
+                                try {
+                                    const cardToDelete = cards.find(card => card.id === id);
+                                    await API.deleteCard(currentSetId, id);
+                                    lastDeletedCard = cardToDelete;
+                                    lastDeletedFromDone = true;
+                                    // Find the index of the card in the container
+                                    const cardDiv = btn.closest('.card-set');
+                                    const index = Array.from(colRightCardsContainer.children).indexOf(cardDiv);
+                                    loadCards(currentSetId);
+                                    loadDoneCards();
+                                    showInlineUndo(colRightCardsContainer, index, 'Card deleted.', async () => {
+                                        // Undo: restore card
+                                        try {
+                                            await API.createCard(currentSetId, lastDeletedCard.question, lastDeletedCard.answer);
+                                            await API.updateCard(currentSetId, lastDeletedCard.id, null, null, true);
+                                            loadCards(currentSetId);
+                                            loadDoneCards();
+                                        } catch (error) {
+                                            console.error('Failed to restore card:', error);
+                                            alert('Failed to restore card. Please try again.');
+                                        }
+                                    });
+                                } catch (error) {
+                                    console.error('Failed to delete card:', error);
+                                    alert('Failed to delete card. Please try again.');
+                                }
+                            });
+                        });
                     }
-
-                    doneCardsList.forEach(card => {
-                        const cardElement = document.createElement('div');
-                        cardElement.className = 'card-set completed';
-                        cardElement.innerHTML = `
-                            <h3>${card.question}</h3>
-                            <p>${card.answer}</p>
-                            <button class="incomplete-card-btn" data-id="${card.id}">Activate</button>
-                            <button class="delete-card-btn" data-id="${card.id}">Delete</button>
-                        `;
-                        colRightCardsContainer.appendChild(cardElement);
-                    });
-
-                    // Add event listeners for Activate and Delete
-                    colRightCardsContainer.querySelectorAll('.incomplete-card-btn').forEach(btn => {
-                        btn.addEventListener('click', async (e) => {
-                            const id = btn.getAttribute('data-id');
-                            try {
-                                await API.updateCard(currentSetId, id, null, null, false);
-                                loadCards(currentSetId);
-                                loadDoneCards();
-                            } catch (error) {
-                                console.error('Failed to activate card:', error);
-                                alert('Failed to activate card. Please try again.');
-                            }
-                        });
-                    });
-
-                    colRightCardsContainer.querySelectorAll('.delete-card-btn').forEach(btn => {
-                        btn.addEventListener('click', async (e) => {
-                            const id = btn.getAttribute('data-id');
-                            try {
-                                const cardToDelete = cards.find(card => card.id === id);
-                                await API.deleteCard(currentSetId, id);
-                                lastDeletedCard = cardToDelete;
-                                lastDeletedFromDone = true;
-                                
-                                // Find the index of the card in the container
-                                const cardDiv = btn.closest('.card-set');
-                                const index = Array.from(colRightCardsContainer.children).indexOf(cardDiv);
-                                
-                                loadCards(currentSetId);
-                                loadDoneCards();
-                                
-                                showInlineUndo(colRightCardsContainer, index, 'Card deleted.', async () => {
-                                    // Undo: restore card
-                                    try {
-                                        await API.createCard(currentSetId, lastDeletedCard.question, lastDeletedCard.answer);
-                                        await API.updateCard(currentSetId, lastDeletedCard.id, null, null, true);
-                                        loadCards(currentSetId);
-                                        loadDoneCards();
-                                    } catch (error) {
-                                        console.error('Failed to restore card:', error);
-                                        alert('Failed to restore card. Please try again.');
-                                    }
-                                });
-                            } catch (error) {
-                                console.error('Failed to delete card:', error);
-                                alert('Failed to delete card. Please try again.');
-                            }
-                        });
-                    });
                 } catch (error) {
                     console.error('Failed to load completed cards:', error);
                     alert('Failed to load completed cards. Please try again.');
@@ -615,29 +463,25 @@
             }
             // Load cards for a specific set
             async function loadCards(setId) {
-                const cardViewPanel = document.getElementById('card-view-panel');
-                if (!cardViewPanel) {
-                    console.error('Card view panel not found');
-                    return;
-                }
-                
-                cardViewPanel.innerHTML = '';
+                const cardContainer = document.querySelector('.card-list-container');
+                cardContainer.innerHTML = '';
                 try {
                     const cards = await API.getCards(setId);
                     const activeCards = cards.filter(card => !card.completed);
+                    
+                    // Update the header card count
                     const headerCardCount = document.getElementById('header-card-count');
                     headerCardCount.textContent = `${cards.length} card${cards.length !== 1 ? 's' : ''}`;
                     headerCardCount.style.display = 'inline-block';
                     
                     if (activeCards.length === 0) {
-                        cardViewPanel.innerHTML = `
+                        cardContainer.innerHTML = `
                             <div class="card-set">
                                 No cards in this set yet. Click "Add Flashcard" to create one!
                             </div>
                         `;
                         return;
                     }
-                    
                     activeCards.forEach(card => {
                         const cardElement = document.createElement('div');
                         cardElement.className = `card-set`;
@@ -656,11 +500,10 @@
                                 <button type="button" class="cancel-edit-btn">Cancel</button>
                             </form>
                         `;
-                        cardViewPanel.appendChild(cardElement);
+                        cardContainer.appendChild(cardElement);
                     });
-                    
-                    // Add event listeners for card actions
-                    cardViewPanel.querySelectorAll('.done-card-btn').forEach(btn => {
+                    // Add event listeners for done/edit/delete
+                    cardContainer.querySelectorAll('.done-card-btn').forEach(btn => {
                         btn.addEventListener('click', async (e) => {
                             const id = btn.getAttribute('data-id');
                             try {
@@ -673,24 +516,22 @@
                             }
                         });
                     });
-                    
-                    cardViewPanel.querySelectorAll('.edit-card-btn').forEach(btn => {
+                    cardContainer.querySelectorAll('.edit-card-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => {
+                            const id = btn.getAttribute('data-id');
                             const cardDiv = btn.closest('.card-set');
                             cardDiv.querySelector('.card-content-view').style.display = 'none';
                             cardDiv.querySelector('.edit-card-form').style.display = 'block';
                         });
                     });
-                    
-                    cardViewPanel.querySelectorAll('.cancel-edit-btn').forEach(btn => {
+                    cardContainer.querySelectorAll('.cancel-edit-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => {
                             const cardDiv = btn.closest('.card-set');
                             cardDiv.querySelector('.edit-card-form').style.display = 'none';
                             cardDiv.querySelector('.card-content-view').style.display = 'block';
                         });
                     });
-                    
-                    cardViewPanel.querySelectorAll('.edit-card-form').forEach(form => {
+                    cardContainer.querySelectorAll('.edit-card-form').forEach(form => {
                         form.addEventListener('submit', async (e) => {
                             e.preventDefault();
                             const id = form.getAttribute('data-id');
@@ -705,13 +546,16 @@
                             }
                         });
                     });
-                    
-                    cardViewPanel.querySelectorAll('.delete-card-btn').forEach(btn => {
+                    cardContainer.querySelectorAll('.delete-card-btn').forEach(btn => {
                         btn.addEventListener('click', async (e) => {
                             const id = btn.getAttribute('data-id');
                             const cardDiv = btn.closest('.card-set');
+                            
+                            // Get current card data from DOM
                             const question = cardDiv.querySelector('h3').textContent;
                             const answer = cardDiv.querySelector('p').textContent;
+                            
+                            // Create placeholder
                             const placeholder = document.createElement('div');
                             placeholder.className = 'card-set deleting';
                             placeholder.innerHTML = `
@@ -721,23 +565,36 @@
                                     <div class="deleting-status">Deleting...</div>
                                 </div>
                             `;
-                            const originalIndex = Array.from(cardViewPanel.children).indexOf(cardDiv);
+                            
+                            // Store the original card's position
+                            const originalIndex = Array.from(cardContainer.children).indexOf(cardDiv);
+                            
+                            // Remove the original card
                             cardDiv.remove();
-                            if (cardViewPanel.children.length === 0 || originalIndex >= cardViewPanel.children.length) {
-                                cardViewPanel.appendChild(placeholder);
+                            
+                            // Insert placeholder at the exact same position
+                            if (cardContainer.children.length === 0 || originalIndex >= cardContainer.children.length) {
+                                cardContainer.appendChild(placeholder);
                             } else {
-                                cardViewPanel.insertBefore(placeholder, cardViewPanel.children[originalIndex]);
+                                cardContainer.insertBefore(placeholder, cardContainer.children[originalIndex]);
                             }
+                            
+                            // Create a variable to store the timeout ID
                             let deleteTimeout;
-                            showInlineUndo(cardViewPanel, originalIndex, 'Card deleted.', () => {
+                            
+                            // Show undo bar
+                            showInlineUndo(cardContainer, originalIndex, 'Card deleted.', () => {
+                                // Undo: restore original card and clear the timeout
                                 clearTimeout(deleteTimeout);
                                 placeholder.remove();
-                                if (cardViewPanel.children.length === 0 || originalIndex >= cardViewPanel.children.length) {
-                                    cardViewPanel.appendChild(cardDiv);
+                                if (cardContainer.children.length === 0 || originalIndex >= cardContainer.children.length) {
+                                    cardContainer.appendChild(cardDiv);
                                 } else {
-                                    cardViewPanel.insertBefore(cardDiv, cardViewPanel.children[originalIndex]);
+                                    cardContainer.insertBefore(cardDiv, cardContainer.children[originalIndex]);
                                 }
                             });
+                            
+                            // Set timeout for actual deletion
                             deleteTimeout = setTimeout(async () => {
                                 try {
                                     await API.deleteCard(setId, id);
@@ -746,11 +603,12 @@
                                 } catch (error) {
                                     console.error('Failed to delete card:', error);
                                     alert('Failed to delete card. Please try again.');
+                                    // Restore original card on error
                                     placeholder.remove();
-                                    if (cardViewPanel.children.length === 0 || originalIndex >= cardViewPanel.children.length) {
-                                        cardViewPanel.appendChild(cardDiv);
+                                    if (cardContainer.children.length === 0 || originalIndex >= cardContainer.children.length) {
+                                        cardContainer.appendChild(cardDiv);
                                     } else {
-                                        cardViewPanel.insertBefore(cardDiv, cardViewPanel.children[originalIndex]);
+                                        cardContainer.insertBefore(cardDiv, cardContainer.children[originalIndex]);
                                     }
                                 }
                             }, 5000);
@@ -777,27 +635,24 @@
                 const showLibraryBtn = document.getElementById('show-card-sets');
                 if (showLibraryBtn) {
                     showLibraryBtn.addEventListener('click', () => {
-                        showPanel('library-panel');
-                        // Hide card view
-                        const cardViewPanel = document.getElementById('card-view-panel');
-                        if (cardViewPanel) cardViewPanel.style.display = 'none';
-                        // Hide header card count, add flashcard, completed btn
-                        const headerCardCount = document.getElementById('header-card-count');
-                        if (headerCardCount) headerCardCount.style.display = 'none';
-                        const addFlashcard = document.getElementById('add-flashcard');
-                        if (addFlashcard) addFlashcard.style.display = 'none';
-                        const headerCompletedBtn = document.getElementById('header-completed-btn');
-                        if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
-                        // Set current set name/desc
-                        const currentSetName = document.getElementById('current-set-name');
-                        if (currentSetName) currentSetName.textContent = 'Library';
-                        const currentSetDesc = document.getElementById('current-set-description');
-                        if (currentSetDesc) currentSetDesc.textContent = '';
-                        // Set Library button as active, remove active from others
+                        currentSetId = null;
+                        document.getElementById('current-set-name').textContent = 'Library';
+                        document.getElementById('current-set-description').textContent = '';
+                        document.querySelector('.card-list-container').style.display = 'none';
+                        const cardCon = document.getElementById('card-con');
+                        if (cardCon) {
+                            cardCon.style.display = 'block';
+                        }
+                        if (libraryCardSetsList) {
+                            libraryCardSetsList.style.display = 'flex';
+                            libraryCardSetsList.classList.remove('stacked-layout');
+                        }
+                        document.getElementById('add-flashcard').style.display = 'none';
+                        document.getElementById('new-set-btn').style.display = 'inline-block';
+                        document.getElementById('header-completed-btn').style.display = 'none';
+                        document.getElementById('header-card-count').style.display = 'none';
                         showLibraryBtn.classList.add('active');
-                        const showHomeBtn = document.getElementById('show-home');
-                        if (showHomeBtn) showHomeBtn.classList.remove('active');
-                        // Reload library to refresh card sets
+                        document.getElementById('show-home').classList.remove('active');
                         loadLibrary();
                     });
                 }
@@ -805,27 +660,31 @@
                 const showHomeBtn = document.getElementById('show-home');
                 if (showHomeBtn) {
                     showHomeBtn.addEventListener('click', () => {
-                        showPanel('home-panel');
-                        // Hide card view and card list containers just in case
-                        const cardViewPanel = document.getElementById('card-view-panel');
-                        if (cardViewPanel) cardViewPanel.style.display = 'none';
-                        // Hide header card count, add flashcard, completed btn
+                        showPage('home-page');
                         const headerCardCount = document.getElementById('header-card-count');
-                        if (headerCardCount) headerCardCount.style.display = 'none';
-                        const addFlashcard = document.getElementById('add-flashcard');
-                        if (addFlashcard) addFlashcard.style.display = 'none';
-                        const headerCompletedBtn = document.getElementById('header-completed-btn');
-                        if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
-                        // Set current set name/desc
                         const currentSetName = document.getElementById('current-set-name');
-                        if (currentSetName) currentSetName.textContent = 'Home';
                         const currentSetDesc = document.getElementById('current-set-description');
-                        if (currentSetDesc) currentSetDesc.textContent = '';
-                        // Set Home button as active, remove active from others
-                        showHomeBtn.classList.add('active');
+                        const addFlashcard = document.getElementById('add-flashcard');
+                        const headerCompletedBtn = document.getElementById('header-completed-btn');
+                        const cardListContainer = document.getElementById('card-list-container');
+                        const cardCon = document.getElementById('card-con');
                         const showCardSets = document.getElementById('show-card-sets');
+
+                        if (headerCardCount) headerCardCount.style.display = 'none';
+                        if (currentSetName) currentSetName.textContent = 'Home';
+                        if (currentSetDesc) currentSetDesc.textContent = '';
+                        if (addFlashcard) addFlashcard.style.display = 'none';
+                        if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
+                        if (cardListContainer) cardListContainer.style.display = 'none';
+                        if (cardCon) cardCon.style.display = 'block';
+                        
+                        if (homeCardSetsList) {
+                            homeCardSetsList.style.display = 'flex';
+                            homeCardSetsList.classList.add('stacked-layout');
+                        }
+                        
+                        showHomeBtn.classList.add('active');
                         if (showCardSets) showCardSets.classList.remove('active');
-                        // Reload library to refresh card sets
                         loadLibrary();
                     });
                 }
@@ -833,58 +692,48 @@
                 const showThemesBtn = document.getElementById('show-themes');
                 if (showThemesBtn) {
                     showThemesBtn.addEventListener('click', () => {
-                        showPanel('themes-panel');
-                        // Hide card view
-                        const cardViewPanel = document.getElementById('card-view-panel');
-                        if (cardViewPanel) cardViewPanel.style.display = 'none';
-                        // Hide header card count, add flashcard, completed btn
-                        const headerCardCount = document.getElementById('header-card-count');
-                        if (headerCardCount) headerCardCount.style.display = 'none';
-                        const addFlashcard = document.getElementById('add-flashcard');
-                        if (addFlashcard) addFlashcard.style.display = 'none';
-                        const headerCompletedBtn = document.getElementById('header-completed-btn');
-                        if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
-                        // Set current set name/desc
-                        const currentSetName = document.getElementById('current-set-name');
-                        if (currentSetName) currentSetName.textContent = 'Themes';
-                        const currentSetDesc = document.getElementById('current-set-description');
-                        if (currentSetDesc) currentSetDesc.textContent = '';
-                        // Set Themes button as active, remove active from others
+                        document.getElementById('current-set-name').textContent = 'Themes';
+                        document.getElementById('current-set-description').textContent = '';
+                        document.querySelector('.card-list-container').style.display = 'none';
+                        if (homeCardSetsList) {
+                            homeCardSetsList.style.display = 'none';
+                        }
+                        if (libraryCardSetsList) {
+                            libraryCardSetsList.style.display = 'none';
+                        }
+                        document.getElementById('add-flashcard').style.display = 'none';
+                        document.getElementById('new-set-btn').style.display = 'none';
+                        document.getElementById('continue-with-btn').style.display = 'none';
+                        document.getElementById('header-completed-btn').style.display = 'none';
+                        document.getElementById('header-card-count').style.display = 'none';
                         showThemesBtn.classList.add('active');
-                        const showHomeBtn = document.getElementById('show-home');
-                        if (showHomeBtn) showHomeBtn.classList.remove('active');
-                        const showLibraryBtn = document.getElementById('show-card-sets');
-                        if (showLibraryBtn) showLibraryBtn.classList.remove('active');
+                        document.getElementById('show-home').classList.remove('active');
+                        document.getElementById('show-card-sets').classList.remove('active');
+                        document.getElementById('show-import').classList.remove('active');
                     });
                 }
                 // Show import button
                 const showImportBtn = document.getElementById('show-import');
                 if (showImportBtn) {
                     showImportBtn.addEventListener('click', () => {
-                        showPanel('import-panel');
-                        // Hide card view
-                        const cardViewPanel = document.getElementById('card-view-panel');
-                        if (cardViewPanel) cardViewPanel.style.display = 'none';
-                        // Hide header card count, add flashcard, completed btn
-                        const headerCardCount = document.getElementById('header-card-count');
-                        if (headerCardCount) headerCardCount.style.display = 'none';
-                        const addFlashcard = document.getElementById('add-flashcard');
-                        if (addFlashcard) addFlashcard.style.display = 'none';
-                        const headerCompletedBtn = document.getElementById('header-completed-btn');
-                        if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
-                        // Set current set name/desc
-                        const currentSetName = document.getElementById('current-set-name');
-                        if (currentSetName) currentSetName.textContent = 'Import';
-                        const currentSetDesc = document.getElementById('current-set-description');
-                        if (currentSetDesc) currentSetDesc.textContent = '';
-                        // Set Import button as active, remove active from others
+                        document.getElementById('current-set-name').textContent = 'Import';
+                        document.getElementById('current-set-description').textContent = '';
+                        document.querySelector('.card-list-container').style.display = 'none';
+                        if (homeCardSetsList) {
+                            homeCardSetsList.style.display = 'none';
+                        }
+                        if (libraryCardSetsList) {
+                            libraryCardSetsList.style.display = 'none';
+                        }
+                        document.getElementById('add-flashcard').style.display = 'none';
+                        document.getElementById('new-set-btn').style.display = 'none';
+                        document.getElementById('continue-with-btn').style.display = 'none';
+                        document.getElementById('header-completed-btn').style.display = 'none';
+                        document.getElementById('header-card-count').style.display = 'none';
                         showImportBtn.classList.add('active');
-                        const showHomeBtn = document.getElementById('show-home');
-                        if (showHomeBtn) showHomeBtn.classList.remove('active');
-                        const showLibraryBtn = document.getElementById('show-card-sets');
-                        if (showLibraryBtn) showLibraryBtn.classList.remove('active');
-                        const showThemesBtn = document.getElementById('show-themes');
-                        if (showThemesBtn) showThemesBtn.classList.remove('active');
+                        document.getElementById('show-home').classList.remove('active');
+                        document.getElementById('show-card-sets').classList.remove('active');
+                        document.getElementById('show-themes').classList.remove('active');
                     });
                 }
                 // Add new set button
@@ -972,53 +821,22 @@
             }
             // Initialize the app
             initializeEventListeners();
-
             // Set initial view state
-            const homePanel = document.getElementById('home-panel');
-            const libraryPanel = document.getElementById('library-panel');
-            const cardViewPanel = document.getElementById('card-view-panel');
-
-            // Hide all panels except home
-            document.querySelectorAll('#card-con > .page-panel').forEach(panel => {
-                if (panel !== homePanel) {
-                    panel.style.display = 'none';
-                }
-            });
-
-            // Show home panel
-            if (homePanel) {
-                homePanel.style.display = 'block';
-            }
-
-            // Set up initial button states
-            const addFlashcard = document.getElementById('add-flashcard');
-            const newSetBtn = document.getElementById('new-set-btn');
-            const headerCompletedBtn = document.getElementById('header-completed-btn');
-            const headerCardCount = document.getElementById('header-card-count');
-
-            if (addFlashcard) addFlashcard.style.display = 'none';
-            if (newSetBtn) newSetBtn.style.display = 'inline-block';
-            if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
-            if (headerCardCount) headerCardCount.style.display = 'none';
-
-            // Set initial header text
-            const currentSetName = document.getElementById('current-set-name');
-            const currentSetDesc = document.getElementById('current-set-description');
-            if (currentSetName) currentSetName.textContent = 'Home';
-            if (currentSetDesc) currentSetDesc.textContent = '';
-
+            document.querySelector('.card-list-container').style.display = 'none';
+            document.getElementById('home-card-sets-list').style.display = 'flex';
+            document.getElementById('library-card-sets-list').style.display = 'none';
+            document.getElementById('add-flashcard').style.display = 'none';
+            document.getElementById('new-set-btn').style.display = 'inline-block';
+            document.getElementById('header-completed-btn').style.display = 'none';
+            document.getElementById('current-set-name').textContent = 'Home';
             // Set Home button as active
-            const showHomeBtn = document.getElementById('show-home');
-            if (showHomeBtn) showHomeBtn.classList.add('active');
-
+            document.getElementById('show-home').classList.add('active');
             // Open sidebar by default
-            if (colLeft) colLeft.classList.add('panel-visible');
+            colLeft.classList.add('panel-visible');
             updateGrid();
-
             // Load initial content
             loadLibrary();
-
-            // Load the current set if one is selected
+            // Load the current set
             if (currentSetId) {
                 loadCards(currentSetId);
                 loadLibrary(); // Ensure .active is applied
@@ -1036,39 +854,26 @@
                 }
             };
             // Add view switching function
-            function switchToCardView(setId) {
-                showPanel('card-view-panel');
+            function switchToCardView(set) {
+                document.getElementById('card-con').style.display = 'flex';
+                document.getElementById('card-list-container').style.display = 'flex';
+                document.getElementById('current-set-name').textContent = set.name;
+                document.getElementById('current-set-description').textContent = set.description || '';
+                document.getElementById('add-flashcard').style.display = 'block';
+                document.getElementById('header-completed-btn').style.display = 'block';
+                document.getElementById('header-card-count').style.display = 'inline-block';
                 
-                // Update header elements
-                const addFlashcard = document.getElementById('add-flashcard');
-                const newSetBtn = document.getElementById('new-set-btn');
-                const continueWithBtn = document.getElementById('continue-with-btn');
-                const headerCompletedBtn = document.getElementById('header-completed-btn');
-                const headerCardCount = document.getElementById('header-card-count');
+                // Hide all pages
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
                 
-                if (addFlashcard) addFlashcard.style.display = 'inline-block';
-                if (newSetBtn) newSetBtn.style.display = 'none';
-                if (continueWithBtn) continueWithBtn.style.display = 'none';
-                if (headerCompletedBtn) headerCompletedBtn.style.display = 'inline-block';
-                if (headerCardCount) headerCardCount.style.display = 'inline-block';
-                
-                // Set up the completed panel button
-                if (headerCompletedBtn && colRight) {
-                    headerCompletedBtn.onclick = () => {
-                        colRight.classList.toggle('panel-visible');
-                        if (colRight.classList.contains('panel-visible')) {
-                            loadDoneCards();
-                        }
-                        updateGrid();
-                    };
-                }
-                
-                // Load cards for the selected set
-                loadCards(setId);
+                currentSetId = set.id;
+                loadCards(set.id);
             }
 
             function switchToLibraryView() {
-                document.getElementById('card-sets-list').style.display = 'flex';
+                document.getElementById('library-card-sets-list').style.display = 'flex';
                 document.querySelector('.card-list-container').style.display = 'none';
                 document.getElementById('add-flashcard').style.display = 'none';
                 document.getElementById('new-set-btn').style.display = 'inline-block';
@@ -1079,10 +884,313 @@
             }
 
             // Navigation Functions
-            function showPanel(panelId) {
-                document.querySelectorAll('#card-con > .page-panel').forEach(el => el.style.display = 'none');
-                const panel = document.getElementById(panelId);
-                if (panel) panel.style.display = 'block';
+            function showPage(pageId) {
+                // Hide all pages
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                // Show selected page
+                document.getElementById(pageId).classList.add('active');
+            }
+
+            // Update navigation handlers
+            const showHomeBtn = document.getElementById('show-home');
+            if (showHomeBtn) {
+                showHomeBtn.addEventListener('click', () => {
+                    showPage('home-page');
+                    const headerCardCount = document.getElementById('header-card-count');
+                    const currentSetName = document.getElementById('current-set-name');
+                    const currentSetDesc = document.getElementById('current-set-description');
+                    const addFlashcard = document.getElementById('add-flashcard');
+                    const headerCompletedBtn = document.getElementById('header-completed-btn');
+                    const cardListContainer = document.getElementById('card-list-container');
+                    const cardCon = document.getElementById('card-con');
+                    const showCardSets = document.getElementById('show-card-sets');
+
+                    if (headerCardCount) headerCardCount.style.display = 'none';
+                    if (currentSetName) currentSetName.textContent = 'Home';
+                    if (currentSetDesc) currentSetDesc.textContent = '';
+                    if (addFlashcard) addFlashcard.style.display = 'none';
+                    if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
+                    if (cardListContainer) cardListContainer.style.display = 'none';
+                    if (cardCon) cardCon.style.display = 'block';
+                    
+                    if (homeCardSetsList) {
+                        homeCardSetsList.style.display = 'flex';
+                        homeCardSetsList.classList.add('stacked-layout');
+                    }
+                    
+                    showHomeBtn.classList.add('active');
+                    if (showCardSets) showCardSets.classList.remove('active');
+                    loadLibrary();
+                });
+            }
+
+            const showLibraryBtn = document.getElementById('show-card-sets');
+            if (showLibraryBtn) {
+                showLibraryBtn.addEventListener('click', () => {
+                    showPage('library-page');
+                    const headerCardCount = document.getElementById('header-card-count');
+                    const currentSetName = document.getElementById('current-set-name');
+                    const currentSetDesc = document.getElementById('current-set-description');
+                    const addFlashcard = document.getElementById('add-flashcard');
+                    const headerCompletedBtn = document.getElementById('header-completed-btn');
+                    const cardListContainer = document.getElementById('card-list-container');
+                    const cardCon = document.getElementById('card-con');
+                    const showHome = document.getElementById('show-home');
+
+                    if (headerCardCount) headerCardCount.style.display = 'none';
+                    if (currentSetName) currentSetName.textContent = 'Library';
+                    if (currentSetDesc) currentSetDesc.textContent = '';
+                    if (addFlashcard) addFlashcard.style.display = 'none';
+                    if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
+                    if (cardListContainer) cardListContainer.style.display = 'none';
+                    if (cardCon) cardCon.style.display = 'block';
+                    
+                    if (libraryCardSetsList) {
+                        libraryCardSetsList.style.display = 'flex';
+                        libraryCardSetsList.classList.remove('stacked-layout');
+                    }
+                    
+                    showLibraryBtn.classList.add('active');
+                    if (showHome) showHome.classList.remove('active');
+                    loadLibrary();
+                });
+            }
+
+            const showThemesBtn = document.getElementById('show-themes');
+            if (showThemesBtn) {
+                showThemesBtn.addEventListener('click', () => {
+                    showPage('themes-page');
+                    const headerCardCount = document.getElementById('header-card-count');
+                    const currentSetName = document.getElementById('current-set-name');
+                    const currentSetDesc = document.getElementById('current-set-description');
+                    const addFlashcard = document.getElementById('add-flashcard');
+                    const headerCompletedBtn = document.getElementById('header-completed-btn');
+                    const cardListContainer = document.getElementById('card-list-container');
+                    const cardCon = document.getElementById('card-con');
+                    const showHome = document.getElementById('show-home');
+                    const showCardSets = document.getElementById('show-card-sets');
+                    const showImport = document.getElementById('show-import');
+
+                    if (headerCardCount) headerCardCount.style.display = 'none';
+                    if (currentSetName) currentSetName.textContent = 'Themes';
+                    if (currentSetDesc) currentSetDesc.textContent = '';
+                    if (addFlashcard) addFlashcard.style.display = 'none';
+                    if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
+                    if (cardListContainer) cardListContainer.style.display = 'none';
+                    if (cardCon) cardCon.style.display = 'block';
+                    
+                    if (homeCardSetsList) homeCardSetsList.style.display = 'none';
+                    if (libraryCardSetsList) libraryCardSetsList.style.display = 'none';
+                    
+                    showThemesBtn.classList.add('active');
+                    if (showHome) showHome.classList.remove('active');
+                    if (showCardSets) showCardSets.classList.remove('active');
+                    if (showImport) showImport.classList.remove('active');
+                });
+            }
+
+            const showImportBtn = document.getElementById('show-import');
+            if (showImportBtn) {
+                showImportBtn.addEventListener('click', () => {
+                    showPage('import-page');
+                    const headerCardCount = document.getElementById('header-card-count');
+                    const currentSetName = document.getElementById('current-set-name');
+                    const currentSetDesc = document.getElementById('current-set-description');
+                    const addFlashcard = document.getElementById('add-flashcard');
+                    const headerCompletedBtn = document.getElementById('header-completed-btn');
+                    const cardListContainer = document.getElementById('card-list-container');
+                    const cardCon = document.getElementById('card-con');
+                    const showHome = document.getElementById('show-home');
+                    const showCardSets = document.getElementById('show-card-sets');
+                    const showThemes = document.getElementById('show-themes');
+
+                    if (headerCardCount) headerCardCount.style.display = 'none';
+                    if (currentSetName) currentSetName.textContent = 'Import';
+                    if (currentSetDesc) currentSetDesc.textContent = '';
+                    if (addFlashcard) addFlashcard.style.display = 'none';
+                    if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
+                    if (cardListContainer) cardListContainer.style.display = 'none';
+                    if (cardCon) cardCon.style.display = 'block';
+                    
+                    if (homeCardSetsList) homeCardSetsList.style.display = 'none';
+                    if (libraryCardSetsList) libraryCardSetsList.style.display = 'none';
+                    
+                    showImportBtn.classList.add('active');
+                    if (showHome) showHome.classList.remove('active');
+                    if (showCardSets) showCardSets.classList.remove('active');
+                    if (showThemes) showThemes.classList.remove('active');
+                });
+            }
+
+            // Update loadCardSets function
+            async function loadCardSets() {
+                try {
+                    const sets = await API.getCardSets();
+                    const homeList = document.getElementById('home-card-sets-list');
+                    const libraryList = document.getElementById('library-card-sets-list');
+                    
+                    // Clear existing lists
+                    homeList.innerHTML = '';
+                    libraryList.innerHTML = '';
+                    
+                    // Sort sets by last accessed date
+                    sets.sort((a, b) => new Date(b.lastAccessed) - new Date(a.lastAccessed));
+                    
+                    // Add sets to both lists
+                    sets.forEach(set => {
+                        const setElement = createCardSetElement(set);
+                        homeList.appendChild(setElement.cloneNode(true));
+                        libraryList.appendChild(setElement);
+                    });
+                } catch (error) {
+                    console.error('Error loading card sets:', error);
+                    showError('Failed to load card sets');
+                }
+            }
+
+            // Update switchToCardView function
+            function switchToCardView(set) {
+                document.getElementById('card-con').style.display = 'flex';
+                document.getElementById('card-list-container').style.display = 'flex';
+                document.getElementById('current-set-name').textContent = set.name;
+                document.getElementById('current-set-description').textContent = set.description || '';
+                document.getElementById('add-flashcard').style.display = 'block';
+                document.getElementById('header-completed-btn').style.display = 'block';
+                document.getElementById('header-card-count').style.display = 'inline-block';
+                
+                // Hide all pages
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                currentSetId = set.id;
+                loadCards();
+            }
+
+            // Update switchToLibraryView function
+            function switchToLibraryView() {
+                document.getElementById('card-con').style.display = 'block';
+                document.getElementById('card-list-container').style.display = 'none';
+                document.getElementById('current-set-name').textContent = 'Library';
+                document.getElementById('current-set-description').textContent = '';
+                document.getElementById('add-flashcard').style.display = 'none';
+                document.getElementById('header-completed-btn').style.display = 'none';
+                document.getElementById('header-card-count').style.display = 'none';
+                
+                // Show library page
+                showPage('library-page');
+                
+                currentSetId = null;
+            }
+
+            // Create card set element
+            function createCardSetElement(set) {
+                const setElement = document.createElement('div');
+                setElement.className = 'card-set' + (set.id === currentSetId ? ' active' : '');
+                setElement.innerHTML = `
+                    <div class="set-content-view">
+                        <h3>${set.name}</h3>
+                        <p>${set.description || ''}</p>
+                        <div class="set-stats">
+                            <span class="card-count">0 cards</span>
+                        </div>
+                        <button class="edit-set-btn" data-id="${set.id}">Edit</button>
+                        <button class="delete-set-btn" data-id="${set.id}">Delete</button>
+                    </div>
+                    <form class="edit-set-form" data-id="${set.id}" style="display:none; margin-top:10px;">
+                        <input type="text" name="edit-set-name" value="${set.name}" style="width:90%; margin-bottom:5px;" required />
+                        <input type="text" name="edit-set-desc" value="${set.description || ''}" style="width:90%; margin-bottom:5px;" />
+                        <button type="submit">Save</button>
+                        <button type="button" class="cancel-edit-set-btn">Cancel</button>
+                    </form>
+                `;
+
+                // Load card count for this set
+                API.getCards(set.id).then(cards => {
+                    const cardCount = cards.length;
+                    const countElement = setElement.querySelector('.card-count');
+                    countElement.textContent = `${cardCount} card${cardCount !== 1 ? 's' : ''}`;
+                }).catch(error => {
+                    console.error('Failed to load card count:', error);
+                });
+
+                // Add event listeners
+                setElement.querySelector('.set-content-view').addEventListener('click', async (e) => {
+                    if (e.target.classList.contains('edit-set-btn')) return;
+                    currentSetId = set.id;
+                    await API.updateLastActiveSet(set.id);
+                    switchToCardView(set);
+                    document.getElementById('current-set-name').textContent = set.name;
+                    document.getElementById('current-set-description').textContent = set.description || '';
+                    loadDoneCards();
+                });
+
+                setElement.querySelector('.edit-set-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    setElement.querySelector('.set-content-view').style.display = 'none';
+                    setElement.querySelector('.edit-set-form').style.display = 'block';
+                });
+
+                setElement.querySelector('.cancel-edit-set-btn').addEventListener('click', (e) => {
+                    setElement.querySelector('.edit-set-form').style.display = 'none';
+                    setElement.querySelector('.set-content-view').style.display = 'block';
+                });
+
+                setElement.querySelector('.edit-set-form').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const name = setElement.querySelector('input[name="edit-set-name"]').value.trim();
+                    const desc = setElement.querySelector('input[name="edit-set-desc"]').value.trim();
+                    try {
+                        await API.updateSet(set.id, name, desc);
+                        setElement.querySelector('.edit-set-form').style.display = 'none';
+                        setElement.querySelector('.set-content-view').style.display = 'block';
+                        loadLibrary();
+                        if (set.id === currentSetId) {
+                            document.getElementById('current-set-name').textContent = name;
+                            document.getElementById('current-set-description').textContent = desc;
+                        }
+                    } catch (error) {
+                        console.error('Failed to update set:', error);
+                        alert('Failed to update set. Please try again.');
+                    }
+                });
+
+                setElement.querySelector('.delete-set-btn').addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    try {
+                        const cards = await API.getCards(set.id);
+                        const message = cards.length > 0 
+                            ? `This set contains ${cards.length} card(s). Deleting will remove all cards. Are you sure?`
+                            : 'Are you sure you want to delete this set?';
+                        
+                        if (confirm(message)) {
+                            for (const card of cards) {
+                                await API.deleteCard(set.id, card.id);
+                            }
+                            await API.deleteSet(set.id);
+                            
+                            const isDeleted = await API.verifySetDeleted(set.id);
+                            if (!isDeleted) {
+                                throw new Error('Set deletion verification failed');
+                            }
+                            
+                            loadLibrary();
+                            if (set.id === currentSetId) {
+                                currentSetId = null;
+                                document.getElementById('current-set-name').textContent = '';
+                                document.getElementById('current-set-description').textContent = '';
+                                document.querySelector('.card-list-container').innerHTML = '';
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Failed to delete set:', error);
+                        alert('Failed to delete set. Please try again.');
+                    }
+                });
+
+                return setElement;
             }
         });
     </script>

@@ -198,4 +198,52 @@
     display: flex;
     justify-content: center;
     width: 100%;
+}
+
+/* Page Container Styles */
+.page {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+.page.active {
+    display: block;
+}
+
+/* Page Panel Styles */
+.page-panel {
+    display: none;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.page-panel[style*="display: block"] {
+    display: block;
+}
+
+/* Card Sets List Styles */
+.card-sets-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Stacked layout for home page */
+.stacked-layout {
+    flex-direction: column;
+    gap: 16px;
+}
+
+.stacked-layout .card-set {
+    width: 100%;
+}
+
+/* Remove legacy card-list-container styles */
+.card-list-container {
+    display: none;
 } 
