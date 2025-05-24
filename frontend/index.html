@@ -17,9 +17,9 @@
         <!-- Removed 'Toggle Library' and 'Toggle Completed' buttons -->
       </div>
     </div>
-    <div class="layout-3col">
+    <div class="app-layout">
       <!-- Left Column -->
-      <div id="col-left" class="panel-base panel-left panel-visible">
+      <div id="sect-nav" class="panel-base panel-left panel-visible">
         <div class="panel-header nav-header">
           <button id="btn-nav-hamburger" class="nav-icon-btn" title="Collapse/Expand Navigation" aria-label="Collapse/Expand Navigation">
             <!-- Hamburger SVG -->
@@ -70,7 +70,7 @@
 
 
       <!-- Main Column -->
-      <div id="card-con" class="panel-base panel-main">
+      <div id="sect-main" class="panel-base panel-main">
         <!-- Page Display Section -->
         <div id="view-home" class="page-panel">
           <div class="main-header">
@@ -190,7 +190,7 @@
       </div>
       
       <!-- Right Column -->
-      <div id="col-right" class="panel-base panel-right panel-hidden">
+      <div id="sect-done" class="panel-base panel-right panel-hidden">
         <div class="panel-header">
           <h2>Completed Cards</h2>
         </div>
@@ -344,9 +344,9 @@
             // Add logging to verify event handlers
             console.log('DOM Content Loaded - Initializing event handlers');
             
-            const layout3col = document.querySelector('.layout-3col');
-            const colLeft = document.getElementById('col-left');
-            const colRight = document.getElementById('col-right');
+            const layout3col = document.querySelector('.app-layout');
+            const colLeft = document.getElementById('sect-nav');
+            const colRight = document.getElementById('sect-done');
             const toggleSetsPanel = document.getElementById('toggle-sets-panel');
             const toggleCompletedPanel = document.getElementById('toggle-completed-panel');
             const cardSetsList = document.getElementById('card-sets-list');
@@ -1144,7 +1144,7 @@
             });
 
             // Hide all panels except home
-            document.querySelectorAll('#card-con > .page-panel').forEach(panel => {
+            document.querySelectorAll('#sect-main > .page-panel').forEach(panel => {
                 if (panel !== homePanel) {
                     panel.style.display = 'none';
                 }
@@ -1253,7 +1253,7 @@
             // Navigation Functions
             function showPanel(panelId) {
                 // Hide all panels
-                document.querySelectorAll('#card-con > .page-panel').forEach(panel => {
+                document.querySelectorAll('#sect-main > .page-panel').forEach(panel => {
                     panel.style.display = 'none';
                 });
                 
