@@ -306,7 +306,7 @@
 }
 
 /* Active state only applies to navigation buttons (Home and Library), not panel toggles */
-#show-home.active, #show-card-sets.active {
+#nav-home.active, #nav-library.active {
     background: #e6f0ff;
     color: #2563eb;
 }
