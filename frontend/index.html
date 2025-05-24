@@ -21,13 +21,13 @@
       <!-- Left Column -->
       <div id="col-left" class="panel-base panel-left panel-visible">
         <div class="panel-header nav-header">
-          <button id="nav-hamburger" class="nav-icon-btn" title="Collapse/Expand Navigation" aria-label="Collapse/Expand Navigation">
+          <button id="btn-nav-hamburger" class="nav-icon-btn" title="Collapse/Expand Navigation" aria-label="Collapse/Expand Navigation">
             <!-- Hamburger SVG -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect y="4" width="24" height="2" rx="1" fill="#555"/><rect y="11" width="24" height="2" rx="1" fill="#555"/><rect y="18" width="24" height="2" rx="1" fill="#555"/></svg>
           </button>
         </div>
         <div class="panel-content nav-content">
-            <button id="nav-home" class="sidebar-nav-btn active" type="button">
+            <button id="btn-nav-home" class="sidebar-nav-btn active" type="button">
                 <!-- Home SVG -->
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L2 9l2 1.5V20h16V10.5L22 9l-10-7zM12 4.5L19 10v8H5v-8l7-5.5z" fill="#555"/>
@@ -35,7 +35,7 @@
                 <span class="nav-label">Home</span>
               </button>
           
-          <button id="nav-library" class="add-flashcard-btn sidebar-nav-btn" type="button">
+          <button id="btn-nav-library" class="add-flashcard-btn sidebar-nav-btn" type="button">
             <!-- Folder SVG -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" fill="#555"/>
@@ -43,14 +43,14 @@
             <span class="nav-label">Library</span>
           </button>
           
-          <button id="nav-themes" class="nav-icon-btn sidebar-nav-btn" type="button">
+          <button id="btn-nav-themes" class="nav-icon-btn sidebar-nav-btn" type="button">
             <!-- Color Palette SVG -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c.84 0 1.5-.66 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 8c-.83 0-1.5-.67-1.5-1.5S5.67 7 6.5 7s1.5.67 1.5 1.5S7.33 10 6.5 10zm3-4C8.67 6 8 5.33 8 4.5S8.67 3 9.5 3s1.5.67 1.5 1.5S10.33 6 9.5 6zM5.75 12.5c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25zM8.5 15c-.83 0-1.5-.67-1.5-1.5S7.67 12 8.5 12s1.5.67 1.5 1.5S9.33 15 8.5 15z" fill="#555"/>
             </svg>
             <span class="nav-label">Themes</span>
           </button>
-          <button id="nav-import" class="nav-icon-btn sidebar-nav-btn" type="button">
+          <button id="btn-nav-import" class="nav-icon-btn sidebar-nav-btn" type="button">
             <!-- Import SVG -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" fill="#555"/>
@@ -871,7 +871,7 @@
                 }
 
                 // Show library button
-                const showLibraryBtn = document.getElementById('nav-library');
+                const showLibraryBtn = document.getElementById('btn-nav-library');
                 if (showLibraryBtn) {
                     showLibraryBtn.addEventListener('click', () => {
                         switchToLibraryView();
@@ -879,7 +879,7 @@
                 }
 
                 // Show home button
-                const showHomeBtn = document.getElementById('nav-home');
+                const showHomeBtn = document.getElementById('btn-nav-home');
                 if (showHomeBtn) {
                     showHomeBtn.addEventListener('click', () => {
                         showPanel('view-home');
@@ -906,7 +906,7 @@
                 }
 
                 // Show themes button
-                const showThemesBtn = document.getElementById('nav-themes');
+                const showThemesBtn = document.getElementById('btn-nav-themes');
                 if (showThemesBtn) {
                     showThemesBtn.addEventListener('click', () => {
                         showPanel('view-themes');
@@ -930,7 +930,7 @@
                 }
 
                 // Show import button
-                const showImportBtn = document.getElementById('nav-import');
+                const showImportBtn = document.getElementById('btn-nav-import');
                 if (showImportBtn) {
                     showImportBtn.addEventListener('click', () => {
                         showPanel('view-import');
@@ -1085,7 +1085,7 @@
                 });
 
                 // Ensure hamburger toggles and calls updateGrid
-                const navCollapseBtn = document.getElementById('nav-hamburger');
+                const navCollapseBtn = document.getElementById('btn-nav-hamburger');
                 if (navCollapseBtn) {
                     navCollapseBtn.addEventListener('click', () => {
                         layout3col.classList.toggle('left-collapsed');
@@ -1156,7 +1156,7 @@
             }
 
             // Set Home button as active
-            const showHomeBtn = document.getElementById('nav-home');
+            const showHomeBtn = document.getElementById('btn-nav-home');
             if (showHomeBtn) showHomeBtn.classList.add('active');
 
             // Open sidebar by default
@@ -1269,19 +1269,19 @@
                     // Set the appropriate button as active
                     switch(panelId) {
                         case 'view-home':
-                            const homeBtn = document.getElementById('nav-home');
+                            const homeBtn = document.getElementById('btn-nav-home');
                             if (homeBtn) homeBtn.classList.add('active');
                             break;
                         case 'view-library':
-                            const libraryBtn = document.getElementById('nav-library');
+                            const libraryBtn = document.getElementById('btn-nav-library');
                             if (libraryBtn) libraryBtn.classList.add('active');
                             break;
                         case 'view-themes':
-                            const themesBtn = document.getElementById('nav-themes');
+                            const themesBtn = document.getElementById('btn-nav-themes');
                             if (themesBtn) themesBtn.classList.add('active');
                             break;
                         case 'view-import':
-                            const importBtn = document.getElementById('nav-import');
+                            const importBtn = document.getElementById('btn-nav-import');
                             if (importBtn) importBtn.classList.add('active');
                             break;
                     }
