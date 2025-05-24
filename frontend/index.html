@@ -70,125 +70,122 @@
 
 
       <!-- Main Column -->
-      <div class="panel-base panel-main">
+      <div id="card-con" class="panel-base panel-main">
         <!-- Page Display Section -->
-        <div id="card-con">
-          
-          <div class="page-panel" id="home-panel">
-            <div class="main-header">
-              <div class="main-header-content">
-                <h2 class="current-set-name">Home</h2>
-                <p class="current-set-description">Welcome to your flashcard app</p>
-                <span class="header-card-count card-count" style="display: none;">0 cards</span>
-              </div>
-              <div class="header-buttons">
-                <button class="new-set-btn" type="button">New Set</button>
-                <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
-                <button class="add-flashcard-btn" type="button">Add Flashcard</button>
-                <button class="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
-                  Completed Cards
-                </button>
-              </div>
+        <div id="home-panel" class="page-panel">
+          <div class="main-header">
+            <div class="main-header-content">
+              <h2 class="current-set-name">Home</h2>
+              <p class="current-set-description">Welcome to your flashcard app</p>
+              <span class="header-card-count card-count" style="display: none;">0 cards</span>
             </div>
-            <form class="new-set-form form-container hidden">
-              <input class="new-set-name" type="text" placeholder="Set Name" required />
-              <input class="new-set-desc" type="text" placeholder="Description" />
-              <button type="submit">Add Set</button>
-              <button type="button" class="cancel-new-set">Cancel</button>
-            </form>
-            <div class="card-sets-list stacked-layout"></div>
+            <div class="header-buttons">
+              <button class="new-set-btn" type="button">New Set</button>
+              <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
+              <button class="add-flashcard-btn" type="button">Add Flashcard</button>
+              <button class="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
+                Completed Cards
+              </button>
+            </div>
           </div>
+          <form class="new-set-form form-container hidden">
+            <input class="new-set-name" type="text" placeholder="Set Name" required />
+            <input class="new-set-desc" type="text" placeholder="Description" />
+            <button type="submit">Add Set</button>
+            <button type="button" class="cancel-new-set">Cancel</button>
+          </form>
+          <div class="card-sets-list stacked-layout"></div>
+        </div>
 
-          <div class="page-panel" id="library-panel" style="display:none">
-            <div class="main-header">
-              <div class="main-header-content">
-                <h2 class="current-set-name">Library</h2>
-                <p class="current-set-description">Manage your flashcard sets</p>
-                <span class="header-card-count card-count" style="display: none;">0 cards</span>
-              </div>
-              <div class="header-buttons">
-                <button class="new-set-btn" type="button">New Set</button>
-                <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
-                <button class="add-flashcard-btn" type="button">Add Flashcard</button>
-                <button class="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
-                  Completed Cards
-                </button>
-              </div>
+        <div id="library-panel" class="page-panel" style="display:none">
+          <div class="main-header">
+            <div class="main-header-content">
+              <h2 class="current-set-name">Library</h2>
+              <p class="current-set-description">Manage your flashcard sets</p>
+              <span class="header-card-count card-count" style="display: none;">0 cards</span>
             </div>
-            <form class="new-set-form form-container hidden">
-              <input class="new-set-name" type="text" placeholder="Set Name" required />
-              <input class="new-set-desc" type="text" placeholder="Description" />
-              <button type="submit">Add Set</button>
-              <button type="button" class="cancel-new-set">Cancel</button>
-            </form>
-            <div class="card-sets-list"></div>
+            <div class="header-buttons">
+              <button class="new-set-btn" type="button">New Set</button>
+              <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
+              <button class="add-flashcard-btn" type="button">Add Flashcard</button>
+              <button class="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
+                Completed Cards
+              </button>
+            </div>
           </div>
+          <form class="new-set-form form-container hidden">
+            <input class="new-set-name" type="text" placeholder="Set Name" required />
+            <input class="new-set-desc" type="text" placeholder="Description" />
+            <button type="submit">Add Set</button>
+            <button type="button" class="cancel-new-set">Cancel</button>
+          </form>
+          <div class="card-sets-list"></div>
+        </div>
 
-          <div class="page-panel" id="themes-panel" style="display:none">
-            <div class="main-header">
-              <div class="main-header-content">
-                <h2 class="current-set-name">Themes</h2>
-                <p class="current-set-description">Customize your experience</p>
-                <span class="header-card-count card-count" style="display: none;">0 cards</span>
-              </div>
-              <div class="header-buttons">
-                <button class="new-set-btn" type="button">New Set</button>
-                <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
-                <button class="add-flashcard-btn" type="button">Add Flashcard</button>
-                <button class="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
-                  Completed Cards
-                </button>
-              </div>
+        <div id="themes-panel" class="page-panel" style="display:none">
+          <div class="main-header">
+            <div class="main-header-content">
+              <h2 class="current-set-name">Themes</h2>
+              <p class="current-set-description">Customize your experience</p>
+              <span class="header-card-count card-count" style="display: none;">0 cards</span>
+            </div>
+            <div class="header-buttons">
+              <button class="new-set-btn" type="button">New Set</button>
+              <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
+              <button class="add-flashcard-btn" type="button">Add Flashcard</button>
+              <button class="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
+                Completed Cards
+              </button>
             </div>
           </div>
+        </div>
 
-          <div class="page-panel" id="import-panel" style="display:none">
-            <div class="main-header">
-              <div class="main-header-content">
-                <h2 class="current-set-name">Import</h2>
-                <p class="current-set-description">Import your flashcard sets</p>
-                <span class="header-card-count card-count" style="display: none;">0 cards</span>
-              </div>
-              <div class="header-buttons">
-                <button class="new-set-btn" type="button">New Set</button>
-                <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
-                <button class="add-flashcard-btn" type="button">Add Flashcard</button>
-                <button class="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
-                  Completed Cards
-                </button>
-              </div>
+        <div id="import-panel" class="page-panel" style="display:none">
+          <div class="main-header">
+            <div class="main-header-content">
+              <h2 class="current-set-name">Import</h2>
+              <p class="current-set-description">Import your flashcard sets</p>
+              <span class="header-card-count card-count" style="display: none;">0 cards</span>
+            </div>
+            <div class="header-buttons">
+              <button class="new-set-btn" type="button">New Set</button>
+              <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
+              <button class="add-flashcard-btn" type="button">Add Flashcard</button>
+              <button class="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
+                Completed Cards
+              </button>
             </div>
           </div>
+        </div>
 
-          <div class="page-panel" id="card-view-panel" style="display:none">
-            <div class="main-header">
-              <div class="main-header-content">
-                <h2 class="current-set-name"></h2>
-                <p class="current-set-description"></p>
-                <span class="header-card-count card-count" style="display: none;">0 cards</span>
-              </div>
-              <div class="header-buttons">
-                <button class="new-set-btn" type="button">New Set</button>
-                <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
-                <button class="add-flashcard-btn" type="button">Add Flashcard</button>
-                <button class="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
-                  Completed Cards
-                </button>
-              </div>
+        <div id="card-view-panel" class="page-panel" style="display:none">
+          <div class="main-header">
+            <div class="main-header-content">
+              <h2 class="current-set-name"></h2>
+              <p class="current-set-description"></p>
+              <span class="header-card-count card-count" style="display: none;">0 cards</span>
             </div>
-            <form class="add-flashcard-form form-container hidden">
-              <input class="flashcard-question" type="text" placeholder="Question" required />
-              <input class="flashcard-answer" type="text" placeholder="Answer" required />
-              <button type="submit">Add Card</button>
-              <button type="button" class="cancel-add-flashcard">Cancel</button>
-            </form>
-            <div class="card-list"></div>
+            <div class="header-buttons">
+              <button class="new-set-btn" type="button">New Set</button>
+              <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
+              <button class="add-flashcard-btn" type="button">Add Flashcard</button>
+              <button class="header-completed-btn" title="Completed Cards" aria-label="Completed Cards">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z" fill="#555"/></svg>
+                Completed Cards
+              </button>
+            </div>
           </div>
+          <form class="add-flashcard-form form-container hidden">
+            <input class="flashcard-question" type="text" placeholder="Question" required />
+            <input class="flashcard-answer" type="text" placeholder="Answer" required />
+            <button type="submit">Add Card</button>
+            <button type="button" class="cancel-add-flashcard">Cancel</button>
+          </form>
+          <div class="card-list"></div>
         </div>
       </div>
       
