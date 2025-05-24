@@ -2,7 +2,7 @@
   "cardSets": [
     {
       "id": 1,
-      "name": "Math",
+      "name": "Set: Math",
       "description": "Start adding flashcards to this set",
       "cards": [
         {
@@ -11,7 +11,7 @@
           "answer": "Helsinki",
           "completed": true,
           "createdAt": "2025-05-21T20:19:21.574Z",
-          "lastModified": "2025-05-23T21:28:41.210Z"
+          "lastModified": "2025-05-24T20:06:50.790Z"
         },
         {
           "id": 2,
@@ -39,11 +39,11 @@
         }
       ],
       "createdAt": "2025-05-21T20:18:57.990Z",
-      "lastModified": "2025-05-23T19:48:26.724Z"
+      "lastModified": "2025-05-24T18:47:33.486Z"
     },
     {
       "id": 2,
-      "name": "Geometry",
+      "name": "Set: Geometry",
       "description": "",
       "cards": [
         {
@@ -64,20 +64,77 @@
         }
       ],
       "createdAt": "2025-05-21T20:20:57.659Z",
-      "lastModified": "2025-05-23T19:48:43.530Z"
+      "lastModified": "2025-05-24T18:47:37.714Z"
     },
     {
       "id": 3,
-      "name": "Physics",
+      "name": "Set: Physics",
       "description": "none",
-      "cards": [],
+      "cards": [
+        {
+          "id": 1,
+          "question": "Earth",
+          "answer": "3",
+          "completed": false,
+          "createdAt": "2025-05-24T20:08:53.922Z",
+          "lastModified": "2025-05-24T20:08:53.922Z"
+        },
+        {
+          "id": 2,
+          "question": "Venus",
+          "answer": "2",
+          "completed": false,
+          "createdAt": "2025-05-24T20:09:04.774Z",
+          "lastModified": "2025-05-24T20:09:04.774Z"
+        },
+        {
+          "id": 3,
+          "question": "Mercury",
+          "answer": "1",
+          "completed": false,
+          "createdAt": "2025-05-24T20:09:21.056Z",
+          "lastModified": "2025-05-24T20:09:21.056Z"
+        },
+        {
+          "id": 4,
+          "question": "Mars",
+          "answer": "4",
+          "completed": false,
+          "createdAt": "2025-05-24T20:09:31.048Z",
+          "lastModified": "2025-05-24T20:09:31.048Z"
+        },
+        {
+          "id": 5,
+          "question": "Jupiter",
+          "answer": "5",
+          "completed": false,
+          "createdAt": "2025-05-24T20:09:42.934Z",
+          "lastModified": "2025-05-24T20:09:42.934Z"
+        },
+        {
+          "id": 6,
+          "question": "Saturn",
+          "answer": "6",
+          "completed": false,
+          "createdAt": "2025-05-24T20:09:54.815Z",
+          "lastModified": "2025-05-24T20:09:54.815Z"
+        }
+      ],
       "createdAt": "2025-05-22T20:04:00.494Z",
-      "lastModified": "2025-05-23T19:48:55.320Z"
+      "lastModified": "2025-05-24T18:47:44.247Z"
+    },
+    {
+      "id": 4,
+      "name": "Construction",
+      "description": "",
+      "cards": [],
+      "createdAt": "2025-05-24T20:37:22.677Z",
+      "lastModified": "2025-05-24T20:37:22.677Z"
     }
   ],
   "settings": {
     "showCompleted": true,
-    "lastActiveSet": 2,
+    "lastActiveSet": 1,
     "theme": "light",
     "studyMode": "normal"
   },
