@@ -6,19 +6,6 @@ This document outlines the development plan for a personal flashcard application
 
 **## PHASES - NEXT**
 
-### *Phase 5: Enhance UI/UX*
-- [ ] Epic 5.1 - Left Nav Bar - move sets to main window
-- [ ] Epic 5.2 - Add back missing show / hide buttons (or something similar)
-- [ ] Epic 5.3 - Remember state (when you open , remember last open deck)
-- [ ] Epic 5.4 - Set card - Indicate the number of cards in a set.
-- [ ] Epic 5.5 - Card reordering (Drag n Drop)
-
-- [ ] Epic 5.6 - Keyboard shortcuts (maybe, if it's easy)
-- [ ] Epic 5.6 - Loading Indicators: (maybe, but is it necessary or useful?)
-  - [ ] Progress indicators
-  - [ ] Loading spinners
-  - [ ] Skeleton screens (what is this?)
-
 
 ### *Phase 6: Import/Export functionality*
 - [ ] Epic 6.1 - Add import/export functionality
@@ -82,3 +69,10 @@ This document outlines the development plan for a personal flashcard application
 - [X] Epic 4.4 - Base.css (New File)
 - [x] Epic 4.5 - Documentation
 - [x] Epic 4.6 - Cleanup
+
+### *Phase 5: Flashcard Play Implimentation*
+- [x] Epic 5.1 - Basic Structure
+- [x] Epic 5.2 - Card Display
+- [x] Epic 5.3 - Navigation
+- [x] Epic 5.4 - Progress and State
+- [x] Epic 5.5 - Polish and Testing

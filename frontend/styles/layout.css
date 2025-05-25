@@ -38,6 +38,12 @@
     --btn-success-hover: #388e3c; /* Success button hover state */
     --btn-danger-bg: #f44336;     /* Danger button background */
     --btn-danger-hover: #d32f2f;  /* Danger button hover state */
+    --btn-flip-bg: #908cff;       /* Flash play flip button */
+    --btn-flip-hover: #6c63ff;    /* Flash play flip hover */
+    --btn-nav-bg: #4a90e2;        /* Flash play navigation */
+    --btn-nav-hover: #357abd;     /* Flash play navigation hover */
+    --btn-shuffle-bg: #4caf50;    /* Flash play shuffle */
+    --btn-shuffle-hover: #388e3c; /* Flash play shuffle hover */
     
     /* Card Colors */
     --card-border: #908cff;       /* Library border */

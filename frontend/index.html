@@ -197,8 +197,8 @@
               <p id="play-card-count">0 cards</p>
             </div>
             <div class="view-header-actions">
-              <button id="play-back-to-sets-btn" class="sidebar-btn">Back to Sets</button>
-              <button id="play-exit-btn" class="sidebar-btn">Exit Play Mode</button>
+              <button id="play-back-to-sets-btn" class="nav-btn">Back to Sets</button>
+              <button id="play-exit-btn" class="nav-btn">Exit Play Mode</button>
             </div>
           </div>
           <div class="play-view-content">
@@ -209,46 +209,29 @@
                     <div class="flashcard-content">
                       <h3>Question</h3>
                       <p id="play-question">Question will appear here</p>
-                      <p class="flip-hint">Click or press Space to flip</p>
                     </div>
                   </div>
                   <div class="flashcard-back">
                     <div class="flashcard-content">
                       <h3>Answer</h3>
                       <p id="play-answer">Answer will appear here</p>
-                      <p class="flip-hint">Click or press Space to flip</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="play-navigation">
-              <button id="play-prev-btn" class="sidebar-btn" disabled>Previous</button>
-              <button id="play-flip-btn" class="sidebar-btn">Flip</button>
-              <button id="play-next-btn" class="sidebar-btn">Next</button>
-              <button id="play-shuffle-btn" class="sidebar-btn">Shuffle</button>
+              <button id="play-prev-btn" class="nav-btn">Previous</button>
+              <button id="play-flip-btn" class="flip-btn">Flip</button>
+              <button id="play-next-btn" class="nav-btn">Next</button>
+              <button id="play-shuffle-btn" class="shuffle-btn">Shuffle</button>
             </div>
             <div class="play-progress">
               <div class="progress-bar">
                 <div id="play-progress-fill" class="progress-fill"></div>
               </div>
               <p id="play-progress-text">Card 0 of 0</p>
-            </div>
-            <div class="study-stats">
-              <div class="stats-grid">
-                <div class="stat-item">
-                  <span class="stat-label">Time Elapsed:</span>
-                  <span id="study-time" class="stat-value">0:00</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-label">Cards/Minute:</span>
-                  <span id="cards-per-minute" class="stat-value">0</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-label">Completion:</span>
-                  <span id="completion-rate" class="stat-value">0%</span>
-                </div>
-              </div>
+              <p class="flip-hint">Click card or press Space to flip</p>
             </div>
           </div>
         </div>
@@ -1344,208 +1327,82 @@
             // Play View Functions
             async function showPlayView(setId) {
                 try {
-                    // Reset card state
-                    let currentCardIndex = 0;
-                    let isFlipped = false;
-                    let cards = [];
-                    let originalOrder = [];
-                    let studyProgress = {
-                        totalCards: 0,
-                        cardsViewed: new Set(),
-                        cardsCompleted: new Set(),
-                        startTime: null,
-                        lastCardTime: null
-                    };
-
-                    // Get set details and cards
-                    const set = await API.getSet(setId);
-                    cards = await API.getCards(setId);
+                    // Show loading state
+                    const playPanel = document.getElementById('view-play-cards');
+                    playPanel.classList.add('loading');
                     
-                    if (!cards || cards.length === 0) {
+                    // Reset card state
+                    currentCardIndex = 0;
+                    isFlipped = false;
+                    cards = [];
+                    originalOrder = [];
+                    
+                    // Fetch set details and cards
+                    const setDetails = await API.getSet(setId);
+                    const fetchedCards = await API.getCards(setId);
+                    
+                    if (!fetchedCards || fetchedCards.length === 0) {
                         throw new Error('No cards found in this set');
                     }
-
-                    // Initialize study progress
-                    studyProgress.totalCards = cards.length;
-                    studyProgress.startTime = new Date();
-                    studyProgress.lastCardTime = studyProgress.startTime;
-
-                    // Store original order for shuffle functionality
+                    
+                    // Validate card data
+                    cards = fetchedCards.filter(card => card && card.question && card.answer);
+                    if (cards.length === 0) {
+                        throw new Error('No valid cards found in this set');
+                    }
+                    
+                    // Store original order
                     originalOrder = [...cards];
-
+                    
                     // Update UI with set details
-                    document.getElementById('play-current-set-name').textContent = `${set.name} - Play Flashcards`;
-                    document.getElementById('play-current-set-description').textContent = set.description;
-                    document.getElementById('play-card-count').textContent = `${cards.length} cards`;
-
-                    // Get DOM elements
-                    const flashcard = document.querySelector('.flashcard');
-                    const questionEl = document.getElementById('play-question');
-                    const answerEl = document.getElementById('play-answer');
+                    const setNameEl = document.getElementById('play-current-set-name');
+                    const setDescEl = document.getElementById('play-current-set-description');
+                    const cardCountEl = document.getElementById('play-card-count');
+                    
+                    if (setNameEl) setNameEl.textContent = `${setDetails.name} - Play Flashcards`;
+                    if (setDescEl) setDescEl.textContent = setDetails.description || 'No description available';
+                    if (cardCountEl) cardCountEl.textContent = `${cards.length} cards`;
+                    
+                    // Update card display
+                    updateCardDisplay();
+                    
+                    // Add event listeners
+                    const card = document.querySelector('.flashcard');
                     const prevBtn = document.getElementById('play-prev-btn');
                     const nextBtn = document.getElementById('play-next-btn');
                     const flipBtn = document.getElementById('play-flip-btn');
                     const shuffleBtn = document.getElementById('play-shuffle-btn');
                     const backToSetsBtn = document.getElementById('play-back-to-sets-btn');
                     const exitBtn = document.getElementById('play-exit-btn');
-                    const progressFill = document.getElementById('play-progress-fill');
-                    const progressText = document.getElementById('play-progress-text');
-
-                    // Get DOM elements for statistics
-                    const studyTimeEl = document.getElementById('study-time');
-                    const cardsPerMinuteEl = document.getElementById('cards-per-minute');
-                    const completionRateEl = document.getElementById('completion-rate');
-
-                    // Function to format time
-                    function formatTime(seconds) {
-                        const minutes = Math.floor(seconds / 60);
-                        const remainingSeconds = seconds % 60;
-                        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-                    }
-
-                    // Function to update statistics display
-                    function updateStats() {
-                        const stats = getStudyStats();
-                        studyTimeEl.textContent = formatTime(stats.totalTime);
-                        cardsPerMinuteEl.textContent = stats.cardsPerMinute;
-                        completionRateEl.textContent = `${stats.completionRate}%`;
-                    }
-
-                    // Update statistics every second
-                    const statsInterval = setInterval(updateStats, 1000);
-
-                    // Clean up interval when leaving play view
-                    function cleanup() {
-                        clearInterval(statsInterval);
-                    }
-
-                    // Add cleanup to navigation buttons
-                    backToSetsBtn.onclick = () => {
-                        cleanup();
-                        showPanel('view-library');
-                        switchToLibraryView();
-                    };
-                    exitBtn.onclick = () => {
-                        cleanup();
-                        showPanel('view-library');
-                        switchToLibraryView();
-                    };
-
-                    // Function to update card display
-                    function updateCardDisplay() {
-                        const card = cards[currentCardIndex];
-                        questionEl.textContent = card.question;
-                        answerEl.textContent = card.answer;
-                        
-                        // Reset flip state
-                        isFlipped = false;
-                        flashcard.classList.remove('flipped');
-                        
-                        // Update button states
-                        prevBtn.disabled = currentCardIndex === 0;
-                        nextBtn.disabled = currentCardIndex === cards.length - 1;
-                        
-                        // Update progress
-                        const progress = ((currentCardIndex + 1) / cards.length) * 100;
-                        progressFill.style.width = `${progress}%`;
-                        progressText.textContent = `Card ${currentCardIndex + 1} of ${cards.length}`;
-
-                        // Update study progress
-                        studyProgress.cardsViewed.add(card.id);
-                        studyProgress.lastCardTime = new Date();
-                    }
-
-                    // Function to flip card
-                    function flipCard() {
-                        isFlipped = !isFlipped;
-                        flashcard.classList.toggle('flipped');
-                        
-                        // If flipping to answer, mark as completed
-                        if (isFlipped) {
-                            const card = cards[currentCardIndex];
-                            studyProgress.cardsCompleted.add(card.id);
-                        }
-                    }
-
-                    // Function to shuffle cards
-                    function shuffleCards() {
-                        // Fisher-Yates shuffle algorithm
-                        for (let i = cards.length - 1; i > 0; i--) {
-                            const j = Math.floor(Math.random() * (i + 1));
-                            [cards[i], cards[j]] = [cards[j], cards[i]];
-                        }
-                        currentCardIndex = 0;
-                        updateCardDisplay();
-                    }
-
-                    // Function to restore original order
-                    function restoreOriginalOrder() {
-                        cards = [...originalOrder];
-                        currentCardIndex = 0;
-                        updateCardDisplay();
-                    }
-
-                    // Function to get study statistics
-                    function getStudyStats() {
-                        const now = new Date();
-                        const totalTime = (now - studyProgress.startTime) / 1000; // in seconds
-                        const cardsPerMinute = (studyProgress.cardsViewed.size / (totalTime / 60)).toFixed(1);
-                        const completionRate = ((studyProgress.cardsCompleted.size / studyProgress.totalCards) * 100).toFixed(1);
-                        
-                        return {
-                            totalTime: Math.floor(totalTime),
-                            cardsPerMinute,
-                            completionRate,
-                            cardsViewed: studyProgress.cardsViewed.size,
-                            cardsCompleted: studyProgress.cardsCompleted.size,
-                            totalCards: studyProgress.totalCards
-                        };
-                    }
-
-                    // Add event listeners
-                    prevBtn.onclick = () => {
-                        if (currentCardIndex > 0) {
-                            currentCardIndex--;
-                            updateCardDisplay();
-                        }
-                    };
-
-                    nextBtn.onclick = () => {
-                        if (currentCardIndex < cards.length - 1) {
-                            currentCardIndex++;
-                            updateCardDisplay();
-                        }
-                    };
-
-                    flipBtn.onclick = flipCard;
-                    flashcard.onclick = flipCard;
-
-                    shuffleBtn.onclick = () => {
-                        if (shuffleBtn.textContent === 'Shuffle') {
-                            shuffleCards();
-                            shuffleBtn.textContent = 'Restore Order';
-                        } else {
-                            restoreOriginalOrder();
-                            shuffleBtn.textContent = 'Shuffle';
-                        }
-                    };
-
+                    
+                    // Remove existing listeners
+                    if (card) card.removeEventListener('click', flipCard);
+                    if (prevBtn) prevBtn.removeEventListener('click', showPreviousCard);
+                    if (nextBtn) nextBtn.removeEventListener('click', showNextCard);
+                    if (flipBtn) flipBtn.removeEventListener('click', flipCard);
+                    if (shuffleBtn) shuffleBtn.removeEventListener('click', shuffleCards);
+                    if (backToSetsBtn) backToSetsBtn.removeEventListener('click', () => showPanel('view-library'));
+                    if (exitBtn) exitBtn.removeEventListener('click', () => showPanel('view-library'));
+                    
+                    // Add new listeners
+                    if (card) card.addEventListener('click', flipCard);
+                    if (prevBtn) prevBtn.addEventListener('click', showPreviousCard);
+                    if (nextBtn) nextBtn.addEventListener('click', showNextCard);
+                    if (flipBtn) flipBtn.addEventListener('click', flipCard);
+                    if (shuffleBtn) shuffleBtn.addEventListener('click', shuffleCards);
+                    if (backToSetsBtn) backToSetsBtn.addEventListener('click', () => showPanel('view-library'));
+                    if (exitBtn) exitBtn.addEventListener('click', () => showPanel('view-library'));
+                    
                     // Add keyboard shortcuts
-                    document.addEventListener('keydown', function(e) {
-                        if (document.getElementById('view-play-cards').style.display === 'none') return;
+                    const handleKeyPress = (e) => {
+                        if (playPanel.style.display !== 'block') return;
                         
                         switch(e.key) {
                             case 'ArrowLeft':
-                                if (currentCardIndex > 0) {
-                                    currentCardIndex--;
-                                    updateCardDisplay();
-                                }
+                                showPreviousCard();
                                 break;
                             case 'ArrowRight':
-                                if (currentCardIndex < cards.length - 1) {
-                                    currentCardIndex++;
-                                    updateCardDisplay();
-                                }
+                                showNextCard();
                                 break;
                             case ' ':
                             case 'Enter':
@@ -1553,17 +1410,41 @@
                                 flipCard();
                                 break;
                         }
-                    });
-
-                    // Initialize display
-                    updateCardDisplay();
+                    };
+                    
+                    document.removeEventListener('keydown', handleKeyPress);
+                    document.addEventListener('keydown', handleKeyPress);
                     
                     // Show the panel
                     showPanel('view-play-cards');
-
+                    
+                    // Remove loading state
+                    playPanel.classList.remove('loading');
+                    
                 } catch (error) {
                     console.error('Error in showPlayView:', error);
-                    alert('Failed to load flashcards. Please try again.');
+                    const playPanel = document.getElementById('view-play-cards');
+                    playPanel.classList.remove('loading');
+                    
+                    // Show error message
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    errorDiv.textContent = error.message || 'An error occurred while loading the cards';
+                    
+                    const content = playPanel.querySelector('.play-view-content');
+                    if (content) {
+                        content.innerHTML = '';
+                        content.appendChild(errorDiv);
+                        
+                        // Add retry button
+                        const retryBtn = document.createElement('button');
+                        retryBtn.className = 'sidebar-btn';
+                        retryBtn.textContent = 'Retry';
+                        retryBtn.onclick = () => showPlayView(setId);
+                        content.appendChild(retryBtn);
+                    }
+                    
+                    showPanel('view-play-cards');
                 }
             }
 
@@ -1630,6 +1511,79 @@
                             break;
                     }
                 }
+            }
+
+            // Update the variables at the top of the script section
+            let currentCardIndex = 0;
+            let isFlipped = false;
+            let cards = [];
+            let originalOrder = [];
+
+            function updateCardDisplay() {
+                const questionEl = document.getElementById('play-question');
+                const answerEl = document.getElementById('play-answer');
+                const progressFill = document.getElementById('play-progress-fill');
+                const progressText = document.getElementById('play-progress-text');
+                const prevBtn = document.getElementById('play-prev-btn');
+                const nextBtn = document.getElementById('play-next-btn');
+                const flashcard = document.querySelector('.flashcard');
+                
+                if (!cards.length || !questionEl || !answerEl) return;
+                
+                // Update card content
+                questionEl.textContent = cards[currentCardIndex].question;
+                answerEl.textContent = cards[currentCardIndex].answer;
+                
+                // Reset flip state
+                if (isFlipped && flashcard) {
+                    flashcard.classList.remove('flipped');
+                    isFlipped = false;
+                }
+                
+                // Update progress
+                const progress = ((currentCardIndex + 1) / cards.length) * 100;
+                if (progressFill) progressFill.style.width = `${progress}%`;
+                if (progressText) progressText.textContent = `Card ${currentCardIndex + 1} of ${cards.length}`;
+                
+                // Update button states
+                if (prevBtn) prevBtn.disabled = currentCardIndex === 0;
+                if (nextBtn) nextBtn.disabled = currentCardIndex === cards.length - 1;
+            }
+
+            // Add these functions back after updateCardDisplay
+            function flipCard() {
+                const flashcard = document.querySelector('.flashcard');
+                if (!flashcard) return;
+                
+                flashcard.classList.toggle('flipped');
+                isFlipped = !isFlipped;
+            }
+
+            function showPreviousCard() {
+                if (currentCardIndex > 0) {
+                    currentCardIndex--;
+                    updateCardDisplay();
+                }
+            }
+
+            function showNextCard() {
+                if (currentCardIndex < cards.length - 1) {
+                    currentCardIndex++;
+                    updateCardDisplay();
+                }
+            }
+
+            function shuffleCards() {
+                if (!cards.length) return;
+                
+                // Fisher-Yates shuffle algorithm
+                for (let i = cards.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [cards[i], cards[j]] = [cards[j], cards[i]];
+                }
+                
+                currentCardIndex = 0;
+                updateCardDisplay();
             }
         });
     </script>

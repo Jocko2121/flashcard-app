@@ -130,19 +130,11 @@
       "cards": [],
       "createdAt": "2025-05-24T20:37:22.677Z",
       "lastModified": "2025-05-24T20:37:22.677Z"
-    },
-    {
-      "id": 5,
-      "name": "Shapes",
-      "description": "",
-      "cards": [],
-      "createdAt": "2025-05-25T18:40:12.724Z",
-      "lastModified": "2025-05-25T18:40:12.724Z"
     }
   ],
   "settings": {
     "showCompleted": true,
-    "lastActiveSet": 2,
+    "lastActiveSet": 4,
     "theme": "light",
     "studyMode": "normal"
   },
