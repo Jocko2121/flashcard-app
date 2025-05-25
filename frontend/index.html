@@ -234,6 +234,22 @@
               </div>
               <p id="play-progress-text">Card 0 of 0</p>
             </div>
+            <div class="study-stats">
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <span class="stat-label">Time Elapsed:</span>
+                  <span id="study-time" class="stat-value">0:00</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Cards/Minute:</span>
+                  <span id="cards-per-minute" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Completion:</span>
+                  <span id="completion-rate" class="stat-value">0%</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1333,6 +1349,13 @@
                     let isFlipped = false;
                     let cards = [];
                     let originalOrder = [];
+                    let studyProgress = {
+                        totalCards: 0,
+                        cardsViewed: new Set(),
+                        cardsCompleted: new Set(),
+                        startTime: null,
+                        lastCardTime: null
+                    };
 
                     // Get set details and cards
                     const set = await API.getSet(setId);
@@ -1341,6 +1364,11 @@
                     if (!cards || cards.length === 0) {
                         throw new Error('No cards found in this set');
                     }
+
+                    // Initialize study progress
+                    studyProgress.totalCards = cards.length;
+                    studyProgress.startTime = new Date();
+                    studyProgress.lastCardTime = studyProgress.startTime;
 
                     // Store original order for shuffle functionality
                     originalOrder = [...cards];
@@ -1363,12 +1391,42 @@
                     const progressFill = document.getElementById('play-progress-fill');
                     const progressText = document.getElementById('play-progress-text');
 
-                    // Add navigation event listeners
+                    // Get DOM elements for statistics
+                    const studyTimeEl = document.getElementById('study-time');
+                    const cardsPerMinuteEl = document.getElementById('cards-per-minute');
+                    const completionRateEl = document.getElementById('completion-rate');
+
+                    // Function to format time
+                    function formatTime(seconds) {
+                        const minutes = Math.floor(seconds / 60);
+                        const remainingSeconds = seconds % 60;
+                        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+                    }
+
+                    // Function to update statistics display
+                    function updateStats() {
+                        const stats = getStudyStats();
+                        studyTimeEl.textContent = formatTime(stats.totalTime);
+                        cardsPerMinuteEl.textContent = stats.cardsPerMinute;
+                        completionRateEl.textContent = `${stats.completionRate}%`;
+                    }
+
+                    // Update statistics every second
+                    const statsInterval = setInterval(updateStats, 1000);
+
+                    // Clean up interval when leaving play view
+                    function cleanup() {
+                        clearInterval(statsInterval);
+                    }
+
+                    // Add cleanup to navigation buttons
                     backToSetsBtn.onclick = () => {
+                        cleanup();
                         showPanel('view-library');
                         switchToLibraryView();
                     };
                     exitBtn.onclick = () => {
+                        cleanup();
                         showPanel('view-library');
                         switchToLibraryView();
                     };
@@ -1391,12 +1449,22 @@
                         const progress = ((currentCardIndex + 1) / cards.length) * 100;
                         progressFill.style.width = `${progress}%`;
                         progressText.textContent = `Card ${currentCardIndex + 1} of ${cards.length}`;
+
+                        // Update study progress
+                        studyProgress.cardsViewed.add(card.id);
+                        studyProgress.lastCardTime = new Date();
                     }
 
                     // Function to flip card
                     function flipCard() {
                         isFlipped = !isFlipped;
                         flashcard.classList.toggle('flipped');
+                        
+                        // If flipping to answer, mark as completed
+                        if (isFlipped) {
+                            const card = cards[currentCardIndex];
+                            studyProgress.cardsCompleted.add(card.id);
+                        }
                     }
 
                     // Function to shuffle cards
@@ -1415,6 +1483,23 @@
                         cards = [...originalOrder];
                         currentCardIndex = 0;
                         updateCardDisplay();
+                    }
+
+                    // Function to get study statistics
+                    function getStudyStats() {
+                        const now = new Date();
+                        const totalTime = (now - studyProgress.startTime) / 1000; // in seconds
+                        const cardsPerMinute = (studyProgress.cardsViewed.size / (totalTime / 60)).toFixed(1);
+                        const completionRate = ((studyProgress.cardsCompleted.size / studyProgress.totalCards) * 100).toFixed(1);
+                        
+                        return {
+                            totalTime: Math.floor(totalTime),
+                            cardsPerMinute,
+                            completionRate,
+                            cardsViewed: studyProgress.cardsViewed.size,
+                            cardsCompleted: studyProgress.cardsCompleted.size,
+                            totalCards: studyProgress.totalCards
+                        };
                     }
 
                     // Add event listeners

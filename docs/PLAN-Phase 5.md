@@ -128,24 +128,24 @@ Key CSS patterns:
   - [x] Update navigation state after shuffle
   - [x] Reset progress indicator after shuffle
 
-**[ ] Epic 5.4 - Progress and State**
-- [ ] Add progress tracking
-  - [ ] Track current card (use JavaScript variable)
-  - [ ] Track total cards (use JavaScript variable)
-  - [ ] Update progress display (use DOM manipulation)
-  - [ ] Store current index in variable
-  - [ ] Update header count display
-- [ ] Implement card transitions
-  - [ ] Add slide animation (use CSS transform)
-  - [ ] Handle edge cases (first/last card)
-  - [ ] Use transform: translateX for slides
-  - [ ] Add transition for smooth movement
-- [ ] Add state management
-  - [ ] Track card order (use JavaScript array)
-  - [ ] Handle shuffle state (use boolean flag)
-  - [ ] Manage navigation state (use JavaScript variables)
-  - [ ] Store original order array
-  - [ ] Track current view state
+**[x] Epic 5.4 - Progress and State**
+- [x] Add progress tracking
+  - [x] Track current card (use JavaScript variable)
+  - [x] Track total cards (use JavaScript variable)
+  - [x] Update progress display (use DOM manipulation)
+  - [x] Store current index in variable
+  - [x] Update header count display
+- [x] Implement card transitions
+  - [x] Add slide animation (use CSS transform)
+  - [x] Handle edge cases (first/last card)
+  - [x] Use transform: translateX for slides
+  - [x] Add transition for smooth movement
+- [x] Add state management
+  - [x] Track card order (use JavaScript array)
+  - [x] Handle shuffle state (use boolean flag)
+  - [x] Manage navigation state (use JavaScript variables)
+  - [x] Store original order array
+  - [x] Track current view state
 
 **[ ] Epic 5.5 - Polish and Testing**
 - [ ] Test all functionality
