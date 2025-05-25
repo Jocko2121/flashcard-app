@@ -47,33 +47,33 @@ Key CSS patterns:
 
 ## Epics
 
-**[ ] Epic 5.1 - Basic Structure**
-- [ ] Create new view panel `view-play-cards`
-  - [ ] Add to index.html following existing panel pattern
-  - [ ] Match existing panel structure (view-header, view-header-content, view-header-actions)
-  - [ ] Add basic layout classes (page-panel, section-base)
-  - [ ] Ensure panel is hidden by default (style="display:none")
-- [ ] Add header section
-  - [ ] Add title with "[Set Name] - Play Flashcards"
-  - [ ] Add "Back to Sets" button (use existing button styles)
-  - [ ] Add "Exit Play Mode" button (use existing button styles)
-  - [ ] Ensure buttons use existing button classes
-- [ ] Add content section
-  - [ ] Create card display area (centered in viewport)
-  - [ ] Add navigation section (below card)
-  - [ ] Add progress indicator area (below navigation)
-  - [ ] Use flexbox for vertical layout
-- [ ] Basic styling
-  - [ ] Use existing CSS variables from layout.css
-  - [ ] Add minimal play-specific styles
-  - [ ] Ensure responsive layout
-  - [ ] Follow existing CSS class naming conventions
-- [ ] CHECKPOINT: Basic Structure Review
-  - [ ] Verify panel structure and layout
-  - [ ] Confirm header elements are correctly positioned
-  - [ ] Validate navigation buttons placement
-  - [ ] Check responsive behavior
-  - [ ] Await user feedback before proceeding to Epic 5.2
+**[x] Epic 5.1 - Basic Structure**
+- [x] Create new view panel `view-play-cards`
+  - [x] Add to index.html following existing panel pattern
+  - [x] Match existing panel structure (view-header, view-header-content, view-header-actions)
+  - [x] Add basic layout classes (page-panel, section-base)
+  - [x] Ensure panel is hidden by default (style="display:none")
+- [x] Add header section
+  - [x] Add title with "[Set Name] - Play Flashcards"
+  - [x] Add "Back to Sets" button (use existing button styles)
+  - [x] Add "Exit Play Mode" button (use existing button styles)
+  - [x] Ensure buttons use existing button classes
+- [x] Add content section
+  - [x] Create card display area (centered in viewport)
+  - [x] Add navigation section (below card)
+  - [x] Add progress indicator area (below navigation)
+  - [x] Use flexbox for vertical layout
+- [x] Basic styling
+  - [x] Use existing CSS variables from layout.css
+  - [x] Add minimal play-specific styles
+  - [x] Ensure responsive layout
+  - [x] Follow existing CSS class naming conventions
+- [x] CHECKPOINT: Basic Structure Review
+  - [x] Verify panel structure and layout
+  - [x] Confirm header elements are correctly positioned
+  - [x] Validate navigation buttons placement
+  - [x] Check responsive behavior
+  - [x] Await user feedback before proceeding to Epic 5.2
 
 **[ ] Epic 5.2 - Card Display**
 - [ ] Implement card container

@@ -326,4 +326,85 @@
 .last-active-message .last-active-set {
     color: #2563eb;
     font-weight: 500;
+}
+
+/* ==========================================================================
+   PLAY CARDS VIEW
+   ========================================================================== */
+
+.play-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - var(--top-bar-height) - 120px);
+    padding: 20px;
+    gap: 20px;
+}
+
+.card-display-area {
+    width: 100%;
+    max-width: 600px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.play-navigation {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.play-progress {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Play View Buttons */
+.back-to-sets-btn,
+.exit-play-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background: var(--btn-primary-bg);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: background-color var(--transition-duration) var(--transition-timing);
+}
+
+.back-to-sets-btn:hover,
+.exit-play-btn:hover {
+    background: var(--btn-primary-hover);
+}
+
+.exit-play-btn {
+    background: var(--btn-danger-bg);
+}
+
+.exit-play-btn:hover {
+    background: var(--btn-danger-hover);
+}
+
+/* Play Cards Button */
+.play-cards-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background: var(--btn-special-bg);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: background-color var(--transition-duration) var(--transition-timing);
+    margin-right: 10px;
+}
+
+.play-cards-btn:hover {
+    background: var(--btn-special-hover);
 } 

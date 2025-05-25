@@ -187,6 +187,32 @@
           </form>
           <div class="flashcard-list"></div>
         </div>
+
+        <!-- New Play Cards View -->
+        <div id="view-play-cards" class="page-panel" style="display:none">
+          <div class="view-header">
+            <div class="view-header-content">
+              <h2 class="current-set-name">Play Flashcards</h2>
+              <p class="current-set-description">Study your flashcards</p>
+              <span class="view-header-count card-count">0 cards</span>
+            </div>
+            <div class="view-header-actions">
+              <button class="back-to-sets-btn" type="button">Back to Sets</button>
+              <button class="exit-play-btn" type="button">Exit Play Mode</button>
+            </div>
+          </div>
+          <div class="play-content">
+            <div class="card-display-area">
+              <!-- Card will be inserted here -->
+            </div>
+            <div class="play-navigation">
+              <!-- Navigation buttons will be added here -->
+            </div>
+            <div class="play-progress">
+              <!-- Progress indicator will be added here -->
+            </div>
+          </div>
+        </div>
       </div>
       
 
@@ -477,7 +503,7 @@
                                 setContentView.addEventListener('click', async (e) => {
                                     // Don't trigger if clicking any button
                                     if (e.target.tagName === 'BUTTON') return;
-                                    alert('Play Flashcards');
+                                    await showPlayView(set.id);
                                 });
                             }
                             
@@ -1239,11 +1265,86 @@
                     };
                 }
                 
+                // Add Play Cards button
+                addPlayButtonToCardView();
+                
                 // Load cards for the selected set
                 if (setId) {
                     loadCards(setId);
                 }
             }
+
+            // Play View Functions
+            async function showPlayView(setId) {
+                const playPanel = document.getElementById('view-play-cards');
+                const currentSetName = playPanel.querySelector('.current-set-name');
+                const currentSetDesc = playPanel.querySelector('.current-set-description');
+                const cardCount = playPanel.querySelector('.card-count');
+                
+                try {
+                    // Get set details from API
+                    const set = await API.getSet(setId);
+                    const cards = await API.getCards(setId);
+                    
+                    // Update header information
+                    currentSetName.textContent = `${set.name} - Play Flashcards`;
+                    currentSetDesc.textContent = set.description || '';
+                    cardCount.textContent = `${cards.length} cards`;
+                    
+                    // Add event listeners for navigation buttons
+                    const backToSetsBtn = playPanel.querySelector('.back-to-sets-btn');
+                    const exitPlayBtn = playPanel.querySelector('.exit-play-btn');
+                    
+                    // Remove any existing listeners
+                    const newBackBtn = backToSetsBtn.cloneNode(true);
+                    const newExitBtn = exitPlayBtn.cloneNode(true);
+                    backToSetsBtn.parentNode.replaceChild(newBackBtn, backToSetsBtn);
+                    exitPlayBtn.parentNode.replaceChild(newExitBtn, exitPlayBtn);
+                    
+                    // Add new listeners
+                    newBackBtn.addEventListener('click', () => {
+                        showPanel('view-library');
+                    });
+                    
+                    newExitBtn.addEventListener('click', () => {
+                        showPanel('view-library');
+                    });
+                    
+                    // Show the play panel
+                    showPanel('view-play-cards');
+                } catch (error) {
+                    console.error('Failed to load set for play view:', error);
+                    alert('Failed to load set. Please try again.');
+                }
+            }
+
+            // Add play button to card view
+            function addPlayButtonToCardView() {
+                const cardViewPanel = document.getElementById('viewH-cards');
+                const headerActions = cardViewPanel.querySelector('.view-header-actions');
+                
+                // Create play button if it doesn't exist
+                if (!headerActions.querySelector('.play-cards-btn')) {
+                    const playButton = document.createElement('button');
+                    playButton.className = 'play-cards-btn';
+                    playButton.type = 'button';
+                    playButton.textContent = 'Play Cards';
+                    playButton.addEventListener('click', () => {
+                        showPlayView(currentSetId);
+                    });
+                    
+                    // Insert before the "Add Flashcard" button
+                    const addFlashcardBtn = headerActions.querySelector('.add-flashcard-btn');
+                    headerActions.insertBefore(playButton, addFlashcardBtn);
+                }
+            }
+
+            // Add play button when showing card view
+            const originalShowCardView = showCardView;
+            showCardView = function(setId) {
+                originalShowCardView(setId);
+                addPlayButtonToCardView();
+            };
 
             function switchToLibraryView() {
                 showPanel('view-library');
