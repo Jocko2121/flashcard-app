@@ -203,13 +203,33 @@
           </div>
           <div class="play-content">
             <div class="card-display-area">
-              <!-- Card will be inserted here -->
+              <div class="flashcard">
+                <div class="flashcard-inner">
+                  <div class="flashcard-front">
+                    <div class="flashcard-content">
+                      <h3 class="question">Question will appear here</h3>
+                      <div class="card-hint">Click to flip</div>
+                    </div>
+                  </div>
+                  <div class="flashcard-back">
+                    <div class="flashcard-content">
+                      <h3 class="answer">Answer will appear here</h3>
+                      <div class="card-hint">Click to flip back</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="play-navigation">
-              <!-- Navigation buttons will be added here -->
+              <button class="prev-card-btn" type="button" disabled>Previous</button>
+              <button class="flip-card-btn" type="button">Flip Card</button>
+              <button class="next-card-btn" type="button">Next</button>
             </div>
             <div class="play-progress">
-              <!-- Progress indicator will be added here -->
+              <div class="progress-bar">
+                <div class="progress-fill"></div>
+              </div>
+              <span class="progress-text">Card 1 of 10</span>
             </div>
           </div>
         </div>
@@ -513,7 +533,7 @@
                                     e.stopPropagation();
                                     currentSetId = set.id;
                                     await API.updateLastActiveSet(set.id);
-                                    switchToCardView(set.id);
+                                    showCardView(set.id);
                                     const currentPanel = document.getElementById('viewH-cards');
                                     const currentSetName = currentPanel.querySelector('.current-set-name');
                                     const currentSetDesc = currentPanel.querySelector('.current-set-description');
@@ -1230,7 +1250,7 @@
                 }
             };
             // Add view switching function
-            function switchToCardView(setId) {
+            function showCardView(setId) {
                 currentSetId = setId;  // Set the currentSetId
                 showPanel('viewH-cards');
                 const cardViewPanel = document.getElementById('viewH-cards');
@@ -1274,50 +1294,6 @@
                 }
             }
 
-            // Play View Functions
-            async function showPlayView(setId) {
-                const playPanel = document.getElementById('view-play-cards');
-                const currentSetName = playPanel.querySelector('.current-set-name');
-                const currentSetDesc = playPanel.querySelector('.current-set-description');
-                const cardCount = playPanel.querySelector('.card-count');
-                
-                try {
-                    // Get set details from API
-                    const set = await API.getSet(setId);
-                    const cards = await API.getCards(setId);
-                    
-                    // Update header information
-                    currentSetName.textContent = `${set.name} - Play Flashcards`;
-                    currentSetDesc.textContent = set.description || '';
-                    cardCount.textContent = `${cards.length} cards`;
-                    
-                    // Add event listeners for navigation buttons
-                    const backToSetsBtn = playPanel.querySelector('.back-to-sets-btn');
-                    const exitPlayBtn = playPanel.querySelector('.exit-play-btn');
-                    
-                    // Remove any existing listeners
-                    const newBackBtn = backToSetsBtn.cloneNode(true);
-                    const newExitBtn = exitPlayBtn.cloneNode(true);
-                    backToSetsBtn.parentNode.replaceChild(newBackBtn, backToSetsBtn);
-                    exitPlayBtn.parentNode.replaceChild(newExitBtn, exitPlayBtn);
-                    
-                    // Add new listeners
-                    newBackBtn.addEventListener('click', () => {
-                        showPanel('view-library');
-                    });
-                    
-                    newExitBtn.addEventListener('click', () => {
-                        showPanel('view-library');
-                    });
-                    
-                    // Show the play panel
-                    showPanel('view-play-cards');
-                } catch (error) {
-                    console.error('Failed to load set for play view:', error);
-                    alert('Failed to load set. Please try again.');
-                }
-            }
-
             // Add play button to card view
             function addPlayButtonToCardView() {
                 const cardViewPanel = document.getElementById('viewH-cards');
@@ -1345,6 +1321,163 @@
                 originalShowCardView(setId);
                 addPlayButtonToCardView();
             };
+
+            // Play View Functions
+            async function showPlayView(setId) {
+                const playPanel = document.getElementById('view-play-cards');
+                const currentSetName = playPanel.querySelector('.current-set-name');
+                const currentSetDesc = playPanel.querySelector('.current-set-description');
+                const cardCount = playPanel.querySelector('.card-count');
+                const flashcard = playPanel.querySelector('.flashcard');
+                const questionEl = playPanel.querySelector('.question');
+                const answerEl = playPanel.querySelector('.answer');
+                const prevBtn = playPanel.querySelector('.prev-card-btn');
+                const nextBtn = playPanel.querySelector('.next-card-btn');
+                const flipBtn = playPanel.querySelector('.flip-card-btn');
+                const progressFill = playPanel.querySelector('.progress-fill');
+                const progressText = playPanel.querySelector('.progress-text');
+                
+                try {
+                    // Reset card state
+                    flashcard.classList.remove('flipped');
+                    questionEl.style.display = 'block';
+                    answerEl.style.display = 'none';
+                    
+                    // Get set details from API
+                    const set = await API.getSet(setId);
+                    console.log('Set details:', set);
+                    
+                    const cards = await API.getCards(setId);
+                    console.log('Cards:', cards);
+                    
+                    if (!cards || cards.length === 0) {
+                        throw new Error('No cards found in set');
+                    }
+                    
+                    // Update header information
+                    currentSetName.textContent = `${set.name} - Play Flashcards`;
+                    currentSetDesc.textContent = set.description || '';
+                    cardCount.textContent = `${cards.length} cards`;
+                    
+                    // Initialize card state
+                    let currentCardIndex = 0;
+                    let isFlipped = false;
+                    
+                    // Function to update card display
+                    function updateCardDisplay() {
+                        const card = cards[currentCardIndex];
+                        if (!card || !card.question || !card.answer) {
+                            console.error('Invalid card data:', card);
+                            throw new Error('Invalid card data');
+                        }
+                        
+                        // Reset flip state
+                        if (isFlipped) {
+                            flashcard.classList.remove('flipped');
+                            isFlipped = false;
+                        }
+                        
+                        // Update card content
+                        questionEl.textContent = card.question;
+                        answerEl.textContent = card.answer;
+                        
+                        // Update progress
+                        const progress = ((currentCardIndex + 1) / cards.length) * 100;
+                        progressFill.style.width = `${progress}%`;
+                        progressText.textContent = `Card ${currentCardIndex + 1} of ${cards.length}`;
+                        
+                        // Update button states
+                        prevBtn.disabled = currentCardIndex === 0;
+                        nextBtn.disabled = currentCardIndex === cards.length - 1;
+                        
+                        // Ensure content is visible
+                        questionEl.style.display = 'block';
+                        answerEl.style.display = 'none';
+                    }
+                    
+                    // Add event listeners for navigation buttons
+                    const backToSetsBtn = playPanel.querySelector('.back-to-sets-btn');
+                    const exitPlayBtn = playPanel.querySelector('.exit-play-btn');
+                    
+                    // Remove any existing listeners
+                    backToSetsBtn.onclick = () => {
+                        showPanel('view-library');
+                    };
+                    
+                    exitPlayBtn.onclick = () => {
+                        showPanel('view-library');
+                    };
+                    
+                    // Add card navigation listeners
+                    prevBtn.onclick = () => {
+                        if (currentCardIndex > 0) {
+                            currentCardIndex--;
+                            updateCardDisplay();
+                        }
+                    };
+                    
+                    nextBtn.onclick = () => {
+                        if (currentCardIndex < cards.length - 1) {
+                            currentCardIndex++;
+                            updateCardDisplay();
+                        }
+                    };
+                    
+                    // Add flip functionality
+                    function flipCard() {
+                        try {
+                            if (!flashcard) {
+                                throw new Error('Flashcard element not found');
+                            }
+                            
+                            flashcard.classList.toggle('flipped');
+                            isFlipped = !isFlipped;
+                            
+                            // Update content visibility
+                            questionEl.style.display = isFlipped ? 'none' : 'block';
+                            answerEl.style.display = isFlipped ? 'block' : 'none';
+                        } catch (error) {
+                            console.error('Error in flip functionality:', error);
+                        }
+                    }
+                    
+                    // Remove any existing listeners
+                    flipBtn.onclick = flipCard;
+                    flashcard.onclick = flipCard;
+                    
+                    // Add keyboard navigation
+                    const handleKeyDown = (e) => {
+                        if (playPanel.style.display !== 'block') return;
+                        
+                        switch(e.key) {
+                            case 'ArrowLeft':
+                                if (!prevBtn.disabled) prevBtn.click();
+                                break;
+                            case 'ArrowRight':
+                                if (!nextBtn.disabled) nextBtn.click();
+                                break;
+                            case ' ':
+                            case 'Enter':
+                                e.preventDefault();
+                                flipCard();
+                                break;
+                        }
+                    };
+                    
+                    // Remove any existing keyboard listener
+                    document.removeEventListener('keydown', handleKeyDown);
+                    document.addEventListener('keydown', handleKeyDown);
+                    
+                    // Show initial card
+                    updateCardDisplay();
+                    
+                    // Show the play panel
+                    showPanel('view-play-cards');
+                } catch (error) {
+                    console.error('Failed to load set for play view:', error);
+                    alert('Failed to load set. Please try again.');
+                }
+            }
 
             function switchToLibraryView() {
                 showPanel('view-library');

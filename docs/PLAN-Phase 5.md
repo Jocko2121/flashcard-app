@@ -75,34 +75,34 @@ Key CSS patterns:
   - [x] Check responsive behavior
   - [x] Await user feedback before proceeding to Epic 5.2
 
-**[ ] Epic 5.2 - Card Display**
-- [ ] Implement card container
-  - [ ] Create front/back structure (use CSS transform for 3D flip)
-  - [ ] Add question display (use existing text styles)
-  - [ ] Add answer display (use existing text styles)
-  - [ ] Set reasonable min-height for landscape flashcard appearance (use CSS min-height)
-  - [ ] Allow vertical expansion for long content (use CSS height: auto)
-  - [ ] Reset to min-height for each new card (reset in JavaScript)
-  - [ ] Use CSS perspective for 3D effect
-  - [ ] Add backface-visibility: hidden for clean flip
-- [ ] Add flip functionality
-  - [ ] Implement click/tap handler (use event delegation)
-  - [ ] Add flip animation (use CSS transform and transition)
-  - [ ] Add visual indicator (use CSS cursor: pointer)
-  - [ ] Use transform-style: preserve-3d
-  - [ ] Add transition: transform var(--transition-duration)
-- [ ] CHECKPOINT: Card Display Review
-  - [ ] Verify card container implementation
-  - [ ] Test card flip animation
-  - [ ] Validate handling of long content
-  - [ ] Confirm card positioning and size
-  - [ ] Await user feedback before proceeding with remaining tasks
-- [ ] Style card display
-  - [ ] Center in viewport (use flexbox)
-  - [ ] Set consistent size (use CSS width/max-width)
-  - [ ] Add minimal styling (use existing card styles as base)
-  - [ ] Use existing card border and shadow styles
-  - [ ] Match existing text styles for consistency
+**[x] Epic 5.2 - Card Display**
+- [x] Implement card container
+  - [x] Create front/back structure (use CSS transform for 3D flip)
+  - [x] Add question display (use existing text styles)
+  - [x] Add answer display (use existing text styles)
+  - [x] Set reasonable min-height for landscape flashcard appearance (use CSS min-height)
+  - [x] Allow vertical expansion for long content (use CSS height: auto)
+  - [x] Reset to min-height for each new card (reset in JavaScript)
+  - [x] Use CSS perspective for 3D effect
+  - [x] Add backface-visibility: hidden for clean flip
+- [x] Add flip functionality
+  - [x] Implement click/tap handler (use event delegation)
+  - [x] Add flip animation (use CSS transform and transition)
+  - [x] Add visual indicator (use CSS cursor: pointer)
+  - [x] Use transform-style: preserve-3d
+  - [x] Add transition: transform var(--transition-duration)
+- [x] CHECKPOINT: Card Display Review
+  - [x] Verify card container implementation
+  - [x] Test card flip animation
+  - [x] Validate handling of long content
+  - [x] Confirm card positioning and size
+  - [x] Await user feedback before proceeding with remaining tasks
+- [x] Style card display
+  - [x] Center in viewport (use flexbox)
+  - [x] Set consistent size (use CSS width/max-width)
+  - [x] Add minimal styling (use existing card styles as base)
+  - [x] Use existing card border and shadow styles
+  - [x] Match existing text styles for consistency
 
 **[ ] Epic 5.3 - Navigation**
 - [ ] Add navigation buttons
