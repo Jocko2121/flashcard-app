@@ -13,54 +13,54 @@
   </head>
   <body>
     <div class="top-bar">
-      <div class="controls">Flashcard App
+      <div class="action-controls">Flashcard App
         <!-- Removed 'Toggle Library' and 'Toggle Completed' buttons -->
       </div>
     </div>
     <div class="app-layout">
       <!-- Left Column -->
-      <div id="sect-nav" class="panel-base panel-left panel-visible">
-        <div class="panel-header nav-header">
-          <button id="btn-nav-hamburger" class="nav-icon-btn" title="Collapse/Expand Navigation" aria-label="Collapse/Expand Navigation">
+      <div id="sect-nav" class="section-base sidebar-nav is-visible">
+        <div class="section-header sidebar-header">
+          <button id="btn-nav-hamburger" class="sidebar-icon-btn" title="Collapse/Expand Navigation" aria-label="Collapse/Expand Navigation">
             <!-- Hamburger SVG -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect y="4" width="24" height="2" rx="1" fill="#555"/><rect y="11" width="24" height="2" rx="1" fill="#555"/><rect y="18" width="24" height="2" rx="1" fill="#555"/></svg>
           </button>
         </div>
-        <div class="panel-content nav-content">
-            <button id="btn-nav-home" class="sidebar-nav-btn active" type="button">
+        <div class="section-content sidebar-content">
+            <button id="btn-nav-home" class="sidebar-btn is-active" type="button">
                 <!-- Home SVG -->
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L2 9l2 1.5V20h16V10.5L22 9l-10-7zM12 4.5L19 10v8H5v-8l7-5.5z" fill="#555"/>
                 </svg>
-                <span class="nav-label">Home</span>
+                <span class="sidebar-label">Home</span>
               </button>
           
-          <button id="btn-nav-library" class="add-flashcard-btn sidebar-nav-btn" type="button">
+          <button id="btn-nav-library" class="add-flashcard-btn sidebar-btn" type="button">
             <!-- Folder SVG -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" fill="#555"/>
             </svg>
-            <span class="nav-label">Library</span>
+            <span class="sidebar-label">Library</span>
           </button>
           
-          <button id="btn-nav-themes" class="nav-icon-btn sidebar-nav-btn" type="button">
+          <button id="btn-nav-themes" class="sidebar-icon-btn sidebar-btn" type="button">
             <!-- Color Palette SVG -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c.84 0 1.5-.66 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 8c-.83 0-1.5-.67-1.5-1.5S5.67 7 6.5 7s1.5.67 1.5 1.5S7.33 10 6.5 10zm3-4C8.67 6 8 5.33 8 4.5S8.67 3 9.5 3s1.5.67 1.5 1.5S10.33 6 9.5 6zM5.75 12.5c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25zM8.5 15c-.83 0-1.5-.67-1.5-1.5S7.67 12 8.5 12s1.5.67 1.5 1.5S9.33 15 8.5 15z" fill="#555"/>
             </svg>
-            <span class="nav-label">Themes</span>
+            <span class="sidebar-label">Themes</span>
           </button>
-          <button id="btn-nav-import" class="nav-icon-btn sidebar-nav-btn" type="button">
+          <button id="btn-nav-import" class="sidebar-icon-btn sidebar-btn" type="button">
             <!-- Import SVG -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" fill="#555"/>
             </svg>
-            <span class="nav-label">Import</span>
+            <span class="sidebar-label">Import</span>
           </button>
 
 
-          <div class="nav-header-label">
-            <span class="nav-label">Stuff</span>
+          <div class="sidebar-header-label">
+            <span class="sidebar-label">Stuff</span>
           </div>
           
         </div>
@@ -70,16 +70,16 @@
 
 
       <!-- Main Column -->
-      <div id="sect-main" class="panel-base panel-main">
+      <div id="sect-main" class="section-base main-content">
         <!-- Page Display Section -->
         <div id="view-home" class="page-panel">
-          <div class="main-header">
-            <div class="main-header-content">
+          <div class="view-header">
+            <div class="view-header-content">
               <h2 class="current-set-name">Home</h2>
               <p class="current-set-description">Welcome to your flashcard app</p>
-              <span class="header-card-count card-count" style="display: none;">0 cards</span>
+              <span class="view-header-count card-count" style="display: none;">0 cards</span>
             </div>
-            <div class="header-buttons">
+            <div class="view-header-actions">
               <button class="new-set-btn" type="button">New Set</button>
               <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
               <button class="add-flashcard-btn" type="button">Add Flashcard</button>
@@ -89,23 +89,23 @@
               </button>
             </div>
           </div>
-          <form class="new-set-form form-container hidden">
+          <form class="new-set-form form-wrap form--hidden">
             <input class="new-set-name" type="text" placeholder="Set Name" required />
             <input class="new-set-desc" type="text" placeholder="Description" />
             <button type="submit">Add Set</button>
             <button type="button" class="cancel-new-set">Cancel</button>
           </form>
-          <div class="card-sets-list stacked-layout"></div>
+          <div id="home-card-sets-list" class="set-list list--stacked"></div>
         </div>
 
         <div id="view-library" class="page-panel" style="display:none">
-          <div class="main-header">
-            <div class="main-header-content">
+          <div class="view-header">
+            <div class="view-header-content">
               <h2 class="current-set-name">Library</h2>
               <p class="current-set-description">Manage your flashcard sets</p>
-              <span class="header-card-count card-count" style="display: none;">0 cards</span>
+              <span class="view-header-count card-count" style="display: none;">0 cards</span>
             </div>
-            <div class="header-buttons">
+            <div class="view-header-actions">
               <button class="new-set-btn" type="button">New Set</button>
               <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
               <button class="add-flashcard-btn" type="button">Add Flashcard</button>
@@ -115,23 +115,23 @@
               </button>
             </div>
           </div>
-          <form class="new-set-form form-container hidden">
+          <form class="new-set-form form-wrap form--hidden">
             <input class="new-set-name" type="text" placeholder="Set Name" required />
             <input class="new-set-desc" type="text" placeholder="Description" />
             <button type="submit">Add Set</button>
             <button type="button" class="cancel-new-set">Cancel</button>
           </form>
-          <div class="card-sets-list"></div>
+          <div class="set-list"></div>
         </div>
 
         <div id="view-themes" class="page-panel" style="display:none">
-          <div class="main-header">
-            <div class="main-header-content">
+          <div class="view-header">
+            <div class="view-header-content">
               <h2 class="current-set-name">Themes</h2>
               <p class="current-set-description">Customize your experience</p>
-              <span class="header-card-count card-count" style="display: none;">0 cards</span>
+              <span class="view-header-count card-count" style="display: none;">0 cards</span>
             </div>
-            <div class="header-buttons">
+            <div class="view-header-actions">
               <button class="new-set-btn" type="button">New Set</button>
               <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
               <button class="add-flashcard-btn" type="button">Add Flashcard</button>
@@ -144,13 +144,13 @@
         </div>
 
         <div id="view-import" class="page-panel" style="display:none">
-          <div class="main-header">
-            <div class="main-header-content">
+          <div class="view-header">
+            <div class="view-header-content">
               <h2 class="current-set-name">Import</h2>
               <p class="current-set-description">Import your flashcard sets</p>
-              <span class="header-card-count card-count" style="display: none;">0 cards</span>
+              <span class="view-header-count card-count" style="display: none;">0 cards</span>
             </div>
-            <div class="header-buttons">
+            <div class="view-header-actions">
               <button class="new-set-btn" type="button">New Set</button>
               <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
               <button class="add-flashcard-btn" type="button">Add Flashcard</button>
@@ -163,13 +163,13 @@
         </div>
 
         <div id="viewH-cards" class="page-panel" style="display:none">
-          <div class="main-header">
-            <div class="main-header-content">
+          <div class="view-header">
+            <div class="view-header-content">
               <h2 class="current-set-name"></h2>
               <p class="current-set-description"></p>
-              <span class="header-card-count card-count" style="display: none;">0 cards</span>
+              <span class="view-header-count card-count" style="display: none;">0 cards</span>
             </div>
-            <div class="header-buttons">
+            <div class="view-header-actions">
               <button class="new-set-btn" type="button">New Set</button>
               <button class="continue-with-btn" type="button" style="display: none;">Continue with: </button>
               <button class="add-flashcard-btn" type="button">Add Flashcard</button>
@@ -179,22 +179,25 @@
               </button>
             </div>
           </div>
-          <form class="add-flashcard-form form-container hidden">
+          <form class="add-flashcard-form form-wrap form--hidden">
             <input class="flashcard-question" type="text" placeholder="Question" required />
             <input class="flashcard-answer" type="text" placeholder="Answer" required />
             <button type="submit">Add Card</button>
             <button type="button" class="cancel-add-flashcard">Cancel</button>
           </form>
-          <div class="card-list"></div>
+          <div class="flashcard-list"></div>
         </div>
       </div>
       
+
+
+
       <!-- Right Column -->
-      <div id="sect-done" class="panel-base panel-right panel-hidden">
-        <div class="panel-header">
+      <div id="sect-done" class="section-base sidebar-done is-hidden">
+        <div class="section-header">
           <h2>Completed Cards</h2>
         </div>
-        <div class="panel-content">
+        <div class="section-content">
           <!-- Completed cards will be loaded here -->
         </div>
       </div>
@@ -350,7 +353,7 @@
             const toggleSetsPanel = document.getElementById('toggle-sets-panel');
             const toggleCompletedPanel = document.getElementById('toggle-completed-panel');
             const cardSetsList = document.getElementById('card-sets-list');
-            const colRightCardsContainer = colRight.querySelector('.panel-content');
+            const colRightCardsContainer = colRight.querySelector('.section-content');
             let currentSetId = null;
             // Inline Undo logic
             let undoTimeout = null;
@@ -381,7 +384,7 @@
                 }, 5000);
             }
             function updateGrid() {
-                const colRightVisible = colRight.classList.contains('panel-visible');
+                const colRightVisible = colRight.classList.contains('is-visible');
                 const isCollapsed = layout3col.classList.contains('left-collapsed');
                 
                 if (colRightVisible && !isCollapsed) {
@@ -397,9 +400,9 @@
             // Load library into sidebar
             async function loadLibrary() {
                 const homePanel = document.getElementById('view-home');
-                const homeCardSetsList = homePanel ? homePanel.querySelector('.card-sets-list') : null;
+                const homeCardSetsList = homePanel ? homePanel.querySelector('.set-list') : null;
                 const libraryPanel = document.getElementById('view-library');
-                const libraryCardSetsList = libraryPanel ? libraryPanel.querySelector('.card-sets-list') : null;
+                const libraryCardSetsList = libraryPanel ? libraryPanel.querySelector('.set-list') : null;
                 
                 if (homeCardSetsList) homeCardSetsList.innerHTML = '';
                 if (libraryCardSetsList) libraryCardSetsList.innerHTML = '';
@@ -437,7 +440,7 @@
                     library.forEach(set => {
                         const createSetElement = () => {
                             const setElement = document.createElement('div');
-                            setElement.className = 'card-set' + (set.id === currentSetId ? ' active' : '');
+                            setElement.className = 'set-card' + (set.id === currentSetId ? ' is-active' : '');
                             setElement.innerHTML = `
                                 <div class="set-content-view">
                                     <h3>${set.name}</h3>
@@ -599,7 +602,7 @@
             }
             // Load done cards
             async function loadDoneCards() {
-                const colRightCardsContainer = colRight.querySelector('.panel-content');
+                const colRightCardsContainer = colRight.querySelector('.section-content');
                 if (!colRightCardsContainer) {
                     console.error('Completed cards container not found');
                     return;
@@ -609,7 +612,7 @@
                 
                 if (!currentSetId) {
                     colRightCardsContainer.innerHTML = `
-                        <div class="card-set">
+                        <div class="set-card">
                             Select a library to view completed cards
                         </div>
                     `;
@@ -622,7 +625,7 @@
                     
                     if (doneCardsList.length === 0) {
                         colRightCardsContainer.innerHTML = `
-                            <div class="card-set">
+                            <div class="set-card">
                                 No completed cards yet. Complete some cards to see them here!
                             </div>
                         `;
@@ -631,7 +634,7 @@
 
                     doneCardsList.forEach(card => {
                         const cardElement = document.createElement('div');
-                        cardElement.className = 'card-set completed';
+                        cardElement.className = 'set-card completed';
                         cardElement.innerHTML = `
                             <h3>${card.question}</h3>
                             <p>${card.answer}</p>
@@ -666,7 +669,7 @@
                                 lastDeletedFromDone = true;
                                 
                                 // Find the index of the card in the container
-                                const cardDiv = btn.closest('.card-set');
+                                const cardDiv = btn.closest('.set-card');
                                 const index = Array.from(colRightCardsContainer.children).indexOf(cardDiv);
                                 
                                 loadCards(currentSetId);
@@ -703,7 +706,7 @@
                     return;
                 }
                 
-                const cardList = cardViewPanel.querySelector('.card-list');
+                const cardList = cardViewPanel.querySelector('.flashcard-list');
                 if (!cardList) {
                     console.error('Card list container not found');
                     return;
@@ -715,7 +718,7 @@
                     const activeCards = cards.filter(card => !card.completed);
                     
                     // Update header elements
-                    const headerCardCount = cardViewPanel.querySelector('.header-card-count');
+                    const headerCardCount = cardViewPanel.querySelector('.view-header-count');
                     if (headerCardCount) {
                         headerCardCount.textContent = `${cards.length} card${cards.length !== 1 ? 's' : ''}`;
                         headerCardCount.style.display = 'inline-block';
@@ -723,7 +726,7 @@
                     
                     if (activeCards.length === 0) {
                         cardList.innerHTML = `
-                            <div class="card-set">
+                            <div class="set-card">
                                 No cards in this set yet. Click "Add Flashcard" to create one!
                             </div>
                         `;
@@ -732,7 +735,7 @@
                     
                     activeCards.forEach(card => {
                         const cardElement = document.createElement('div');
-                        cardElement.className = 'card-set';
+                        cardElement.className = 'set-card';
                         cardElement.innerHTML = `
                             <div class="card-content-view">
                                 <h3>${card.question}</h3>
@@ -768,7 +771,7 @@
                     
                     cardList.querySelectorAll('.edit-card-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => {
-                            const cardDiv = btn.closest('.card-set');
+                            const cardDiv = btn.closest('.set-card');
                             const contentView = cardDiv.querySelector('.card-content-view');
                             const editForm = cardDiv.querySelector('.edit-card-form');
                             if (contentView) contentView.style.display = 'none';
@@ -778,7 +781,7 @@
                     
                     cardList.querySelectorAll('.cancel-edit-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => {
-                            const cardDiv = btn.closest('.card-set');
+                            const cardDiv = btn.closest('.set-card');
                             const contentView = cardDiv.querySelector('.card-content-view');
                             const editForm = cardDiv.querySelector('.edit-card-form');
                             if (contentView) contentView.style.display = 'block';
@@ -805,11 +808,11 @@
                     cardList.querySelectorAll('.delete-card-btn').forEach(btn => {
                         btn.addEventListener('click', async (e) => {
                             const id = btn.getAttribute('data-id');
-                            const cardDiv = btn.closest('.card-set');
+                            const cardDiv = btn.closest('.set-card');
                             const question = cardDiv.querySelector('h3').textContent;
                             const answer = cardDiv.querySelector('p').textContent;
                             const placeholder = document.createElement('div');
-                            placeholder.className = 'card-set deleting';
+                            placeholder.className = 'set-card deleting';
                             placeholder.innerHTML = `
                                 <div class="card-content-view">
                                     <h3>${question}</h3>
@@ -862,8 +865,8 @@
                 // Removed left panel toggle event handler; left panel is always visible
                 if (toggleCompletedPanel && colRight) {
                     toggleCompletedPanel.addEventListener('click', () => {
-                        colRight.classList.toggle('panel-visible');
-                        if (colRight.classList.contains('panel-visible')) {
+                        colRight.classList.toggle('is-visible');
+                        if (colRight.classList.contains('is-visible')) {
                             loadDoneCards();
                         }
                         updateGrid();
@@ -889,7 +892,7 @@
                         const addFlashcard = homePanel.querySelector('.add-flashcard-btn');
                         const newSetBtn = homePanel.querySelector('.new-set-btn');
                         const headerCompletedBtn = homePanel.querySelector('.header-completed-btn');
-                        const headerCardCount = homePanel.querySelector('.header-card-count');
+                        const headerCardCount = homePanel.querySelector('.view-header-count');
                         const currentSetName = homePanel.querySelector('.current-set-name');
                         const currentSetDesc = homePanel.querySelector('.current-set-description');
 
@@ -916,7 +919,7 @@
                         const addFlashcard = themesPanel.querySelector('.add-flashcard-btn');
                         const newSetBtn = themesPanel.querySelector('.new-set-btn');
                         const headerCompletedBtn = themesPanel.querySelector('.header-completed-btn');
-                        const headerCardCount = themesPanel.querySelector('.header-card-count');
+                        const headerCardCount = themesPanel.querySelector('.view-header-count');
                         const currentSetName = themesPanel.querySelector('.current-set-name');
                         const currentSetDesc = themesPanel.querySelector('.current-set-description');
 
@@ -940,7 +943,7 @@
                         const addFlashcard = importPanel.querySelector('.add-flashcard-btn');
                         const newSetBtn = importPanel.querySelector('.new-set-btn');
                         const headerCompletedBtn = importPanel.querySelector('.header-completed-btn');
-                        const headerCardCount = importPanel.querySelector('.header-card-count');
+                        const headerCardCount = importPanel.querySelector('.view-header-count');
                         const currentSetName = importPanel.querySelector('.current-set-name');
                         const currentSetDesc = importPanel.querySelector('.current-set-description');
 
@@ -964,7 +967,7 @@
                         }
                         const form = currentPanel.querySelector('.new-set-form');
                         if (form) {
-                            form.classList.remove('hidden');
+                            form.classList.remove('form--hidden');
                             newSetBtn.style.display = 'none';
                         }
                     });
@@ -983,7 +986,7 @@
                         const newSetBtn = currentPanel.querySelector('.new-set-btn');
                         if (form) {
                             form.reset();
-                            form.classList.add('hidden');
+                            form.classList.add('form--hidden');
                         }
                         if (newSetBtn) newSetBtn.style.display = 'inline-block';
                     });
@@ -1013,7 +1016,7 @@
                             const btn = currentPanel.querySelector('.new-set-btn');
                             if (form) {
                                 form.reset();
-                                form.classList.add('hidden');
+                                form.classList.add('form--hidden');
                             }
                             if (btn) btn.style.display = 'inline-block';
                             loadLibrary();
@@ -1034,7 +1037,7 @@
                         }
                         const form = cardViewPanel.querySelector('.add-flashcard-form');
                         if (form) {
-                            form.classList.remove('hidden');
+                            form.classList.remove('form--hidden');
                             addFlashcardBtn.style.display = 'none';
                         }
                     });
@@ -1048,7 +1051,7 @@
                         const btn = currentPanel.querySelector('.add-flashcard-btn');
                         if (form) {
                             form.reset();
-                            form.classList.add('hidden');
+                            form.classList.add('form--hidden');
                         }
                         if (btn) btn.style.display = 'inline-block';
                     });
@@ -1073,7 +1076,7 @@
                             const btn = currentPanel.querySelector('.add-flashcard-btn');
                             if (form) {
                                 form.reset();
-                                form.classList.add('hidden');
+                                form.classList.add('form--hidden');
                             }
                             if (btn) btn.style.display = 'inline-block';
                             loadCards(currentSetId);
@@ -1111,7 +1114,7 @@
                 const addFlashcard = panel.querySelector('.add-flashcard-btn');
                 const newSetBtn = panel.querySelector('.new-set-btn');
                 const headerCompletedBtn = panel.querySelector('.header-completed-btn');
-                const headerCardCount = panel.querySelector('.header-card-count');
+                const headerCardCount = panel.querySelector('.view-header-count');
                 const currentSetName = panel.querySelector('.current-set-name');
                 const currentSetDesc = panel.querySelector('.current-set-description');
 
@@ -1157,10 +1160,10 @@
 
             // Set Home button as active
             const showHomeBtn = document.getElementById('btn-nav-home');
-            if (showHomeBtn) showHomeBtn.classList.add('active');
+            if (showHomeBtn) showHomeBtn.classList.add('is-active');
 
             // Open sidebar by default
-            if (colLeft) colLeft.classList.add('panel-visible');
+            if (colLeft) colLeft.classList.add('is-visible');
             updateGrid();
 
             // Load initial content
@@ -1169,7 +1172,7 @@
             // Load the current set if one is selected
             if (currentSetId) {
                 loadCards(currentSetId);
-                loadLibrary(); // Ensure .active is applied
+                loadLibrary(); // Ensure .is-active is applied
             }
             // Make toggleCardCompletion available globally
             window.toggleCardCompletion = async function(cardId) {
@@ -1194,7 +1197,7 @@
                 const newSetBtn = cardViewPanel.querySelector('.new-set-btn');
                 const continueWithBtn = cardViewPanel.querySelector('.continue-with-btn');
                 const headerCompletedBtn = cardViewPanel.querySelector('.header-completed-btn');
-                const headerCardCount = cardViewPanel.querySelector('.header-card-count');
+                const headerCardCount = cardViewPanel.querySelector('.view-header-count');
                 
                 // Only show and enable Add Flashcard button if we have a valid setId
                 if (addFlashcard) {
@@ -1209,8 +1212,8 @@
                 // Set up the completed panel button
                 if (headerCompletedBtn && colRight) {
                     headerCompletedBtn.onclick = () => {
-                        colRight.classList.toggle('panel-visible');
-                        if (colRight.classList.contains('panel-visible')) {
+                        colRight.classList.toggle('is-visible');
+                        if (colRight.classList.contains('is-visible')) {
                             loadDoneCards();
                         }
                         updateGrid();
@@ -1231,7 +1234,7 @@
                 const addFlashcard = libraryPanel.querySelector('.add-flashcard-btn');
                 const newSetBtn = libraryPanel.querySelector('.new-set-btn');
                 const headerCompletedBtn = libraryPanel.querySelector('.header-completed-btn');
-                const headerCardCount = libraryPanel.querySelector('.header-card-count');
+                const headerCardCount = libraryPanel.querySelector('.view-header-count');
                 const currentSetName = libraryPanel.querySelector('.current-set-name');
                 const currentSetDesc = libraryPanel.querySelector('.current-set-description');
 
@@ -1263,26 +1266,26 @@
                     panel.style.display = 'block';
                     
                     // Update navigation button states
-                    const navButtons = document.querySelectorAll('.sidebar-nav-btn');
-                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    const navButtons = document.querySelectorAll('.sidebar-btn');
+                    navButtons.forEach(btn => btn.classList.remove('is-active'));
                     
                     // Set the appropriate button as active
                     switch(panelId) {
                         case 'view-home':
                             const homeBtn = document.getElementById('btn-nav-home');
-                            if (homeBtn) homeBtn.classList.add('active');
+                            if (homeBtn) homeBtn.classList.add('is-active');
                             break;
                         case 'view-library':
                             const libraryBtn = document.getElementById('btn-nav-library');
-                            if (libraryBtn) libraryBtn.classList.add('active');
+                            if (libraryBtn) libraryBtn.classList.add('is-active');
                             break;
                         case 'view-themes':
                             const themesBtn = document.getElementById('btn-nav-themes');
-                            if (themesBtn) themesBtn.classList.add('active');
+                            if (themesBtn) themesBtn.classList.add('is-active');
                             break;
                         case 'view-import':
                             const importBtn = document.getElementById('btn-nav-import');
-                            if (importBtn) importBtn.classList.add('active');
+                            if (importBtn) importBtn.classList.add('is-active');
                             break;
                     }
                 }

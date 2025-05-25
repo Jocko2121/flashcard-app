@@ -60,11 +60,11 @@
     overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
-.panel-left.panel-visible ~ .app-layout {
+.sidebar-nav.is-visible ~ .app-layout {
     --left-panel-width: var(--panel-width);
 }
 
-.panel-right.panel-visible ~ .app-layout {
+.sidebar-done.is-visible ~ .app-layout {
     --right-panel-width: var(--panel-width);
 }
 
@@ -72,7 +72,7 @@
    PANEL TRANSITIONS & ANIMATIONS
    ========================================================================== */
 
-.panel-base {
+.section-base {
     width: var(--panel-width);
     background: var(--panel-bg);
     box-shadow: var(--panel-shadow);
@@ -85,7 +85,7 @@
 }
 
 /* Left Panel */
-.panel-left {
+.sidebar-nav {
     width: 220px;
     min-width: 220px;
     max-width: 220px;
@@ -93,12 +93,12 @@
     transform: translateX(-100%);
 }
 
-.panel-left.panel-visible {
+.sidebar-nav.is-visible {
     transform: translateX(0);
 }
 
 /* Main Panel */
-.panel-main {
+.main-content {
     min-width: 0;
     width: 100%;
     padding: var(--main-padding);
@@ -113,7 +113,7 @@
 }
 
 /* Right Panel */
-.panel-right {
+.sidebar-done {
     padding: 15px 0 0 0;
     transform: translateX(100%);
     width: 335px;
@@ -121,7 +121,7 @@
     max-width: 335px;
 }
 
-.panel-right.panel-visible {
+.sidebar-done.is-visible {
     transform: translateX(0);
 }
 
@@ -134,7 +134,7 @@
    ========================================================================== */
 
 /* Panel Headers */
-.panel-header {
+.section-header {
     padding: 0 20px 20px 20px;
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
@@ -145,7 +145,7 @@
 }
 
 /* Panel Content Areas */
-.panel-content {
+.section-content {
     flex: 1;
     overflow-y: auto;
     padding: 20px;
@@ -173,7 +173,7 @@
 }
 
 /* Collapsed sidebar: force width and hide labels */
-.app-layout.left-collapsed .panel-left {
+.app-layout.left-collapsed .sidebar-nav {
     width: 56px !important;
     min-width: 56px !important;
     max-width: 56px !important;
@@ -182,17 +182,17 @@
     overflow: hidden;
 }
 
-.app-layout.left-collapsed .panel-left .nav-label {
+.app-layout.left-collapsed .sidebar-nav .sidebar-label {
     display: none !important;
 }
 
-.app-layout.left-collapsed .panel-left .sidebar-nav-btn {
+.app-layout.left-collapsed .sidebar-nav .sidebar-btn {
     justify-content: center;
     padding-left: 0;
     padding-right: 0;
 }
 
-.app-layout.left-collapsed .panel-left .nav-icon-btn {
+.app-layout.left-collapsed .sidebar-nav .sidebar-icon-btn {
     margin-left: 0;
     margin-right: 0;
     display: flex;
@@ -207,7 +207,7 @@
     height: 100%;
 }
 
-.page.active {
+.page.is-active {
     display: block;
 }
 
@@ -225,22 +225,25 @@
 }
 
 /* Card Sets List Styles */
-.card-sets-list {
+.set-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 32px;
+    justify-content: flex-start;
     width: 100%;
     box-sizing: border-box;
+    min-height: 0;
 }
 
 /* Stacked layout for home page */
-.stacked-layout {
+.list--stacked {
     flex-direction: column;
     gap: 16px;
 }
 
-.stacked-layout .card-set {
+.list--stacked .set-card {
     width: 100%;
+    max-width: 100%;
 }
 
 /* Remove legacy card-list-container styles */
