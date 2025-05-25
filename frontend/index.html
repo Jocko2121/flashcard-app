@@ -422,7 +422,7 @@
                     if (lastActiveLibrary && !currentSetId) {
                         const lastLibrary = library.find(set => String(set.id) === String(lastActiveLibrary));
                         if (lastLibrary && continueBtn) {
-                            continueBtn.textContent = `Continue with: ${lastLibrary.name}`;
+                            continueBtn.textContent = `Continue with: ${lastLibrary.name} Flashcards`;
                             continueBtn.style.display = 'inline-block';
                             continueBtn.onclick = () => {
                                 currentSetId = lastLibrary.id;
@@ -430,7 +430,7 @@
                                 const currentPanel = document.getElementById('viewH-cards');
                                 const currentSetName = currentPanel.querySelector('.current-set-name');
                                 const currentSetDesc = currentPanel.querySelector('.current-set-description');
-                                if (currentSetName) currentSetName.textContent = lastLibrary.name;
+                                if (currentSetName) currentSetName.textContent = `${lastLibrary.name} Flashcards`;
                                 if (currentSetDesc) currentSetDesc.textContent = lastLibrary.description || '';
                                 loadDoneCards();
                             };
@@ -448,7 +448,8 @@
                                     <div class="set-stats">
                                         <span class="card-count">0 cards</span>
                                     </div>
-                                    <button class="edit-set-btn" data-id="${set.id}">Edit</button>
+                                    <button class="edit-set-btn" data-id="${set.id}">Edit Set</button>
+                                    <button class="edit-flashcards-btn" data-id="${set.id}">Edit Flashcards</button>
                                     <button class="delete-set-btn" data-id="${set.id}">Delete</button>
                                 </div>
                                 <form class="edit-set-form" data-id="${set.id}" style="display:none; margin-top:10px;">
@@ -474,15 +475,23 @@
                             const setContentView = setElement.querySelector('.set-content-view');
                             if (setContentView) {
                                 setContentView.addEventListener('click', async (e) => {
-                                    // Only trigger set selection if not clicking the edit button
-                                    if (e.target.classList.contains('edit-set-btn')) return;
+                                    // Don't trigger if clicking any button
+                                    if (e.target.tagName === 'BUTTON') return;
+                                    alert('Play Flashcards');
+                                });
+                            }
+                            
+                            const editFlashcardsBtn = setElement.querySelector('.edit-flashcards-btn');
+                            if (editFlashcardsBtn) {
+                                editFlashcardsBtn.addEventListener('click', async (e) => {
+                                    e.stopPropagation();
                                     currentSetId = set.id;
                                     await API.updateLastActiveSet(set.id);
                                     switchToCardView(set.id);
                                     const currentPanel = document.getElementById('viewH-cards');
                                     const currentSetName = currentPanel.querySelector('.current-set-name');
                                     const currentSetDesc = currentPanel.querySelector('.current-set-description');
-                                    if (currentSetName) currentSetName.textContent = set.name;
+                                    if (currentSetName) currentSetName.textContent = `${set.name} - Edit Flashcards`;
                                     if (currentSetDesc) currentSetDesc.textContent = set.description || '';
                                     loadDoneCards();
                                 });
@@ -531,7 +540,7 @@
                                             const currentPanel = document.getElementById('viewH-cards');
                                             const currentSetName = currentPanel.querySelector('.current-set-name');
                                             const currentSetDesc = currentPanel.querySelector('.current-set-description');
-                                            if (currentSetName) currentSetName.textContent = name;
+                                            if (currentSetName) currentSetName.textContent = `${name} Flashcards`;
                                             if (currentSetDesc) currentSetDesc.textContent = desc;
                                         }
                                     } catch (error) {
@@ -634,7 +643,7 @@
 
                     doneCardsList.forEach(card => {
                         const cardElement = document.createElement('div');
-                        cardElement.className = 'set-card completed';
+                        cardElement.className = 'flashcard-card completed';
                         cardElement.innerHTML = `
                             <h3>${card.question}</h3>
                             <p>${card.answer}</p>
@@ -719,10 +728,18 @@
                     
                     // Update header elements
                     const headerCardCount = cardViewPanel.querySelector('.view-header-count');
+                    const currentSetName = cardViewPanel.querySelector('.current-set-name');
+                    const currentSetDesc = cardViewPanel.querySelector('.current-set-description');
+                    
                     if (headerCardCount) {
                         headerCardCount.textContent = `${cards.length} card${cards.length !== 1 ? 's' : ''}`;
                         headerCardCount.style.display = 'inline-block';
                     }
+                    
+                    // Get the set name and update the header
+                    const set = await API.getSet(setId);
+                    if (currentSetName) currentSetName.textContent = `${set.name} - Edit Flashcards`;
+                    if (currentSetDesc) currentSetDesc.textContent = set.description || '';
                     
                     if (activeCards.length === 0) {
                         cardList.innerHTML = `
@@ -735,13 +752,13 @@
                     
                     activeCards.forEach(card => {
                         const cardElement = document.createElement('div');
-                        cardElement.className = 'set-card';
+                        cardElement.className = 'flashcard-card';
                         cardElement.innerHTML = `
                             <div class="card-content-view">
                                 <h3>${card.question}</h3>
                                 <p>${card.answer}</p>
                                 <button class="done-card-btn" data-id="${card.id}">Mark Complete</button>
-                                <button class="edit-card-btn" data-id="${card.id}">Edit</button>
+                                <button class="edit-card-btn" data-id="${card.id}">Edit Card</button>
                                 <button class="delete-card-btn" data-id="${card.id}">Delete</button>
                             </div>
                             <form class="edit-card-form" data-id="${card.id}" style="display:none; margin-top:10px;">
@@ -771,7 +788,7 @@
                     
                     cardList.querySelectorAll('.edit-card-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => {
-                            const cardDiv = btn.closest('.set-card');
+                            const cardDiv = btn.closest('.flashcard-card');
                             const contentView = cardDiv.querySelector('.card-content-view');
                             const editForm = cardDiv.querySelector('.edit-card-form');
                             if (contentView) contentView.style.display = 'none';
@@ -781,7 +798,7 @@
                     
                     cardList.querySelectorAll('.cancel-edit-btn').forEach(btn => {
                         btn.addEventListener('click', (e) => {
-                            const cardDiv = btn.closest('.set-card');
+                            const cardDiv = btn.closest('.flashcard-card');
                             const contentView = cardDiv.querySelector('.card-content-view');
                             const editForm = cardDiv.querySelector('.edit-card-form');
                             if (contentView) contentView.style.display = 'block';
@@ -808,7 +825,7 @@
                     cardList.querySelectorAll('.delete-card-btn').forEach(btn => {
                         btn.addEventListener('click', async (e) => {
                             const id = btn.getAttribute('data-id');
-                            const cardDiv = btn.closest('.set-card');
+                            const cardDiv = btn.closest('.flashcard-card');
                             const question = cardDiv.querySelector('h3').textContent;
                             const answer = cardDiv.querySelector('p').textContent;
                             const placeholder = document.createElement('div');
@@ -900,7 +917,7 @@
                         if (newSetBtn) newSetBtn.style.display = 'inline-block';
                         if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
                         if (headerCardCount) headerCardCount.style.display = 'none';
-                        if (currentSetName) currentSetName.textContent = 'Home';
+                        if (currentSetName) currentSetName.textContent = 'Home Set';
                         if (currentSetDesc) currentSetDesc.textContent = 'Welcome to your flashcard app';
                         
                         // Reload library to refresh card sets
@@ -1131,11 +1148,11 @@
                 // Set panel-specific defaults
                 if (panel === homePanel) {
                     if (newSetBtn) newSetBtn.style.display = 'inline-block';
-                    if (currentSetName) currentSetName.textContent = 'Home';
+                    if (currentSetName) currentSetName.textContent = 'Home Set';
                     if (currentSetDesc) currentSetDesc.textContent = 'Welcome to your flashcard app';
                 } else if (panel === libraryPanel) {
                     if (newSetBtn) newSetBtn.style.display = 'inline-block';
-                    if (currentSetName) currentSetName.textContent = 'Library';
+                    if (currentSetName) currentSetName.textContent = 'Library Set';
                     if (currentSetDesc) currentSetDesc.textContent = 'Manage your flashcard sets';
                 } else if (panel === themesPanel) {
                     if (currentSetName) currentSetName.textContent = 'Themes';
@@ -1198,6 +1215,8 @@
                 const continueWithBtn = cardViewPanel.querySelector('.continue-with-btn');
                 const headerCompletedBtn = cardViewPanel.querySelector('.header-completed-btn');
                 const headerCardCount = cardViewPanel.querySelector('.view-header-count');
+                const currentSetName = cardViewPanel.querySelector('.current-set-name');
+                const currentSetDesc = cardViewPanel.querySelector('.current-set-description');
                 
                 // Only show and enable Add Flashcard button if we have a valid setId
                 if (addFlashcard) {
@@ -1246,7 +1265,7 @@
                 if (newSetBtn) newSetBtn.style.display = 'inline-block';
                 if (headerCompletedBtn) headerCompletedBtn.style.display = 'none';
                 if (headerCardCount) headerCardCount.style.display = 'none';
-                if (currentSetName) currentSetName.textContent = 'Library';
+                if (currentSetName) currentSetName.textContent = 'Library Set';
                 if (currentSetDesc) currentSetDesc.textContent = 'Manage your flashcard sets';
                 
                 // Reload library to refresh card sets

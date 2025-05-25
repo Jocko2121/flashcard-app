@@ -5,7 +5,7 @@
 /* Library Component */
 .set-card {
     background: var(--panel-bg);
-    border: 2px solid var(--card-border);
+    border: 2px solid var(--btn-danger-bg); /* Using danger color for set cards */
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 16px;
@@ -19,13 +19,13 @@
 
 .set-card.is-active {
     background: var(--card-active-bg);
-    border-color: var(--card-active-border);
+    border-color: var(--btn-danger-bg); /* Use danger color for active state */
 }
 
 .set-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border-color: var(--card-border);
+    border-color: var(--btn-danger-bg); /* Keep danger color on hover */
 }
 
 .set-card h3 {
@@ -38,6 +38,21 @@
     margin: 0;
     color: var(--text-secondary);
     font-size: 0.9rem;
+}
+
+/* Flashcard Component */
+.flashcard-card {
+    background: var(--panel-bg);
+    border: 2px solid var(--card-border); /* Using card border color for flashcards */
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    min-height: 100px;
+    position: relative;
+    z-index: 4;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Main Header Component */
@@ -100,6 +115,11 @@
     gap: 16px;
     width: 100%;
     box-sizing: border-box;
+}
+
+.flashcard-list .set-card {
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Remove legacy card-list-container styles */
