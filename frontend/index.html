@@ -189,47 +189,50 @@
         </div>
 
         <!-- New Play Cards View -->
-        <div id="view-play-cards" class="page-panel" style="display:none">
+        <div id="view-play-cards" class="page-panel section-base" style="display:none">
           <div class="view-header">
             <div class="view-header-content">
-              <h2 class="current-set-name">Play Flashcards</h2>
-              <p class="current-set-description">Study your flashcards</p>
-              <span class="view-header-count card-count">0 cards</span>
+              <h2 id="play-current-set-name">Set Name - Play Flashcards</h2>
+              <p id="play-current-set-description">Set description will appear here</p>
+              <p id="play-card-count">0 cards</p>
             </div>
             <div class="view-header-actions">
-              <button class="back-to-sets-btn" type="button">Back to Sets</button>
-              <button class="exit-play-btn" type="button">Exit Play Mode</button>
+              <button id="play-back-to-sets-btn" class="sidebar-btn">Back to Sets</button>
+              <button id="play-exit-btn" class="sidebar-btn">Exit Play Mode</button>
             </div>
           </div>
-          <div class="play-content">
+          <div class="play-view-content">
             <div class="card-display-area">
               <div class="flashcard">
                 <div class="flashcard-inner">
                   <div class="flashcard-front">
                     <div class="flashcard-content">
-                      <h3 class="question">Question will appear here</h3>
-                      <div class="card-hint">Click to flip</div>
+                      <h3>Question</h3>
+                      <p id="play-question">Question will appear here</p>
+                      <p class="flip-hint">Click or press Space to flip</p>
                     </div>
                   </div>
                   <div class="flashcard-back">
                     <div class="flashcard-content">
-                      <h3 class="answer">Answer will appear here</h3>
-                      <div class="card-hint">Click to flip back</div>
+                      <h3>Answer</h3>
+                      <p id="play-answer">Answer will appear here</p>
+                      <p class="flip-hint">Click or press Space to flip</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="play-navigation">
-              <button class="prev-card-btn" type="button" disabled>Previous</button>
-              <button class="flip-card-btn" type="button">Flip Card</button>
-              <button class="next-card-btn" type="button">Next</button>
+              <button id="play-prev-btn" class="sidebar-btn" disabled>Previous</button>
+              <button id="play-flip-btn" class="sidebar-btn">Flip</button>
+              <button id="play-next-btn" class="sidebar-btn">Next</button>
+              <button id="play-shuffle-btn" class="sidebar-btn">Shuffle</button>
             </div>
             <div class="play-progress">
               <div class="progress-bar">
-                <div class="progress-fill"></div>
+                <div id="play-progress-fill" class="progress-fill"></div>
               </div>
-              <span class="progress-text">Card 1 of 10</span>
+              <p id="play-progress-text">Card 0 of 0</p>
             </div>
           </div>
         </div>
@@ -1324,137 +1327,140 @@
 
             // Play View Functions
             async function showPlayView(setId) {
-                const playPanel = document.getElementById('view-play-cards');
-                const currentSetName = playPanel.querySelector('.current-set-name');
-                const currentSetDesc = playPanel.querySelector('.current-set-description');
-                const cardCount = playPanel.querySelector('.card-count');
-                const flashcard = playPanel.querySelector('.flashcard');
-                const questionEl = playPanel.querySelector('.question');
-                const answerEl = playPanel.querySelector('.answer');
-                const prevBtn = playPanel.querySelector('.prev-card-btn');
-                const nextBtn = playPanel.querySelector('.next-card-btn');
-                const flipBtn = playPanel.querySelector('.flip-card-btn');
-                const progressFill = playPanel.querySelector('.progress-fill');
-                const progressText = playPanel.querySelector('.progress-text');
-                
                 try {
                     // Reset card state
-                    flashcard.classList.remove('flipped');
-                    questionEl.style.display = 'block';
-                    answerEl.style.display = 'none';
-                    
-                    // Get set details from API
-                    const set = await API.getSet(setId);
-                    console.log('Set details:', set);
-                    
-                    const cards = await API.getCards(setId);
-                    console.log('Cards:', cards);
-                    
-                    if (!cards || cards.length === 0) {
-                        throw new Error('No cards found in set');
-                    }
-                    
-                    // Update header information
-                    currentSetName.textContent = `${set.name} - Play Flashcards`;
-                    currentSetDesc.textContent = set.description || '';
-                    cardCount.textContent = `${cards.length} cards`;
-                    
-                    // Initialize card state
                     let currentCardIndex = 0;
                     let isFlipped = false;
+                    let cards = [];
+                    let originalOrder = [];
+
+                    // Get set details and cards
+                    const set = await API.getSet(setId);
+                    cards = await API.getCards(setId);
                     
+                    if (!cards || cards.length === 0) {
+                        throw new Error('No cards found in this set');
+                    }
+
+                    // Store original order for shuffle functionality
+                    originalOrder = [...cards];
+
+                    // Update UI with set details
+                    document.getElementById('play-current-set-name').textContent = `${set.name} - Play Flashcards`;
+                    document.getElementById('play-current-set-description').textContent = set.description;
+                    document.getElementById('play-card-count').textContent = `${cards.length} cards`;
+
+                    // Get DOM elements
+                    const flashcard = document.querySelector('.flashcard');
+                    const questionEl = document.getElementById('play-question');
+                    const answerEl = document.getElementById('play-answer');
+                    const prevBtn = document.getElementById('play-prev-btn');
+                    const nextBtn = document.getElementById('play-next-btn');
+                    const flipBtn = document.getElementById('play-flip-btn');
+                    const shuffleBtn = document.getElementById('play-shuffle-btn');
+                    const backToSetsBtn = document.getElementById('play-back-to-sets-btn');
+                    const exitBtn = document.getElementById('play-exit-btn');
+                    const progressFill = document.getElementById('play-progress-fill');
+                    const progressText = document.getElementById('play-progress-text');
+
+                    // Add navigation event listeners
+                    backToSetsBtn.onclick = () => {
+                        showPanel('view-library');
+                        switchToLibraryView();
+                    };
+                    exitBtn.onclick = () => {
+                        showPanel('view-library');
+                        switchToLibraryView();
+                    };
+
                     // Function to update card display
                     function updateCardDisplay() {
                         const card = cards[currentCardIndex];
-                        if (!card || !card.question || !card.answer) {
-                            console.error('Invalid card data:', card);
-                            throw new Error('Invalid card data');
-                        }
-                        
-                        // Reset flip state
-                        if (isFlipped) {
-                            flashcard.classList.remove('flipped');
-                            isFlipped = false;
-                        }
-                        
-                        // Update card content
                         questionEl.textContent = card.question;
                         answerEl.textContent = card.answer;
                         
-                        // Update progress
-                        const progress = ((currentCardIndex + 1) / cards.length) * 100;
-                        progressFill.style.width = `${progress}%`;
-                        progressText.textContent = `Card ${currentCardIndex + 1} of ${cards.length}`;
+                        // Reset flip state
+                        isFlipped = false;
+                        flashcard.classList.remove('flipped');
                         
                         // Update button states
                         prevBtn.disabled = currentCardIndex === 0;
                         nextBtn.disabled = currentCardIndex === cards.length - 1;
                         
-                        // Ensure content is visible
-                        questionEl.style.display = 'block';
-                        answerEl.style.display = 'none';
+                        // Update progress
+                        const progress = ((currentCardIndex + 1) / cards.length) * 100;
+                        progressFill.style.width = `${progress}%`;
+                        progressText.textContent = `Card ${currentCardIndex + 1} of ${cards.length}`;
                     }
-                    
-                    // Add event listeners for navigation buttons
-                    const backToSetsBtn = playPanel.querySelector('.back-to-sets-btn');
-                    const exitPlayBtn = playPanel.querySelector('.exit-play-btn');
-                    
-                    // Remove any existing listeners
-                    backToSetsBtn.onclick = () => {
-                        showPanel('view-library');
-                    };
-                    
-                    exitPlayBtn.onclick = () => {
-                        showPanel('view-library');
-                    };
-                    
-                    // Add card navigation listeners
+
+                    // Function to flip card
+                    function flipCard() {
+                        isFlipped = !isFlipped;
+                        flashcard.classList.toggle('flipped');
+                    }
+
+                    // Function to shuffle cards
+                    function shuffleCards() {
+                        // Fisher-Yates shuffle algorithm
+                        for (let i = cards.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [cards[i], cards[j]] = [cards[j], cards[i]];
+                        }
+                        currentCardIndex = 0;
+                        updateCardDisplay();
+                    }
+
+                    // Function to restore original order
+                    function restoreOriginalOrder() {
+                        cards = [...originalOrder];
+                        currentCardIndex = 0;
+                        updateCardDisplay();
+                    }
+
+                    // Add event listeners
                     prevBtn.onclick = () => {
                         if (currentCardIndex > 0) {
                             currentCardIndex--;
                             updateCardDisplay();
                         }
                     };
-                    
+
                     nextBtn.onclick = () => {
                         if (currentCardIndex < cards.length - 1) {
                             currentCardIndex++;
                             updateCardDisplay();
                         }
                     };
-                    
-                    // Add flip functionality
-                    function flipCard() {
-                        try {
-                            if (!flashcard) {
-                                throw new Error('Flashcard element not found');
-                            }
-                            
-                            flashcard.classList.toggle('flipped');
-                            isFlipped = !isFlipped;
-                            
-                            // Update content visibility
-                            questionEl.style.display = isFlipped ? 'none' : 'block';
-                            answerEl.style.display = isFlipped ? 'block' : 'none';
-                        } catch (error) {
-                            console.error('Error in flip functionality:', error);
-                        }
-                    }
-                    
-                    // Remove any existing listeners
+
                     flipBtn.onclick = flipCard;
                     flashcard.onclick = flipCard;
-                    
-                    // Add keyboard navigation
-                    const handleKeyDown = (e) => {
-                        if (playPanel.style.display !== 'block') return;
+
+                    shuffleBtn.onclick = () => {
+                        if (shuffleBtn.textContent === 'Shuffle') {
+                            shuffleCards();
+                            shuffleBtn.textContent = 'Restore Order';
+                        } else {
+                            restoreOriginalOrder();
+                            shuffleBtn.textContent = 'Shuffle';
+                        }
+                    };
+
+                    // Add keyboard shortcuts
+                    document.addEventListener('keydown', function(e) {
+                        if (document.getElementById('view-play-cards').style.display === 'none') return;
                         
                         switch(e.key) {
                             case 'ArrowLeft':
-                                if (!prevBtn.disabled) prevBtn.click();
+                                if (currentCardIndex > 0) {
+                                    currentCardIndex--;
+                                    updateCardDisplay();
+                                }
                                 break;
                             case 'ArrowRight':
-                                if (!nextBtn.disabled) nextBtn.click();
+                                if (currentCardIndex < cards.length - 1) {
+                                    currentCardIndex++;
+                                    updateCardDisplay();
+                                }
                                 break;
                             case ' ':
                             case 'Enter':
@@ -1462,20 +1468,17 @@
                                 flipCard();
                                 break;
                         }
-                    };
-                    
-                    // Remove any existing keyboard listener
-                    document.removeEventListener('keydown', handleKeyDown);
-                    document.addEventListener('keydown', handleKeyDown);
-                    
-                    // Show initial card
+                    });
+
+                    // Initialize display
                     updateCardDisplay();
                     
-                    // Show the play panel
+                    // Show the panel
                     showPanel('view-play-cards');
+
                 } catch (error) {
-                    console.error('Failed to load set for play view:', error);
-                    alert('Failed to load set. Please try again.');
+                    console.error('Error in showPlayView:', error);
+                    alert('Failed to load flashcards. Please try again.');
                 }
             }
 

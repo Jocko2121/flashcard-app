@@ -417,62 +417,70 @@
     opacity: 0.7;
 }
 
+/* Play Navigation */
 .play-navigation {
     display: flex;
-    gap: 1rem;
     justify-content: center;
-    width: 100%;
-    max-width: 600px;
+    gap: 1rem;
+    margin: 2rem 0;
 }
 
-.play-navigation button {
+.play-navigation .sidebar-btn {
+    min-width: 100px;
     padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: background-color var(--transition-duration) var(--transition-timing);
+    font-size: 1rem;
+    transition: all var(--transition-duration) var(--transition-timing);
 }
 
-.play-navigation button:hover:not(:disabled) {
-    background: var(--bg-tertiary);
-}
-
-.play-navigation button:disabled {
+.play-navigation .sidebar-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
+.play-navigation .sidebar-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--panel-shadow);
+}
+
+/* Play Progress */
 .play-progress {
-    width: 100%;
-    max-width: 600px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+    margin-top: 1rem;
 }
 
 .progress-bar {
     width: 100%;
+    max-width: 400px;
     height: 8px;
-    background: var(--bg-secondary);
+    background-color: var(--bg-secondary);
     border-radius: 4px;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background: var(--accent-color);
-    transition: width 0.3s var(--transition-timing);
+    background-color: var(--accent-primary);
+    width: 0%;
+    transition: width var(--transition-duration) var(--transition-timing);
 }
 
-.progress-text {
+#play-progress-text {
     font-size: 0.9rem;
     color: var(--text-secondary);
 }
 
-/* Responsive adjustments */
+/* Flip Hint */
+.flip-hint {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    text-align: center;
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .flashcard {
         height: 300px;
@@ -485,10 +493,14 @@
     .play-navigation {
         flex-wrap: wrap;
     }
-
-    .play-navigation button {
-        flex: 1;
-        min-width: 120px;
+    
+    .play-navigation .sidebar-btn {
+        min-width: 80px;
+        padding: 0.5rem 1rem;
+    }
+    
+    .progress-bar {
+        max-width: 300px;
     }
 }
 

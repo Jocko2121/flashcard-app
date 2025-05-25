@@ -104,29 +104,29 @@ Key CSS patterns:
   - [x] Use existing card border and shadow styles
   - [x] Match existing text styles for consistency
 
-**[ ] Epic 5.3 - Navigation**
-- [ ] Add navigation buttons
-  - [ ] Add next/last buttons (use existing button styles)
-  - [ ] Style buttons (use CSS variables for colors)
-  - [ ] Add disable states (use CSS :disabled)
-  - [ ] Use existing button classes for consistency
-  - [ ] Add aria-labels for accessibility
-- [ ] Implement progress display
-  - [ ] Add card counter (use existing counter styles)
-  - [ ] Add visual progress indicator (use CSS progress bar)
-  - [ ] Use existing card-count class
-  - [ ] Update counter on card change
-- [ ] Add keyboard shortcuts
-  - [ ] Implement left/right arrow navigation (use keydown event)
-  - [ ] Add keyboard event listeners (use event delegation)
-  - [ ] Prevent default behavior for arrow keys
-  - [ ] Add visual feedback for keyboard navigation
-- [ ] Add shuffle functionality
-  - [ ] Add shuffle button (use existing button styles)
-  - [ ] Implement shuffle algorithm (use Fisher-Yates)
-  - [ ] Preserve original order (store in separate array)
-  - [ ] Update navigation state after shuffle
-  - [ ] Reset progress indicator after shuffle
+**[x] Epic 5.3 - Navigation**
+- [x] Add navigation buttons
+  - [x] Add next/last buttons (use existing button styles)
+  - [x] Style buttons (use CSS variables for colors)
+  - [x] Add disable states (use CSS :disabled)
+  - [x] Use existing button classes for consistency
+  - [x] Add aria-labels for accessibility
+- [x] Implement progress display
+  - [x] Add card counter (use existing counter styles)
+  - [x] Add visual progress indicator (use CSS progress bar)
+  - [x] Use existing card-count class
+  - [x] Update counter on card change
+- [x] Add keyboard shortcuts
+  - [x] Implement left/right arrow navigation (use keydown event)
+  - [x] Add keyboard event listeners (use event delegation)
+  - [x] Prevent default behavior for arrow keys
+  - [x] Add visual feedback for keyboard navigation
+- [x] Add shuffle functionality
+  - [x] Add shuffle button (use existing button styles)
+  - [x] Implement shuffle algorithm (use Fisher-Yates)
+  - [x] Preserve original order (store in separate array)
+  - [x] Update navigation state after shuffle
+  - [x] Reset progress indicator after shuffle
 
 **[ ] Epic 5.4 - Progress and State**
 - [ ] Add progress tracking
