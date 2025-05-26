@@ -17,16 +17,26 @@ This document outlines the development plan for a personal flashcard application
   - [ ] Document import/export features
 
 
-### *Phase 7: Search and Filtering*
-- [ ] Epic 7.1 - Implement card search
-- [ ] Epic 7.2 - Add tag support
-- [ ] Epic 7.3 - Create advanced filters
-- [ ] Epic 7.4 - Test search functionality
+### *Phase 7: Themes*
+- [ ] Epic 7.1 - 
+
+
+
+
+
+
+
+**## PHASES - Optional**
+
+### *Phase 10: Search and Filtering*
+- [ ] Epic 10.1 - Implement card search
+- [ ] Epic 10.2 - Add tag support
+- [ ] Epic 10.3 - Create advanced filters
+- [ ] Epic 10.4 - Test search functionality
  - [ ] Document search features
 
-
-### *Phase 8: Custom Study Modes*
-- [ ] Epic 8.1 - Create custom study modes
+### *Phase 11: Custom Study Modes*
+- [ ] Epic 11.1 - Create custom study modes
   - [ ] Add timed study sessions
   - [ ] Implement random order
   - [ ] Add custom card ordering
