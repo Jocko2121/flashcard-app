@@ -2,6 +2,7 @@ const rateLimit = require('express-rate-limit');
 const { body, param, validationResult } = require('express-validator');
 const helmet = require('helmet');
 const cors = require('cors');
+const { ValidationError } = require('./error-handler');
 
 // Rate limiting configuration
 const limiter = rateLimit({
@@ -22,7 +23,12 @@ const corsOptions = {
 const validateInput = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        const error = errors.array()[0];
+        // Check if it's an ID validation error
+        if (error.param === 'id' || error.param === 'setId' || error.param === 'cardId') {
+            throw new ValidationError('Resource not found');
+        }
+        throw new ValidationError(error.msg);
     }
     next();
 };
@@ -77,7 +83,7 @@ const cardUpdateRules = [
 const idValidationRules = [
     param('id')
         .isInt({ min: 1 })
-        .withMessage('ID must be a positive integer'),
+        .withMessage('Resource not found'),
     validateInput
 ];
 

@@ -41,10 +41,12 @@ async function initializeDataFile() {
 // Import routes
 const setsRouter = require('./routes/sets');
 const cardsRouter = require('./routes/cards');
+const importRouter = require('./routes/import');
 
 // Mount routes
 app.use('/api/sets', setsRouter);
 app.use('/api/sets/:setId/cards', cardsRouter);
+app.use('/api/sets/import', importRouter);
 
 // Error handling middleware (must be last)
 app.use(errorHandler);

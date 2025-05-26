@@ -1,5 +1,7 @@
 // Error handling middleware
 const errorHandler = (err, req, res, next) => {
+    // Debug log for error type and message
+    console.log('[DEBUG] errorHandler:', { name: err.name, message: err.message });
     // Log the error
     console.error('Error:', {
         message: err.message,
@@ -15,8 +17,14 @@ const errorHandler = (err, req, res, next) => {
 
     // Handle specific error types
     if (err.name === 'ValidationError') {
-        status = 400;
-        message = err.message || 'Invalid input data';
+        // Check if it's an ID validation error
+        if (err.message === 'Resource not found') {
+            status = 404;
+            message = 'Resource not found';
+            err.status = 404; // Ensure Express uses 404
+        } else {
+            status = 400;
+        }
     } else if (err.name === 'NotFoundError') {
         status = 404;
         message = err.message || 'Resource not found';
