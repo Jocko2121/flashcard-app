@@ -808,15 +808,17 @@
 
 .import-textarea {
     flex: 1;
+    min-height: 25em;
+    height: 25em;
     padding: 1rem;
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    background: var(--bg-secondary);
+    background: #fff;
     color: var(--text-primary);
     font-family: inherit;
     font-size: 1rem;
     line-height: 1.5;
-    resize: none;
+    resize: both;
     transition: border-color var(--transition-duration) var(--transition-timing);
 }
 

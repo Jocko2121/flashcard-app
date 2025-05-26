@@ -155,10 +155,9 @@
               <div class="import-header">
                 <h3>Paste Your Flashcard Set</h3>
                 <div class="import-actions">
-                  <button id="btn-format-help" class="import-btn" type="button">Format Help</button>
-                  <button id="btn-import" class="import-btn" type="button" disabled>Import</button>
-                  <button id="btn-validate-import" class="import-btn" type="button" disabled>Validate</button>
-                  <button id="btn-clear-import" class="import-btn" type="button">Clear All</button>
+                  <button id="btn-auto-format" class="import-btn" type="button" title="Automatically clean up and structure your pasted text">Auto-Format</button>
+                  <button id="btn-validate-import" class="import-btn" type="button" disabled title="Check your input for errors and show a preview">Validate</button>
+                  <button id="btn-clear-import" class="import-btn" type="button" title="Clear all text from the input area">Clear All</button>
                 </div>
               </div>
               <div class="import-text-container">
@@ -176,14 +175,26 @@ Where:
 a, b, and c are coefficients
 ± means plus or minus
 √ means square root"></textarea>
-                <div class="import-text-footer">
-                  <button id="btn-copy-example" class="import-btn" type="button">Copy Example</button>
+                <div class="import-text-footer" style="display: flex; justify-content: space-between; align-items: center;">
                   <span class="char-count">0 characters</span>
+                  <button id="btn-import" class="import-btn" type="button" disabled title="Import the flashcard set if valid">Import</button>
                 </div>
+                <div id="import-errors" style="color: red; margin-top: 8px;"></div>
+                <div id="import-preview" style="margin-top: 16px;"></div>
               </div>
-              <div class="quick-examples">
-                <h4>Quick Examples</h4>
-                <div class="example-templates">
+              <div class="quick-examples" id="quick-examples-section">
+                <h4 id="quick-examples-toggle" style="cursor:pointer;user-select:none;">Quick Examples &#9654;</h4>
+                <div class="example-templates" id="quick-examples-templates" style="display:none;">
+                  <div class="example-template">
+                    <h5>Format Rules</h5>
+                    <pre>• First line: Set Name (max 100 chars)
+• Second line: Set Description (max 500 chars, optional)
+• Blank line after set info
+• Each card starts with a Question (max 1000 chars, single line)
+• Answer can span multiple lines (max 1000 chars)
+• Blank line between cards
+• Maximum 100 cards per set</pre>
+                  </div>
                   <div class="example-template">
                     <h5>Basic Math</h5>
                     <pre>Math Basics
@@ -245,20 +256,7 @@ The process where JavaScript moves declarations to the top of their scope before
               </div>
             </div>
             <div class="preview-section">
-              <div class="preview-header">
-                <h3>Preview</h3>
-                <span class="preview-status">No content to preview</span>
-              </div>
-              <div class="preview-content">
-                <div class="preview-set-info">
-                  <h4 class="preview-set-name">Set Name</h4>
-                  <p class="preview-set-description">Set Description</p>
-                  <p class="preview-card-count">0 cards</p>
-                </div>
-                <div class="preview-cards">
-                  <!-- Cards will be previewed here -->
-                </div>
-              </div>
+              <!-- New styled preview area will be rendered here -->
             </div>
           </div>
         </div>
@@ -1316,10 +1314,135 @@ The process where JavaScript moves declarations to the top of their scope before
                 clearImportBtn.addEventListener('click', clearImportText);
             }
 
+            // --- Import Format Validation ---
+            function validateImportFormat(text) {
+                // Example format rules (customize as needed):
+                // 1. First line: Set Name (required)
+                // 2. Second line: Set Description (optional)
+                // 3. Blank line
+                // 4. Each card: Question (line), Answer (next line), blank line between cards
+                const lines = text.split(/\r?\n/).map(l => l.trim());
+                const errors = [];
+                const warnings = [];
+                let idx = 0;
+                // Find set name
+                while (idx < lines.length && !lines[idx]) idx++;
+                if (idx >= lines.length) {
+                    errors.push('Set name is required.');
+                    return { errors, warnings };
+                }
+                const setName = lines[idx++];
+                // Find set description (optional)
+                while (idx < lines.length && !lines[idx]) idx++;
+                let setDesc = '';
+                if (idx < lines.length) setDesc = lines[idx++];
+                // Skip blank lines
+                while (idx < lines.length && !lines[idx]) idx++;
+                // Parse cards
+                let cardCount = 0;
+                while (idx < lines.length) {
+                    // Question
+                    if (!lines[idx]) {
+                        idx++;
+                        continue;
+                    }
+                    const question = lines[idx++];
+                    if (!question) {
+                        errors.push(`Card ${cardCount + 1}: Question is required.`);
+                        continue;
+                    }
+                    // Answer
+                    while (idx < lines.length && !lines[idx]) idx++;
+                    if (idx >= lines.length || !lines[idx]) {
+                        errors.push(`Card ${cardCount + 1}: Answer is required.`);
+                        break;
+                    }
+                    const answer = lines[idx++];
+                    if (!answer) {
+                        errors.push(`Card ${cardCount + 1}: Answer is required.`);
+                        continue;
+                    }
+                    cardCount++;
+                    // Skip blank lines between cards
+                    while (idx < lines.length && !lines[idx]) idx++;
+                }
+                if (cardCount === 0) {
+                    errors.push('At least one card is required.');
+                }
+                return { errors, warnings };
+            }
+
+            // --- Preview Rendering ---
+            function renderImportPreview(text) {
+                const previewDiv = document.getElementById('import-preview');
+                previewDiv.innerHTML = '';
+                const result = validateImportFormat(text);
+                // Parse set name and description
+                const lines = text.split(/\r?\n/).map(l => l.trim());
+                let idx = 0;
+                while (idx < lines.length && !lines[idx]) idx++;
+                const setName = idx < lines.length ? lines[idx++] : '';
+                while (idx < lines.length && !lines[idx]) idx++;
+                const setDesc = idx < lines.length ? lines[idx++] : '';
+                // Skip blank lines
+                while (idx < lines.length && !lines[idx]) idx++;
+                // Parse cards
+                let cards = [];
+                let currentCard = [];
+                while (idx < lines.length) {
+                    const line = lines[idx];
+                    if (!line) {
+                        if (currentCard.length) {
+                            cards.push(currentCard);
+                            currentCard = [];
+                        }
+                    } else {
+                        currentCard.push(line);
+                    }
+                    idx++;
+                }
+                if (currentCard.length) cards.push(currentCard);
+                // Build preview HTML
+                let html = '';
+                html += `<div class="preview-header" style="margin-bottom: 10px;"><h3 style="margin:0;">Preview</h3></div>`;
+                html += `<div><strong>Set Name:</strong> ${setName || '<span style=\'color:#888\'>(none)</span>'}</div>`;
+                html += `<div><strong>Description:</strong> ${setDesc || '<span style=\'color:#888\'>(none)</span>'}</div><br>`;
+                cards.forEach((card, i) => {
+                    html += `<div style="margin-bottom:10px;"><strong>Card ${i+1}:</strong><br>`;
+                    if (card.length > 0) {
+                        html += `<span style="color:#2563eb;font-weight:bold;">Q:</span> ${card[0]}<br>`;
+                        if (card.length > 1) {
+                            html += `<span style="color:#388e3c;font-weight:bold;">A:</span> ${card.slice(1).join('<br>')}`;
+                        }
+                    }
+                    html += `</div>`;
+                });
+                html += `<br><hr style=\"margin:16px 0;\">`;
+                html += `<div style="margin:8px 0;"><strong>Total cards:</strong> ${cards.length}</div>`;
+                previewDiv.innerHTML = html;
+            }
+
             if (validateImportBtn) {
                 validateImportBtn.addEventListener('click', () => {
-                    // TODO: Implement validation logic
-                    console.log('Validation clicked');
+                    const text = importText.value.trim();
+                    const result = validateImportFormat(text);
+                    const errorDiv = document.getElementById('import-errors');
+                    errorDiv.innerHTML = '';
+                    if (result.errors.length > 0) {
+                        result.errors.forEach(err => {
+                            const p = document.createElement('div');
+                            p.textContent = err;
+                            errorDiv.appendChild(p);
+                        });
+                    } else if (result.warnings.length > 0) {
+                        result.warnings.forEach(warn => {
+                            const p = document.createElement('div');
+                            p.textContent = warn;
+                            p.style.color = 'orange';
+                            errorDiv.appendChild(p);
+                        });
+                    }
+                    renderImportPreview(text);
                 });
             }
 
@@ -1802,6 +1925,98 @@ x = (-b ± √(b² - 4ac)) / 2a`;
                     });
                 });
             });
+
+            // --- Improved Auto-Formatting (aligned to spec) ---
+            function autoFormatImportText(text) {
+                // Normalize line endings and trim trailing spaces
+                let lines = text.replace(/\r\n?/g, '\n').split('\n').map(l => l.replace(/\s+$/, ''));
+                // Remove leading blank lines
+                while (lines.length && !lines[0].trim()) lines.shift();
+                // Set name
+                let idx = 0;
+                let formatted = [];
+                if (idx < lines.length) {
+                    formatted.push(lines[idx++]); // Set name
+                }
+                // Set description
+                while (idx < lines.length && !lines[idx].trim()) idx++;
+                if (idx < lines.length) {
+                    formatted.push(lines[idx++]); // Set description
+                }
+                // Blank line after set info
+                formatted.push('');
+                // Cards
+                let cards = [];
+                let currentCard = [];
+                let inCard = false;
+                while (idx < lines.length) {
+                    const line = lines[idx];
+                    if (!line.trim()) {
+                        // Blank line: could be within answer or between cards
+                        if (inCard) {
+                            currentCard.push(''); // preserve blank line within answer
+                        } else {
+                            // Multiple blank lines between cards are allowed
+                        }
+                    } else {
+                        // If this is a question (line ends with '?') and currentCard is not empty, treat as new card
+                        if (line.trim().endsWith('?') && currentCard.length > 0) {
+                            cards.push(currentCard);
+                            currentCard = [];
+                        }
+                        currentCard.push(line);
+                        inCard = true;
+                    }
+                    // If next line is blank and currentCard is not empty, treat as card separator
+                    if (inCard && (!line.trim()) && currentCard.length > 0) {
+                        cards.push(currentCard);
+                        currentCard = [];
+                        inCard = false;
+                    }
+                    idx++;
+                }
+                if (currentCard.length) cards.push(currentCard);
+                // Format cards: question, answer(s), preserve blank lines within answers, allow multiple blank lines between cards
+                cards.forEach((card, i) => {
+                    if (card.length) {
+                        formatted.push(card[0]); // Question
+                        if (card.length > 1) {
+                            for (let j = 1; j < card.length; ++j) {
+                                formatted.push(card[j]); // Answer lines (including blank lines)
+                            }
+                        }
+                        // Only add a blank line between cards, not after the last card
+                        if (i < cards.length - 1) formatted.push('');
+                    }
+                });
+                // Remove trailing blank lines
+                while (formatted.length && !formatted[formatted.length-1].trim()) formatted.pop();
+                return formatted.join('\n');
+            }
+
+            const autoFormatBtn = document.getElementById('btn-auto-format');
+            if (autoFormatBtn) {
+                autoFormatBtn.addEventListener('click', () => {
+                    const text = importText.value;
+                    const formatted = autoFormatImportText(text);
+                    importText.value = formatted;
+                    // Optionally, update character count and errors
+                    if (typeof updateCharCount === 'function') updateCharCount();
+                    const errorDiv = document.getElementById('import-errors');
+                    if (errorDiv) errorDiv.innerHTML = '';
+                });
+            }
+
+            // Expand/collapse Quick Examples
+            const quickExamplesToggle = document.getElementById('quick-examples-toggle');
+            const quickExamplesTemplates = document.getElementById('quick-examples-templates');
+            if (quickExamplesToggle && quickExamplesTemplates) {
+                quickExamplesToggle.addEventListener('click', () => {
+                    const isCollapsed = quickExamplesTemplates.style.display === 'none';
+                    quickExamplesTemplates.style.display = isCollapsed ? '' : 'none';
+                    quickExamplesToggle.innerHTML = `Quick Examples ${isCollapsed ? '&#9660;' : '&#9654;'}`;
+                });
+            }
         });
     </script>
   </body>

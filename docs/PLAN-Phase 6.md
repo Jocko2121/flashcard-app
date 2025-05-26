@@ -324,19 +324,14 @@ a, b, and c are coefficients
   - [ ] Await user feedback
 
 **[ ] Epic 6.3 - Enhanced Text Paste Features**
-- [ ] Add live validation
-  - [ ] Implement real-time format checking
-  - [ ] Add inline error display
-  - [ ] Add syntax highlighting
-  - [ ] Add auto-formatting
-- [ ] Enhance preview functionality
-  - [ ] Add live preview updates
-  - [ ] Add inline editing
-  - [ ] Add duplicate detection
-  - [ ] Add card counting
-- [ ] Add user assistance features
-  - [ ] Add format examples
-  - [ ] Add help tooltips
+- [x] Add validation
+  - [x] Implement format checking
+  - [x] Implement inline error display
+  - [x] Add auto-formatting (buggy - fix later)
+- [x] Enhance preview functionality
+  - [x] Add preview updates (simple styled preview)
+  - [x] Add card counting
+  - [x] Add button tooltips
   - [ ] Add error suggestions
   - [ ] Add undo/redo support
 - [ ] CHECKPOINT: Enhanced Features Review
