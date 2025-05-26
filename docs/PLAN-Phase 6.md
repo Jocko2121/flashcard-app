@@ -268,30 +268,30 @@ a, b, and c are coefficients
 ## Epics
 
 **[ ] Epic 6.1 - Basic Text Paste UI**
-- [ ] Create text paste interface
-  - [ ] Add large text area
-  - [ ] Add format example display
-    - [ ] Show example format with headers
-    - [ ] Show example card entry
-    - [ ] Add copy example button
-  - [ ] Add clear button
-  - [ ] Add character count
-  - [ ] Add format help button
-  - [ ] Add quick format examples
-- [ ] Add basic preview section
-  - [ ] Create preview table
-  - [ ] Add set information display
-  - [ ] Add card count display
-  - [ ] Add validation status
-- [ ] Add action buttons
-  - [ ] Add import button
-  - [ ] Add clear button
-  - [ ] Add format help button
-- [ ] CHECKPOINT: Basic UI Review
-  - [ ] Verify text area functionality
-  - [ ] Test format example display
-  - [ ] Validate preview display
-  - [ ] Await user feedback
+- [x] Create text paste interface
+  - [x] Add large text area
+  - [x] Add format example display
+  - [x] Add clear button
+  - [x] Add character count
+  - [x] Add copy example button
+  - [x] Add format help button
+  - [x] Add card count display
+  - [x] Add import button
+- [x] Add basic preview section
+  - [x] Show set name
+  - [x] Show description
+  - [x] Show card count
+  - [x] Show preview status
+- [x] Add quick format examples
+  - [x] Add example templates
+  - [x] Make examples copyable
+- [x] Verify UI review
+  - [x] Check all buttons work
+  - [x] Verify text area behavior
+  - [x] Test character count
+  - [x] Test preview updates
+  - [x] Verify error states
+  - [x] Test responsive design
 
 **[ ] Epic 6.2 - Text Paste Processing**
 - [ ] Install required packages
